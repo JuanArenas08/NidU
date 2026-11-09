@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NidU · Mapa de navegación</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--navy:#07275C;--blue:#0469E6;--gold:#FFB012;--green:#2F8F6B;--purple:#7C5CC4;--ink:#1B2A4A;--ink2:#4A5878;--ink3:#8A96B0;--line:#E3E8F0;--bg:#F4F7FB;--card:#fff}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(--ink);padding:32px 24px 60px;line-height:1.5}
+  .wrap{max-width:1240px;margin:0 auto}
+  h1{font-family:'Nunito',sans-serif;font-weight:900;font-size:30px;color:var(--navy)}
+  .sub{color:var(--ink2);margin:6px 0 18px;max-width:760px}
+  .legend{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:26px;font-size:13px;color:var(--ink2);font-weight:600}
+  .legend span{display:inline-flex;align-items:center;gap:7px}
+  .dot{width:14px;height:14px;border-radius:4px;flex:none}
+  .lanes{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:22px;align-items:start}
+  .lane{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px 16px 20px;box-shadow:0 2px 16px rgba(10,30,70,.05)}
+  .lane h2{font-family:'Nunito',sans-serif;font-size:15px;letter-spacing:.06em;text-transform:uppercase;color:#fff;padding:9px 14px;border-radius:12px;margin-bottom:14px}
+  .lane.pub h2{background:var(--ink2)}
+  .lane.stu h2{background:var(--blue)}
+  .lane.ag h2{background:var(--navy)}
+  .node{border:1.5px solid var(--line);border-radius:13px;padding:11px 13px;margin:0 0 6px;background:#fff}
+  .node .t{font-weight:800;font-size:14.5px;color:var(--navy);display:flex;align-items:center;gap:8px}
+  .node .d{font-size:12.5px;color:var(--ink3);margin-top:3px}
+  .node.entry{border-color:var(--gold);background:#FFFaf0}
+  .node.main{border-color:var(--blue);background:#F2F8FF}
+  .node.ag-main{border-color:var(--navy);background:#F1F4FB}
+  .node.flow{border-color:var(--purple);background:#F7F4FD}
+  .node.alt{border-style:dashed}
+  .arrow{display:flex;justify-content:center;color:var(--ink3);font-size:15px;margin:1px 0}
+  .branch{margin:4px 0 6px 14px;padding-left:12px;border-left:2px dashed var(--line)}
+  .branch .node{margin-bottom:5px}
+  .chip{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;margin-left:6px;vertical-align:middle}
+  .chip.go{background:#E7F0FF;color:var(--blue)}
+  .chip.occ{background:#07275C;color:#fff}
+  .steps{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:12.5px;color:var(--ink2);font-weight:600;margin-top:4px}
+  .steps b{background:#fff;border:1px solid var(--line);border-radius:8px;padding:3px 8px;color:var(--navy)}
+  .sep{color:var(--purple);font-weight:800}
+  .note{font-size:12.5px;color:var(--ink3);margin-top:12px}
+  footer{margin-top:28px;font-size:12.5px;color:var(--ink3);text-align:center}
+  .xlink{font-size:11.5px;color:var(--purple);font-weight:700;margin-top:4px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>NidU · Mapa de navegación</h1>
+  <p class="sub">Prototipo de media fidelidad. Flujo de pantallas por tipo de usuario. La app es una SPA con enrutamiento por hash (<code>#explorar</code>, <code>#arriendo</code>…); los cuadros punteados son caminos alternativos o modales, y las flechas moradas marcan flujos de varios pasos.</p>
+
+  <div class="legend">
+    <span><i class="dot" style="background:var(--gold)"></i>Entrada / autenticación</span>
+    <span><i class="dot" style="background:var(--blue)"></i>Pantalla principal (estudiante)</span>
+    <span><i class="dot" style="background:var(--navy)"></i>Pantalla principal (agente)</span>
+    <span><i class="dot" style="background:var(--purple)"></i>Flujo / modal de varios pasos</span>
+    <span><i class="dot" style="background:#fff;border:1.5px dashed var(--line)"></i>Camino alternativo</span>
+  </div>
+
+  <div class="lanes">
+
+    <!-- PÚBLICO -->
+    <section class="lane pub">
+      <h2>Público / Entrada</h2>
+      <div class="node entry"><div class="t">Inicio (Landing)</div><div class="d">Propuesta de valor, mapa demo, CTA a registro e inicio de sesión.</div></div>
+      <div class="arrow">▼</div>
+      <div class="node"><div class="t">Explorar sin sesión</div><div class="d">Invitado: ve arriendos y mapa; acciones de cuenta pedirán iniciar sesión.</div><div class="xlink">→ Dashboard Estudiante (limitado)</div></div>
+
+      <div class="arrow">▼ &nbsp;Estudiante</div>
+      <div class="node entry"><div class="t">Ingresar con cuenta universitaria</div><div class="d">Elige universidad (ESPOL / UG / UCSG / UEES).</div></div>
+      <div class="steps">
+        <b>SSO universitario</b><span class="sep">→</span><b>Verificación SMS</b><span class="sep">→</span><b>Setup: presupuesto · ciudad · teléfono · avisos</b>
+      </div>
+      <div class="xlink">⇒ entra al Dashboard de Estudiante</div>
+
+      <div class="arrow">▼ &nbsp;Agente</div>
+      <div class="node entry"><div class="t">Crear cuenta de agente</div><div class="d">Datos, contraseña segura (validación en vivo), cédula/RUC y documento del inmueble.</div></div>
+      <div class="steps">
+        <b>Verificación SMS</b><span class="sep">→</span><b>Pago de suscripción (demo $5/mes)</b>
+      </div>
+      <div class="xlink">⇒ entra al Panel de Agente · verificación en curso</div>
+      <p class="note">El login simula el SSO sin validar credenciales reales (pantalla marcada como prototipo, nunca imita el portal real).</p>
+    </section>
+
+    <!-- ESTUDIANTE -->
+    <section class="lane stu">
+      <h2>Estudiante</h2>
+      <div class="node main"><div class="t">Explorar</div><div class="d">Mapa + lista, filtros, orden, comparar hasta 3, favoritos. Universidad fija según su cuenta.</div></div>
+      <div class="arrow">▼</div>
+      <div class="node main"><div class="t">Detalle del arriendo</div><div class="d">Fotos, costo real, seguridad (índice NidU + opinión de estudiantes), rutas de bus, reseñas, perfil del agente.</div></div>
+
+      <div class="branch">
+        <div class="node"><div class="t">Contactar al agente <span class="chip go">→ Mis mensajes</span></div><div class="d">Abre conversación; el agente responde (simulado).</div></div>
+        <div class="node"><div class="t">Agendar visita <span class="chip go">→ Mis visitas</span></div><div class="d">Día y hora; se confirma por notificación.</div></div>
+        <div class="node flow"><div class="t">Arrendar con un amigo</div><div class="steps" style="margin-top:6px"><b>Invitar / cupo abierto</b><span class="sep">→</span><b>Contrato + firma</b><span class="sep">→</span><b>Pago</b><span class="sep">→</span><b>Grupo (todos listos)</b><span class="sep">→</span><b>Arrendado</b></div></div>
+        <div class="node flow"><div class="t">Vincularse / arrendar</div><div class="d">A solicitud del agente: contrato → pago → subir comprobante → queda <b>Ocupado</b>.</div></div>
+        <div class="node alt"><div class="t">Arriendo ocupado <span class="chip occ">solo lectura</span></div><div class="d">Se abre para ver la publicación, desde cuándo está ocupado y el perfil del agente; sin acciones.</div></div>
+      </div>
+
+      <div class="arrow">▼ &nbsp;Menú</div>
+      <div class="node"><div class="t">Mis mensajes</div><div class="d">Bandeja de conversaciones con agentes, con respuestas simuladas.</div></div>
+      <div class="node"><div class="t">Mis visitas</div><div class="d">Visitas agendadas: estado, reprogramar o cancelar.</div></div>
+      <div class="node"><div class="t">Mis amigos</div><div class="d">Agregar estudiantes, ver si arriendan y dónde, invitar a arrendar / aceptar invitaciones.</div></div>
+      <div class="node"><div class="t">Zonas según estudiantes</div><div class="d">Seguridad por zona a partir de reseñas; permite opinar y recalcular la etiqueta.</div></div>
+      <div class="node"><div class="t">Mi perfil</div><div class="d">Editar teléfono (con SMS), historial y reseñas, calificación de arrendadores, soporte, eliminar cuenta.</div></div>
+      <p class="note">Límite: un estudiante solo puede tener <b>un arriendo activo</b> a la vez; aceptar o iniciar otro se bloquea.</p>
+    </section>
+
+    <!-- AGENTE -->
+    <section class="lane ag">
+      <h2>Agente</h2>
+      <div class="node ag-main"><div class="t">Panel</div><div class="d">Métricas (vistas, interesados, tasa de contacto), gráfico semanal, mensajes recientes, plan.</div></div>
+      <div class="arrow">▼</div>
+      <div class="node ag-main"><div class="t">Mis arriendos</div><div class="d">Tabla con estado (disponible / pausado / arrendado).</div></div>
+      <div class="branch">
+        <div class="node"><div class="t">Editar</div><div class="d">Solo arriendos no arrendados.</div></div>
+        <div class="node"><div class="t">Inquilino</div><div class="d">Arriendos ocupados: datos del estudiante, tiempo, pagos, atrasos.</div></div>
+      </div>
+      <div class="arrow">▼</div>
+      <div class="node ag-main"><div class="t">Publicar arriendo</div><div class="d">Fotos, tipo, precio (comparado con la zona), zona ↔ pin del mapa sincronizados, servicios, condiciones y vista previa.</div></div>
+      <div class="arrow">▼</div>
+      <div class="node"><div class="t">Mensajes</div><div class="d">Responder a estudiantes o <b>enviar solicitud de vinculación</b>.</div><div class="xlink">→ Estudiante: solicitud de vinculación</div></div>
+      <div class="arrow">▼</div>
+      <div class="node"><div class="t">Mi perfil</div><div class="d">Visible también para los estudiantes: datos, reseñas y lista de arriendos.</div></div>
+      <p class="note">El panel puede alternar a “ver como estudiante” para probar el lado del estudiante.</p>
+    </section>
+
+  </div>
+
+  <footer>NidU — prototipo de media fidelidad · mapa de navegación de pantallas y flujos.</footer>
+</div>
+</body>
+</html>

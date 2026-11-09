@@ -61,7 +61,11 @@ document.addEventListener('click',e=>{const a=e.target.closest('[data-act]');if(
   case 'addQ':{const t=a.closest('form').querySelector('textarea');t.value+=' '+a.textContent;a.classList.add('on');break;}
   case 'visit':visitModal();break;
   case 'pickOne':a.parentNode.querySelectorAll('.chip').forEach(c=>c.classList.toggle('on',c===a));break;
-  case 'confirmVisit':closeModal();toast('Visita solicitada (demo). Te confirmaremos por notificación');break;
+  case 'confirmVisit':confirmVisit();break;
+  case 'cancelVisit':cancelVisit(id);break;
+  case 'reVisit':reVisit(id);break;
+  case 'openChat':openChat(id);break;
+  case 'sendChat':sendChat(id);break;
   case 'call':{const A=agentOf(S.sel);toast(A?`Teléfono de ${A.n}: ${A.ph}`:'Teléfono no disponible');break;}
   case 'zoomImg':{const k=a.dataset.k;modal(`${mhead(`${esc(a.dataset.c||'Foto')}`)}<div style="height:420px">${k?room(k,S.sel.pal):`<img src="${S.sel.imgs[+a.dataset.i]}" style="width:100%;height:100%;object-fit:contain;background:#000">`}</div>`,true);break;}
   case 'aTab':S.aTab=a.dataset.t;renderAgent();break;
