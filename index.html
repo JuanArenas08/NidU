@@ -584,6 +584,8 @@ input[type=range]{width:100%;accent-color:var(--blue)}
 <section class="view" data-view="arriendo"><div class="wrap" id="detail"></div></section>
 <section class="view" data-view="agente"><div class="agentlay" id="agent"></div></section>
 <section class="view" data-view="publicar"><div class="wrap" id="publish"></div></section>
+<section class="view" data-view="perfil"><div class="wrap" id="sprofile"></div></section>
+<section class="view" data-view="amigos"><div class="wrap" id="friends"></div></section>
 
 <div class="ov" id="ov"><div class="modal" id="modal"></div></div>
 <div class="toast" id="toast"><svg class="ico"><use href="#i-check"/></svg><span></span></div>
@@ -649,6 +651,7 @@ const UNIS={
   uees:{n:'UEES',full:'UEES · Samborondón',x:948,y:226}
 };
 const ZAVG={Prosperina:172,Ceibos:235,Mapasingue:132,Urdesa:238,Kennedy:220,Centenario:188,Centro:205,Alborada:168,Sauces:150,'Samborondón':330,'Vía a la Costa':260};
+const ZONEXY={Prosperina:[392,330],Ceibos:[205,345],Mapasingue:[450,305],Urdesa:[505,405],Kennedy:[685,320],Centenario:[612,540],Centro:[745,505],Alborada:[720,215],Sauces:[785,150],'Samborondón':[960,300],'Vía a la Costa':[120,430]};
 
 const ZSAFE={Prosperina:{s:3.6,l:'Media en calles internas',upc:'UPC a 400 m',r:'Pocos reportes'},Ceibos:{s:4.5,l:'Buena',upc:'UPC a 600 m',r:'Muy pocos reportes'},Mapasingue:{s:2.7,l:'Baja en calles internas',upc:'UPC a 900 m',r:'Robos reportados de noche'},Urdesa:{s:4.2,l:'Buena',upc:'UPC a 300 m',r:'Pocos reportes'},Kennedy:{s:4.1,l:'Buena',upc:'UPC a 500 m',r:'Pocos reportes'},Centenario:{s:4.0,l:'Buena',upc:'UPC a 700 m',r:'Pocos reportes'},Centro:{s:3.1,l:'Buena en avenidas',upc:'UPC a 200 m',r:'Reportes en la noche'},Alborada:{s:3.8,l:'Media',upc:'UPC a 450 m',r:'Algunos reportes'},Sauces:{s:3.4,l:'Media',upc:'UPC a 800 m',r:'Algunos reportes'},'Samborondón':{s:4.8,l:'Muy buena',upc:'Guardia privada',r:'Muy pocos reportes'},'Vía a la Costa':{s:4.4,l:'Buena',upc:'Guardia privada',r:'Pocos reportes'}};
 const ORIG={milagro:{n:'Milagro',c:1.50,t:75},daule:{n:'Daule',c:1.00,t:50},duran:{n:'Durán',c:0.60,t:45},babahoyo:{n:'Babahoyo',c:2.25,t:100},salinas:{n:'Salinas',c:4.00,t:150},quevedo:{n:'Quevedo',c:6.50,t:180},machala:{n:'Machala',c:7.00,t:210},manta:{n:'Manta',c:8.00,t:240},otra:{n:'Otra ciudad',c:5.00,t:180}};
@@ -693,6 +696,14 @@ const RPOOL=[
  {n:'Jorge V.',from:'Daule',u:'UG',r:4,a:[4,4,3,4],t:'Zona con comida y farmacias cerca. El wifi podría ser mejor.'}];
 const RCOL=['#0469E6','#2F8F6B','#7C5CC4','#E2725B','#07275C','#B07400'];
 const REV={};
+const FR={
+ dome:{n:'Doménica Vera',from:'Manta',u:'ESPOL',col:'#E2725B',rating:4.7,renting:{where:'Mini depa en Ceibos Norte',until:'feb 2027',mates:[]},places:['Suite en Urdesa','Habitación en Kennedy'],reviews:4},
+ mateo:{n:'Mateo Salas',from:'Quevedo',u:'ESPOL',col:'#2F8F6B',rating:4.9,renting:{where:'Habitación en Vía a la Costa',until:'abr 2027',mates:[]},places:['Habitación en Mapasingue'],reviews:2},
+ valen:{n:'Valentina Cruz',from:'Machala',u:'UCSG',col:'#7C5CC4',rating:4.5,renting:null,places:['Habitación en Centenario','Depa compartido en Sauces'],reviews:5},
+ kevin:{n:'Kevin Mora',from:'Babahoyo',u:'UG',col:'#0469E6',rating:4.2,renting:null,places:['Habitación junto a la UG'],reviews:3},
+ ana:{n:'Ana Lucía R.',from:'Salinas',u:'ESPOL',col:'#B07400',rating:4.8,renting:{where:'Depa compartido en Sauces',until:'ene 2027',mates:['Bryan S.']},places:[],reviews:6},
+ bryan:{n:'Bryan Soto',from:'Daule',u:'UG',col:'#07275C',rating:4.0,renting:null,places:['Mini depa en Kennedy Norte'],reviews:1}
+};
 L.forEach(l=>{const k=(l.id*7)%RPOOL.length;const n=(l.id===7||l.id===14)?1:(l.id%3)+2;const low=(ZSAFE[l.zone]||{s:4}).s<3.2;REV[l.id]=Array.from({length:n},(_,i)=>{const b=RPOOL[(k+i*2)%RPOOL.length];return {...b,a:[low?Math.min(b.a[0],3):b.a[0],...b.a.slice(1)],h:['hace 2 semanas','hace 1 mes','hace 3 meses','hace 5 meses'][i%4],col:RCOL[(k+i)%RCOL.length]};});});
 const S={user:null,uni:'espol',budget:180,notify:true,fav:new Set([3]),sel:null,dir:'ida',orig:'milagro',verif:null,prof:false,authMail:null,cmp:new Set(),rvStar:5,upl:{},
   f:{min:80,max:350,zones:new Set(),types:new Set(),sv:new Set(),dist:8,sort:'cerca',q:'',safe:0,vph:false},
@@ -701,6 +712,11 @@ const S={user:null,uni:'espol',budget:180,notify:true,fav:new Set([3]),sel:null,
   notifAgent:[{t:'Nuevo mensaje de Juan Pablo Arenas',s:'Sobre: Habitación amoblada en Prosperina',id:1,h:'10:24',k:'msg'},{t:'Nueva reseña · 4★',s:'Mini depa en Ceibos Norte: "Buen internet para clases"',id:2,h:'ayer',k:'rev'},{t:'Un usuario reportó un anuncio',s:'Cuarto en Urdesa Central: las fotos no coinciden',id:10,h:'hace 2 días',k:'report'},{t:'Pago atrasado',s:'Doménica Vera lleva 8 días de atraso · Mini depa en Ceibos',id:2,h:'hace 3 días',k:'pay'}],
   notifApp:[{t:'Novedad en NidU',s:'Ahora puedes comparar hasta 3 arriendos lado a lado',h:'esta semana',k:'app'},{t:'Mejoramos el mapa y las rutas de bus',s:'Más rápido y con líneas actualizadas por universidad',h:'hace 1 semana',k:'app'}],
   msgs:[{n:'Juan Pablo Arenas',ini:'JP',col:'#0469E6',lid:1,m:'Hola, ¿la habitación sigue disponible? Soy estudiante foráneo y entro a ESPOL este semestre.',h:'10:24',u:true},{n:'José Andrade',ini:'JA',col:'#2F8F6B',lid:2,m:'¿Se puede visitar el sábado en la mañana?',h:'ayer',u:true},{n:'Valentina Cruz',ini:'VC',col:'#7C5CC4',lid:10,m:'¿El precio incluye el internet?',h:'lun',u:false}],
+  friends:new Set(['dome','mateo']),
+  invites:[{id:1,lid:5,from:'valen',to:'me',status:'pending',h:'hace 1 h'}],
+  links:[],
+  myRating:{v:4.8,n:5},
+  myHistory:[{t:'Habitación amoblada en Prosperina',dur:'3 meses · actual',r:5,t2:'Muy cerca de ESPOL y el dueño responde rápido.'},{t:'Cuarto con baño privado',dur:'5 meses · 2025',r:4,t2:'Buena zona, aunque el agua caliente a veces fallaba.'},{t:'Residencia en Mapasingue',dur:'4 meses · 2024',r:3}],
   pub:null, aTab:'panel'};
 
 /* ===================== HELPERS ===================== */
@@ -725,8 +741,8 @@ function toast(m){const t=$('#toast');t.querySelector('span').textContent=m;t.cl
 function modal(html,wide){$('#modal').className='modal'+(wide?' wide':'');$('#modal').innerHTML=html;$('#ov').classList.add('on');}
 function closeModal(){$('#ov').classList.remove('on');}
 $('#ov').addEventListener('click',e=>{if(e.target.id==='ov')closeModal();});
-function store(){try{localStorage.setItem('nidu',JSON.stringify({user:S.user,uni:S.uni,budget:S.budget,fav:[...S.fav],orig:S.orig,verif:S.verif,prof:S.prof,subscribed:S.subscribed}));}catch(e){}}
-try{const d=JSON.parse(localStorage.getItem('nidu')||'null');if(d){S.user=d.user;S.uni=d.uni||'espol';S.budget=d.budget||180;S.fav=new Set(d.fav||[]);S.orig=d.orig||'milagro';S.verif=d.verif||null;if(S.verif==='rev')S.verif='ok';S.prof=!!d.prof;S.subscribed=!!d.subscribed;}}catch(e){}
+function store(){try{localStorage.setItem('nidu',JSON.stringify({user:S.user,uni:S.uni,budget:S.budget,fav:[...S.fav],orig:S.orig,verif:S.verif,prof:S.prof,subscribed:S.subscribed,friends:[...S.friends]}));}catch(e){}}
+try{const d=JSON.parse(localStorage.getItem('nidu')||'null');if(d){S.user=d.user;S.uni=d.uni||'espol';S.budget=d.budget||180;S.fav=new Set(d.fav||[]);S.orig=d.orig||'milagro';S.verif=d.verif||null;if(S.verif==='rev')S.verif='ok';S.prof=!!d.prof;S.subscribed=!!d.subscribed;if(Array.isArray(d.friends))S.friends=new Set(d.friends);}}catch(e){}
 
 /* room illustrations */
 const PAL=[{w1:'#EAF2FE',w2:'#D3E3FA',fl:'#C9A27E',bl:'#0469E6',ac:'#FFB012'},{w1:'#FBEFE3',w2:'#F2DCC6',fl:'#B98B66',bl:'#E2725B',ac:'#2F8F6B'},{w1:'#EAF5EE',w2:'#D2EADA',fl:'#A9876A',bl:'#07275C',ac:'#FFB012'},{w1:'#F3EEFA',w2:'#E2D8F2',fl:'#B08F74',bl:'#7C5CC4',ac:'#FFB012'},{w1:'#FFF6DE',w2:'#F7E5B3',fl:'#9C7A5E',bl:'#0469E6',ac:'#E2725B'}];
@@ -798,23 +814,25 @@ function lineOf(l){const B=UBUS[S.uni]||UBUS.espol;if(B.lines[0]==='BUEES')retur
 function busRow(u){const B=UBUS[u]||UBUS.espol;const lines=B.lines[0]==='BUEES'?'servicio institucional BUEES':'líneas '+B.lines.join(', ');return `<div class="busrow">${ic('i-bus','sm')}<div><b>Buses que pasan cerca de ${UNIS[u].n}:</b> ${lines}.${B.metro?' '+esc(B.metro)+'.':''}<div style="color:var(--ink3);margin-top:3px">${esc(B.note)} <span style="font-style:italic">Datos de fuentes públicas; pueden cambiar por obras o decisiones de la ATM.</span></div></div></div>`;}
 
 /* ===================== ROUTER ===================== */
-const VIEWS=['inicio','registro','ingresar','explorar','arriendo','agente','publicar'];
+const VIEWS=['inicio','registro','ingresar','explorar','arriendo','agente','publicar','perfil','amigos'];
 function go(v){if(location.hash==='#'+v)render();else location.hash=v;}
 window.addEventListener('hashchange',render);
 let prevView=null;
 function render(){
   let v=location.hash.slice(1)||'inicio';
+  if(S.user&&(v==='inicio'||['como','beneficios','agentes'].includes(v))){location.hash=S.user.role==='agente'?'agente':'explorar';return;}
   if(['como','beneficios','agentes'].includes(v)){showView('inicio');renderLanding();document.getElementById(v)?.scrollIntoView({behavior:'smooth'});return;}
   if(!VIEWS.includes(v))v='inicio';
   if(v==='arriendo'&&!S.sel)v='explorar';
   if((v==='agente'||v==='publicar')&&S.user?.role!=='agente'){v='ingresar';}
+  if((v==='perfil'||v==='amigos')&&(!S.user||S.user.role!=='estudiante')){v=S.user?'agente':'ingresar';}
   showView(v);window.scrollTo(0,0);
   if((v==='registro'||v==='ingresar')&&prevView!==v){sstep='pick';authUni=null;agentPay=false;agentTab=(v==='ingresar'?'login':'register');}
-  ({inicio:renderLanding,registro:()=>renderAuth('reg'),ingresar:()=>renderAuth('login'),explorar:renderExplore,arriendo:renderDetail,agente:renderAgent,publicar:renderPublish})[v]();
+  ({inicio:renderLanding,registro:()=>renderAuth('reg'),ingresar:()=>renderAuth('login'),explorar:renderExplore,arriendo:renderDetail,agente:renderAgent,publicar:renderPublish,perfil:renderStudentProfile,amigos:renderFriends})[v]();
   prevView=v;
 }
 function showView(v){document.querySelectorAll('.view').forEach(s=>s.classList.toggle('on',s.dataset.view===v));
-  const app=['explorar','arriendo','agente','publicar'].includes(v);$('#appTop').innerHTML=app?topbar(v):'';}
+  const app=['explorar','arriendo','agente','publicar','perfil','amigos'].includes(v);$('#appTop').innerHTML=app?topbar(v):'';}
 
 /* ===================== LANDING ===================== */
 function renderLanding(){
@@ -863,7 +881,7 @@ function agentLoginBody(){return `<h1>Entra como agente</h1><p class="hint">Acce
     <div class="demo"><button type="button" class="btn sec" data-act="demo" data-r="estudiante">${ic('i-cap','sm')}Estudiante</button><button type="button" class="btn sec" data-act="demo" data-r="agente">${ic('i-building','sm')}Agente</button></div>`;}
 function agentRegBody(){return `<h1>Crea tu cuenta de agente</h1><p class="hint">Publica tus arriendos y llega directo a estudiantes foráneos.</p>
   <div class="fld"><label>Nombre completo</label><input class="inp" id="rgName" placeholder="Ej. Carlos Ríos" value="${esc(pendingAgent?pendingAgent.name:'')}"><div class="errtxt">Escribe tu nombre.</div></div>
-  <div class="fld"><label>Correo electrónico</label><input class="inp" id="rgMail" type="email" placeholder="nombre@correo.com" value="${esc(pendingAgent?pendingAgent.email:'')}"><div class="errtxt">Escribe un correo válido.</div></div>
+  <div class="fld"><label>Correo electrónico</label><input class="inp" id="rgMail" type="email" placeholder="nombre@correo.com" value="${esc(pendingAgent?pendingAgent.email:'arenastituana@gmail.com')}"><div class="errtxt">Escribe un correo válido.</div></div>
   <div class="row2"><div class="fld"><label>Teléfono</label><input class="inp" id="rgPhone" placeholder="09X XXX XXXX" value="${esc(pendingAgent?pendingAgent.phone||'':'')}"></div><div class="fld"><label>Tipo</label><select class="inp" id="rgType"><option>Agente independiente</option><option>Inmobiliaria</option><option>Propietario</option></select></div></div>
   <div class="slab" style="margin-top:4px"><span>Verificación · obligatoria</span><span style="color:var(--ink3);font-weight:500">Así los estudiantes confían en ti</span></div>
   <label class="upl ${S.upl.ced?'done':''}" id="uplced"><input type="file" accept="image/*,.pdf" data-up="ced">${ic('i-user','sm')}<span>${S.upl.ced?'✓ Cédula o RUC cargado':'Cédula o RUC (foto o PDF) · obligatorio'}</span></label>
@@ -910,6 +928,7 @@ function studentAuth(mode){
     <div class="idcard"><div class="av" style="background:${UCOL[authUni]}">${ini}</div><div style="flex:1"><b>${esc(id.n)} <span style="color:var(--good)">${ic('i-shield','xs')}</span></b><small>${esc(S.authMail||id.e)} · ${u.n}</small></div></div>
     <form data-form="setup" novalidate>
     <div class="budget"><label style="font-size:13px;font-weight:600;color:var(--ink2)">Presupuesto mensual para arriendo</label><div class="v" id="rgBv">$${S.budget}<small> /mes</small></div><input class="rng" id="rgBudget" type="range" min="80" max="400" step="5" value="${S.budget}" style="--p:${(S.budget-80)/320*100}%"><div class="minmax"><span>$80</span><span>$400</span></div><div class="bcount" id="rgCount"></div></div>
+    <div class="fld"><label>Número de teléfono (para llamadas)</label><input class="inp" id="stPhone" type="tel" placeholder="09X XXX XXXX" value="${esc(S.user&&S.user.phone||'')}"></div>
     <div class="fld"><label>¿De dónde vienes?</label><select class="inp" id="rgOrig">${Object.entries(ORIG).map(([k,o])=>`<option value="${k}" ${k===S.orig?'selected':''}>${o.n}</option>`).join('')}</select></div>
     <div class="switchrow"><div class="t"><b>Avísame de nuevos arriendos</b><small>Cerca de ${u.n} y dentro de tu presupuesto</small></div><button type="button" class="sw ${S.notify?'on':''}" data-act="sw" aria-label="Notificaciones"></button></div>
     <button class="btn pri block" type="submit">Entrar a NidU</button></form>`;}
@@ -923,7 +942,7 @@ function studentAuth(mode){
     <p class="legal">¿Eres agente inmobiliario? <a href="#registro" data-act="role" data-r="agente"><b>Crea una cuenta de agente</b></a></p>`;
 }
 function bindStudentAuth(){const r=$('#rgBudget');if(!r)return;const upc=()=>{const n=countFor(authUni||S.uni,+r.value);$('#rgCount').innerHTML=`${ic('i-home','xs')}${n} arriendo${n===1?'':'s'} dentro de tu presupuesto cerca de ${UNIS[authUni||S.uni].n}`;};r.oninput=()=>{$('#rgBv').innerHTML=`$${r.value}<small> /mes</small>`;r.style.setProperty('--p',(r.value-80)/320*100+'%');upc();};upc();}
-function studentSetup(){S.uni=authUni;S.budget=+$('#rgBudget').value;S.orig=$('#rgOrig').value;const id=UIDENT[authUni];S.user={name:id.n,email:S.authMail||id.e,role:'estudiante',uni:authUni};S.prof=true;store();toast(`¡Listo, ${id.n.split(' ')[0]}! Bienvenid@ a NidU`);go('explorar');}
+function studentSetup(){S.uni=authUni;S.budget=+$('#rgBudget').value;S.orig=$('#rgOrig').value;const id=UIDENT[authUni];S.user={name:id.n,email:S.authMail||id.e,role:'estudiante',uni:authUni,phone:($('#stPhone')?$('#stPhone').value.trim():'')};S.prof=true;store();toast(`¡Listo, ${id.n.split(' ')[0]}! Bienvenid@ a NidU`);go('explorar');}
 function submitSso(){const m=$('#ssoMail').value.trim(),p=$('#ssoPass').value;const dom=UIDENT[authUni].e.split('@')[1];const okMail=/^[^@\s]+@[^@\s]+$/.test(m)&&new RegExp('@'+dom.replace(/[.]/g,'\\.')+'$','i').test(m);const okPass=p.length>0;vfld('#ssoMail',okMail);vfld('#ssoPass',okPass);if(!(okMail&&okPass)){toast('Revisa el correo y la contraseña');return;}S.authMail=m;if(S.prof){S.uni=authUni;S.user={name:UIDENT[authUni].n,email:m,role:'estudiante',uni:authUni};store();toast(`Bienvenid@ de nuevo, ${UIDENT[authUni].n.split(' ')[0]}`);go('explorar');}else{sstep='setup';reAuth();}}
 function vfld(id,ok){const i=$(id);const f=i.closest('.fld');f.classList.toggle('e',!ok);i.classList.toggle('err',!ok);return ok;}
 function submitReg(){
@@ -953,7 +972,7 @@ function notifIcon(k){return {new:'i-pin',price:'i-tag',msg:'i-msg',rev:'i-star'
 function topbar(v){
   const ag=S.user?.role==='agente';const name=S.user?.name||'Invitado';const ini=name.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase();
   const unis=Object.entries(UNIS).map(([k,u])=>`<option value="${k}" ${k===S.uni?'selected':''}>${u.n}</option>`).join('');
-  return `<div class="top"><div class="in"><a class="brand" href="#inicio"><img class="i" src="icon.png" alt="" style="height:34px"><img class="w" src="word.png" alt="NidU" style="height:22px"></a>
+  return `<div class="top"><div class="in"><a class="brand" href="${S.user?(S.user.role==='agente'?'#agente':'#explorar'):'#inicio'}"><img class="i" src="icon.png" alt="" style="height:34px"><img class="w" src="word.png" alt="NidU" style="height:22px"></a>
   ${ag&&v!=='explorar'&&v!=='arriendo'?`<div class="tag blue" style="height:30px;padding:0 12px">${ic('i-building','xs')}Modo agente</div>`:`<div class="unisel"><div class="cap">${ic('i-cap','sm')}</div><div><small>Tu universidad</small><select data-chg="uni">${unis}</select></div></div>
   <div class="tsearch">${ic('i-search','sm')}<input placeholder="Buscar zona o arriendo…" data-chg="q" value="${esc(S.f.q)}"></div>`}
   <div class="sp"></div>
@@ -963,9 +982,9 @@ function topbar(v){
   <div class="menu" id="menu"></div></div>`;
 }
 function openMenu(kind){const m=$('#menu');if(m.classList.contains('on')&&m.dataset.k===kind){m.classList.remove('on');return;}m.dataset.k=kind;
-  if(kind==='bell'){const list=notifList();m.innerHTML=`<h5>Notificaciones</h5>${list.length?list.map(n=>{const clk=n.id&&n.k!=='app';return `<div class="nt"${clk?` data-act="openL" data-id="${n.id}" style="cursor:pointer"`:''}><div class="ib">${ic(notifIcon(n.k),'sm')}</div><div><b>${esc(n.t)}</b><small>${esc(n.s)} · ${n.h}</small></div></div>`}).join(''):'<p style="padding:10px;color:var(--ink3)">Sin novedades</p>'}`;}
+  if(kind==='bell'){const list=notifList();m.innerHTML=`<h5>Notificaciones</h5>${list.length?list.map(n=>{let at='';if(n.k==='link')at=`data-act="linkWiz" data-id="${n.linkId}" style="cursor:pointer"`;else if(n.k==='invite')at=`data-act="go" data-v="amigos" style="cursor:pointer"`;else if(n.id&&n.k!=='app')at=`data-act="openL" data-id="${n.id}" style="cursor:pointer"`;return `<div class="nt" ${at}><div class="ib">${ic(notifIcon(n.k),'sm')}</div><div><b>${esc(n.t)}</b><small>${esc(n.s)} · ${n.h}</small></div></div>`}).join(''):'<p style="padding:10px;color:var(--ink3)">Sin novedades</p>'}`;}
   else{const ag=S.user?.role==='agente';m.innerHTML=S.user?`<div style="padding:10px"><b>${esc(S.user.name)}</b><div style="color:var(--ink3);font-size:13px">${esc(S.user.email)}</div></div>
-   ${ag?`<button class="mi" data-act="go" data-v="agente">${ic('i-grid','sm')}Panel del agente</button><button class="mi" data-act="go" data-v="publicar">${ic('i-plus','sm')}Publicar arriendo</button><button class="mi" data-act="go" data-v="explorar">${ic('i-eye','sm')}Ver como estudiante</button>`:`<button class="mi" data-act="go" data-v="explorar">${ic('i-map','sm')}Explorar arriendos</button><button class="mi" data-act="favs">${ic('i-heart','sm')}Mis favoritos (${S.fav.size})</button><button class="mi" data-act="budget">${ic('i-tag','sm')}Cambiar presupuesto ($${S.budget})</button>`}
+   ${ag?`<button class="mi" data-act="go" data-v="agente">${ic('i-grid','sm')}Panel del agente</button><button class="mi" data-act="go" data-v="publicar">${ic('i-plus','sm')}Publicar arriendo</button><button class="mi" data-act="go" data-v="explorar">${ic('i-eye','sm')}Ver como estudiante</button>`:`<button class="mi" data-act="go" data-v="explorar">${ic('i-map','sm')}Explorar arriendos</button><button class="mi" data-act="go" data-v="amigos">${ic('i-users','sm')}Mis amigos (${S.friends.size})</button><button class="mi" data-act="go" data-v="perfil">${ic('i-user','sm')}Mi perfil</button><button class="mi" data-act="favs">${ic('i-heart','sm')}Mis favoritos (${S.fav.size})</button><button class="mi" data-act="budget">${ic('i-tag','sm')}Cambiar presupuesto ($${S.budget})</button>`}
    <button class="mi" data-act="switchRole">${ic('i-swap','sm')}Cambiar a ${ag?'estudiante':'agente'} (demo)</button><button class="mi" data-act="logout" style="color:var(--bad)">${ic('i-logout','sm')}Cerrar sesión</button>`
    :`<button class="mi" data-act="go" data-v="ingresar">${ic('i-user','sm')}Iniciar sesión</button><button class="mi" data-act="go" data-v="registro">${ic('i-plus','sm')}Crear cuenta</button>`;}
   m.classList.add('on');}
@@ -975,7 +994,7 @@ document.addEventListener('click',e=>{if(!e.target.closest('.menu,[data-act=bell
 let onlyFav=false;
 function results(){const F=S.f;let r=visible().filter(l=>l.price>=F.min&&l.price<=F.max&&km(l)<=F.dist&&(!F.zones.size||F.zones.has(l.zone))&&(!F.types.size||F.types.has(l.type))&&[...F.sv].every(s=>l.sv.includes(s))&&(!F.q||(l.t+' '+l.zone).toLowerCase().includes(F.q.toLowerCase()))&&(!onlyFav||S.fav.has(l.id))&&safety(l.zone).s>=F.safe&&(!F.vph||l.vph));
   const srt={cerca:(a,b)=>km(a)-km(b),precio:(a,b)=>a.price-b.price,valor:(a,b)=>(rating(b)?.avg||0)-(rating(a)?.avg||0),seguro:(a,b)=>safety(b.zone).s-safety(a.zone).s,total:(a,b)=>cost(a).tot-cost(b).tot}[F.sort];return r.sort(srt);}
-function cardHTML(l,opt={}){const d=km(l),f=fair(l.price),z=zfair(l.price,l.zone),sf=safety(l.zone),rt=rating(l),c=cost(l);return `<div class="card" data-act="openL" data-id="${l.id}" data-hov="${l.id}" role="button" tabindex="0"><div class="th">${thumb(l)}${l.isNew?'<span class="tag">Nuevo</span>':''}${l.vph?`<span class="tag blue" style="position:absolute;left:6px;bottom:6px;top:auto">${ic('i-camera','xs')}Verificadas</span>`:''}</div><div><h4>${esc(l.t)}</h4><div class="meta">${ic('i-pin','xs')}${esc(l.zone)} · ${d} km de ${UNIS[S.uni].n}</div><div class="meta2"><span>${ic(d<0.9?'i-walk':'i-bus','xs')}${how(d)}</span><span class="sbadge ${sf.k}">${ic('i-shield','xs')}${sf.lab}</span>${rt?`<span>${stars(rt.avg)} ${rt.avg} (${rt.n})</span>`:''}</div><div class="pr"><span class="price">$${l.price}<small>/mes</small></span><span class="badge ${f.k}">${f.s}</span></div><div class="sub2"><span title="Arriendo + servicios no incluidos + pasajes">≈ <b style="color:var(--ink2)">$${c.tot}</b> costo real/mes</span><span style="color:var(--${z.k==='bad'?'bad':z.k==='good'?'good':'ink3'})">${z.s}</span></div></div>${opt.nofav?'':`<button class="fav ${S.fav.has(l.id)?'on':''}" data-act="fav" data-id="${l.id}" aria-label="Favorito">${ic('i-heart','sm')}</button><button class="cmpb ${S.cmp.has(l.id)?'on':''}" data-act="cmp" data-id="${l.id}" aria-label="Comparar" title="Agregar a comparar">${ic('i-list','sm')}</button>`}</div>`;}
+function cardHTML(l,opt={}){const d=km(l),f=fair(l.price),z=zfair(l.price,l.zone),sf=safety(l.zone),rt=rating(l),c=cost(l);return `<div class="card" data-act="openL" data-id="${l.id}" data-hov="${l.id}" role="button" tabindex="0"><div class="th">${thumb(l)}${l.isNew?'<span class="tag">Nuevo</span>':''}${l.vph?`<span class="tag blue" style="position:absolute;left:6px;bottom:6px;top:auto">${ic('i-camera','xs')}Verificadas</span>`:''}</div><div><h4>${esc(l.t)}</h4><div class="meta">${ic('i-pin','xs')}${esc(l.zone)} · ${d} km de ${UNIS[S.uni].n}</div><div class="meta2"><span>${ic(d<0.9?'i-walk':'i-bus','xs')}${how(d)}</span><span class="sbadge ${sf.k}">${ic('i-shield','xs')}${sf.lab}</span>${rt?`<span>${stars(rt.avg)} ${rt.avg} (${rt.n})</span>`:''}</div><div class="pr"><span class="price">$${l.price}<small>/mes</small></span><span class="badge ${f.k}">${f.s}</span>${l.rented?'<span class="badge" style="background:var(--navy);color:#fff">Ocupado</span>':''}</div><div class="sub2"><span title="Arriendo + servicios no incluidos + pasajes">≈ <b style="color:var(--ink2)">$${c.tot}</b> costo real/mes</span><span style="color:var(--${z.k==='bad'?'bad':z.k==='good'?'good':'ink3'})">${z.s}</span></div></div>${opt.nofav?'':`<button class="fav ${S.fav.has(l.id)?'on':''}" data-act="fav" data-id="${l.id}" aria-label="Favorito">${ic('i-heart','sm')}</button><button class="cmpb ${S.cmp.has(l.id)?'on':''}" data-act="cmp" data-id="${l.id}" aria-label="Comparar" title="Agregar a comparar">${ic('i-list','sm')}</button>`}</div>`;}
 function renderExplore(){
   const F=S.f,U=UNIS[S.uni];const fc=F.zones.size+F.types.size+F.sv.size+(F.min>80||F.max<350?1:0)+(F.dist<8?1:0)+(F.safe?1:0)+(F.vph?1:0);
   $('#explore').innerHTML=`<aside class="side"><div class="hd"><h2 id="rcount"></h2><p>Comparados con tu presupuesto de <b style="color:var(--ink)">$${S.budget}/mes</b> · <a href="#explorar" data-act="budget">cambiar</a></p>
@@ -1069,7 +1088,7 @@ function renderDetail(){const l=S.sel,A=agentOf(l),d=km(l),f=fair(l.price),z=zfa
         <div class="cmpl"><span>$${lo}</span><span><b>Promedio en ${esc(l.zone)}: $${za}</b></span><span>$${hi}</span></div></div>
       <a href="#arriendo" data-act="toCost" class="r" style="display:flex;justify-content:space-between;align-items:center;color:var(--ink)"><span style="font-size:13px;font-weight:700;color:var(--ink2)">COSTO REAL ESTIMADO</span><b style="font-family:var(--hf);font-size:20px;color:var(--navy)">$${c.tot}/mes</b></a>
     </div>
-    <div style="display:grid;gap:10px;margin-top:18px"><button class="btn pri block" data-act="contact">${ic('i-msg','sm')}Contactar al agente</button><button class="btn sec block" data-act="visit">${ic('i-clock','sm')}Agendar visita</button><button class="btn ghost block sm" data-act="cmp" data-id="${l.id}">${ic('i-list','sm')}${S.cmp.has(l.id)?'Quitar de comparar':'Agregar a comparar'}</button></div>
+    <div style="display:grid;gap:10px;margin-top:18px">${l.rented?`<div class="scam" style="background:var(--blue-50)">${ic('i-home','sm')}<div><b>Este arriendo ya está ocupado.</b> Un estudiante se vinculó a través de NidU, así que no recibe nuevas solicitudes.</div></div>`:`<button class="btn pri block" data-act="contact">${ic('i-msg','sm')}Contactar al agente</button><button class="btn sec block" data-act="visit">${ic('i-clock','sm')}Agendar visita</button>${S.user&&S.user.role==='estudiante'?`<button class="btn ghost block sm" data-act="shareRent" data-id="${l.id}">${ic('i-users','sm')}Arrendar con un amigo</button>`:''}<button class="btn ghost block sm" data-act="cmp" data-id="${l.id}">${ic('i-list','sm')}${S.cmp.has(l.id)?'Quitar de comparar':'Agregar a comparar'}</button>`}</div>
     <div class="agent" data-act="agentProfile" data-ag="${l.ag}" style="cursor:pointer"><div class="av" style="background:${A.col}">${A.ini}</div><div style="flex:1"><b>${esc(A.n)} ${A.v?`<span style="color:var(--good)">${ic('i-shield','xs')}</span>`:''}</b><small>${A.rv?`${ic('i-star','xs')} ${A.r} (${A.rv} reseñas) · `:''}Ver perfil completo</small></div><button class="iconbtn" data-act="call" aria-label="Llamar">${ic('i-phone','sm')}</button></div>
     <p style="font-size:12px;color:var(--ink3);margin-top:14px;display:flex;gap:6px">${ic('i-shield','xs')}Nunca pagues sin visitar el arriendo y firmar contrato.</p></div></aside></div>
   <div class="mbar"><div><span class="price" style="font-size:22px">$${l.price}<small>/mes</small></span><div><span class="badge ${f.k}">${f.s}</span></div></div><button class="btn pri" data-act="contact">${ic('i-msg','sm')}Contactar</button></div>`;
@@ -1148,7 +1167,7 @@ function agentProfileHTML(key,viewer){const A=key==='me'?{n:(S.user&&S.user.name
  </div>`;}
 function openAgentProfile(key){modal(`<div class="mh"><h3>Perfil del agente</h3><button class="iconbtn" data-act="close">${ic('i-x')}</button></div><div class="mb">${agentProfileHTML(key,'student')}</div>`,true);}
 function msgRow(m,i){const l=L.find(x=>x.id===m.lid);return `<div class="msg ${m.u?'unread':''}" data-act="readMsg" data-i="${i}"><div class="av" style="background:${m.col}">${m.ini}</div><div style="flex:1;min-width:0"><div style="display:flex;justify-content:space-between"><b>${esc(m.n)}</b><small>${m.h}</small></div><small style="color:var(--blue)">${esc(l?l.t:'')}</small><p>${esc(m.m)}</p></div></div>`;}
-function readMsg(i){const m=S.msgs[i];m.u=false;const l=L.find(x=>x.id===m.lid);modal(`<div class="mh"><h3>${esc(m.n)}</h3><button class="iconbtn" data-act="close">${ic('i-x')}</button></div><div class="mb"><small style="color:var(--blue);font-weight:600">${esc(l?.t||'')}</small><div style="background:var(--bg);padding:12px 14px;border-radius:14px 14px 14px 4px;margin:10px 0 16px;max-width:85%">${esc(m.m)}</div><div class="fld"><label>Tu respuesta</label><textarea class="inp" rows="3">¡Hola! Sí, sigue disponible. Puedes visitarlo el sábado a las 10:00. ¿Te queda bien?</textarea></div></div><div class="mf"><button class="btn pri" data-act="reply">${ic('i-msg','sm')}Responder</button></div>`);renderAgent();}
+function readMsg(i){const m=S.msgs[i];m.u=false;const l=L.find(x=>x.id===m.lid);modal(`<div class="mh"><h3>${esc(m.n)}</h3><button class="iconbtn" data-act="close">${ic('i-x')}</button></div><div class="mb"><small style="color:var(--blue);font-weight:600">${esc(l?.t||'')}</small><div style="background:var(--bg);padding:12px 14px;border-radius:14px 14px 14px 4px;margin:10px 0 16px;max-width:85%">${esc(m.m)}</div><div class="fld"><label>Tu respuesta</label><textarea class="inp" rows="3">¡Hola! Sí, sigue disponible. Puedes visitarlo el sábado a las 10:00. ¿Te queda bien?</textarea></div></div><div class="mf"><button class="btn sec" data-act="sendLink" data-i="${i}">${ic('i-check','sm')}Enviar vinculación</button><button class="btn pri" data-act="reply">${ic('i-msg','sm')}Responder</button></div>`);renderAgent();}
 
 /* ===================== PUBLISH ===================== */
 function renderPublish(){if(!S.pub)S.pub={t:'',type:'Habitación',zone:'Prosperina',price:170,m2:14,bath:'Privado',sv:new Set(['wifi','agua','luz']),x:360,y:304,imgs:[],g:'1 mes',c:'6 meses',r:'Solo estudiantes'};const P=S.pub;
@@ -1168,28 +1187,110 @@ function renderPublish(){if(!S.pub)S.pub={t:'',type:'Habitación',zone:'Prosperi
   </div>
   <aside class="preview"><div class="blk"><h3>Vista previa</h3><p style="font-size:13px;color:var(--ink3);margin:-8px 0 12px">Así lo verá un estudiante con presupuesto de $180</p><div id="pPrev"></div>
    <button class="btn pri block" type="submit" style="margin-top:16px">${ic('i-check','sm')}${S.pub.editId?'Guardar cambios':'Publicar arriendo'}</button><button class="btn ghost block" type="button" data-act="go" data-v="agente" style="margin-top:6px">Guardar borrador</button></div></aside></form>`;
-  const m=initMap($('#pMap'),{ctl:true,onClick:(x,y)=>{P.x=Math.round(x);P.y=Math.round(y);pubPin();pubPrev();},onCenter:()=>m.center(P.x,P.y,1.4)});
+  const m=initMap($('#pMap'),{ctl:true,onClick:(x,y)=>{P.x=Math.round(x);P.y=Math.round(y);const z=nearestZone(P.x,P.y);P.zone=z;const sel=$('#pZ');if(sel)sel.value=z;pubPin();pubPrev();},onCenter:()=>m.center(P.x,P.y,1.4)});
   requestAnimationFrame(()=>m.center(P.x,P.y,1.4));
-  ['pT','pP','pM','pZ','pB','pR'].forEach(id=>$('#'+id).addEventListener('input',pubPrev));
+  ['pT','pP','pM','pB','pR'].forEach(id=>$('#'+id).addEventListener('input',pubPrev));
+  $('#pZ').addEventListener('change',()=>{const z=$('#pZ').value;P.zone=z;const c=ZONEXY[z];if(c){P.x=c[0];P.y=c[1];pubPin();if(MAPS.pMap)MAPS.pMap.center(P.x,P.y,1.5);}pubPrev();});
   $('#phIn').onchange=e=>{[...e.target.files].slice(0,8-P.imgs.length).forEach(f=>P.imgs.push(URL.createObjectURL(f)));pubPhotos();pubPrev();};
   pubPhotos();pubPin();pubPrev();}
 function pubPhotos(){const P=S.pub;$('#phs').innerHTML=`<div class="add" data-act="addPh">${ic('i-camera')}Agregar</div>`+(P.imgs.length?P.imgs.map(s=>`<div class="ph"><img src="${s}" alt=""></div>`).join(''):['cuarto','bano'].map((k,i)=>`<div class="ph" style="opacity:.55">${room(k,0)}</div>`).join(''));}
 function nearestUni(x,y){return Object.entries(UNIS).map(([k,u])=>[k,Math.hypot(x-u.x,y-u.y)/62]).sort((a,b)=>a[1]-b[1])[0];}
+function nearestZone(x,y){return Object.entries(ZONEXY).map(([z,c])=>[z,Math.hypot(x-c[0],y-c[1])]).sort((a,b)=>a[1]-b[1])[0][0];}
 function pubPin(){const P=S.pub,m=MAPS.pMap;m.layer.innerHTML=uniMarkers(nearestUni(P.x,P.y)[0])+`<div class="pin mine" style="left:${P.x}px;top:${P.y}px;--c:var(--blue)"><div class="p">${ic('i-home','xs')}</div><div class="t"></div></div>`;const [u,d]=nearestUni(P.x,P.y);const dd=Math.round(d*10)/10;$('#pLoc').innerHTML=`${ic('i-cap')}<div><b>A ${dd} km de ${UNIS[u].n}</b><div style="color:var(--ink3);font-size:12.5px">${how(dd)} · la universidad más cercana</div></div>`;}
 function pubPrev(){const P=S.pub;P.t=$('#pT').value;P.price=+$('#pP').value||0;P.m2=+$('#pM').value||0;P.zone=$('#pZ').value;P.bath=$('#pB').value;P.r=$('#pR').value;
   const z=zfair(P.price,P.zone);$('#pHint').innerHTML=P.price?`<div class="hintbox ${z.k}">${ic(z.k==='good'?'i-check':'i-tag','sm')}${z.l}</div>`:'';
   const [u]=nearestUni(P.x,P.y);const fake={id:0,t:P.t||'Título de tu arriendo',type:P.type,zone:P.zone,x:P.x,y:P.y,price:P.price,m2:P.m2,pal:0,ag:'carlos',sv:[...P.sv],img:P.imgs[0],isNew:true};
   const old=S.uni;S.uni=u;const b=S.budget;S.budget=180;$('#pPrev').innerHTML=cardHTML(fake,{nofav:true}).replace('data-act="openL"','');S.uni=old;S.budget=b;}
-function submitPub(){const P=S.pub;pubPrev();if(!vfld('#pT',P.t.trim().length>=8)){toast('Falta el título del anuncio');$('#pT').focus();return;}
+function submitPub(){if(submitPub.busy)return;const P=S.pub;pubPrev();if(!vfld('#pT',P.t.trim().length>=8)){toast('Falta el título del anuncio');$('#pT').focus();return;}
+  submitPub.busy=true;setTimeout(()=>{submitPub.busy=false;},1200);
   if(P.editId){const l=L.find(x=>x.id===P.editId);if(l){Object.assign(l,{t:P.t.trim(),type:P.type,zone:P.zone,x:P.x,y:P.y,price:P.price,m2:P.m2,bath:P.bath,sv:[...P.sv],cond:[`Garantía: ${$('#pG').value}`,`Contrato mínimo: ${$('#pC').value}`,P.r].filter(Boolean),img:P.imgs[0],imgs:P.imgs.slice(),desc:$('#pD').value||l.desc});}S.pub=null;toast('Cambios guardados');S.aTab='list';go('agente');return;}
   const l={id:++NID,t:P.t.trim(),type:P.type,zone:P.zone,x:P.x,y:P.y,price:P.price,m2:P.m2,bath:P.bath,sv:[...P.sv],cond:[`Garantía: ${$('#pG').value}`,`Contrato mínimo: ${$('#pC').value}`,P.r].filter(Boolean),ag:(S.user?.name==='Carlos Ríos'?'carlos':'me'),pal:NID%5,isNew:true,views:0,contacts:0,st:true,mine:true,vph:false,img:P.imgs[0],imgs:P.imgs.slice(),desc:$('#pD').value||'Arriendo publicado recientemente en NidU.'};
-  L.unshift(l);REV[l.id]=[];const [u,d]=nearestUni(l.x,l.y);S.notifs.unshift({t:`Nuevo arriendo en ${l.zone}`,s:`${l.t} · $${l.price}/mes`,id:l.id,h:'ahora'});S.pub=null;
-  toast('¡Publicado! Ya aparece en el mapa de los estudiantes');S.aTab='list';go('agente');}
+  L.unshift(l);REV[l.id]=[];S.notifStudent.unshift({t:`Nuevo arriendo en ${l.zone}`,s:`${l.t} · $${l.price}/mes`,id:l.id,h:'ahora',k:'new'});S.pub=null;S.aTab='list';go('agente');publishedModal(l);}
+function publishedModal(l){const z=zfair(l.price,l.zone);modal(`<div class="mh"><h3>¡Arriendo publicado!</h3><button class="iconbtn" data-act="close">${ic('i-x')}</button></div><div class="mb" style="text-align:center"><div style="width:66px;height:66px;border-radius:50%;background:var(--good-50);color:var(--good);display:grid;place-items:center;margin:4px auto 14px">${ic('i-check','lg')}</div><b style="font-size:17px">${esc(l.t)}</b><p style="color:var(--ink2);margin:8px 0 2px">Ya aparece en el mapa de los estudiantes, comparado con su presupuesto.</p><div style="display:flex;gap:10px;align-items:center;justify-content:center;margin-top:12px"><span class="price" style="font-size:22px">$${l.price}<small>/mes</small></span><span class="badge ${z.k}">${z.s.replace(' de la zona','')}</span></div></div><div class="mf"><button class="btn sec" data-act="go" data-v="publicar">Publicar otro</button><button class="btn pri" data-act="close">Ver mis arriendos</button></div>`);}
+
+/* ===================== STUDENT: PROFILE / FRIENDS / LINKING ===================== */
+let INVID=10, LINKID=0, wizStep=0, wizLink=null, wizPay='transfer', wizComp=false;
+function myRentals(){return L.filter(l=>l.rented&&(l.tenants||[]).some(t=>t.n===(S.user&&S.user.name)));}
+function myTenant(l){return (l.tenants||[]).find(t=>t.n===(S.user&&S.user.name))||{};}
+function invFrom(i){return i.from==='ext'?{n:i.extName,from:i.extFrom,col:'#B07400'}:FR[i.from];}
+
+function renderStudentProfile(){
+  if(!S.user){go('ingresar');return;}
+  const name=S.user.name, ini=name.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase();
+  const from=(ORIG[S.orig]||ORIG.otra).n, uni=UNIS[S.uni].n, rt=S.myRating;
+  const ren=myRentals(), pend=S.links.filter(x=>x.status!=='done');
+  const revCount=S.myHistory.filter(h=>h.r).length;
+  $('#sprofile').innerHTML=`<div class="crumb"><button data-act="go" data-v="explorar">${ic('i-back','sm')}Volver a explorar</button></div>
+  <div class="blk"><div class="prof">
+    <div class="prof-head"><div class="av" style="background:#0469E6">${ini}</div><div style="flex:1"><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><h2 style="font-size:24px;color:var(--navy)">${esc(name)}</h2><span class="badge good">${ic('i-shield','xs')}Estudiante verificado</span></div><div style="color:var(--ink2);margin-top:4px">Viene de ${esc(from)} · estudia en ${esc(uni)}</div><div style="display:flex;gap:5px;align-items:center;margin-top:6px">${stars(rt.v)} <b>${rt.v}</b><span style="color:var(--ink3)">que te dan los arrendadores (${rt.n})</span></div></div></div>
+    <div class="prof-stats"><div><b>${ren.length}</b><small>Arrendando ahora</small></div><div><b>${S.myHistory.length}</b><small>Lugares</small></div><div><b>${revCount}</b><small>Opiniones</small></div><div><b>${S.friends.size}</b><small>Amigos</small></div></div>
+    <div class="scam" style="margin-top:14px">${ic('i-shield','sm')}<div>Tu calificación la dan los arrendadores con los que has arrendado. Les ayuda a decidir cuando quieras arrendar un lugar nuevo.</div></div>
+  </div></div>
+  <div class="blk"><h3>Dónde estás arrendando</h3>${ren.length?ren.map(l=>{const t=myTenant(l),mates=t.mates||[];return `<div class="tenant"><div class="th2"><div class="th" style="width:46px;height:46px;border-radius:12px;overflow:hidden;flex:none">${thumb(l)}</div><div style="flex:1"><b>${esc(l.t)}</b><small>${esc(l.zone)} · $${l.price}/mes</small></div><span class="badge ${mates.length?'':'good'}" ${mates.length?'style="background:var(--blue-50);color:var(--blue)"':''}>${mates.length?'Con roomies':'Vives solo/a'}</span></div><div class="tgrid"><div><small>Desde</small><b>${esc(t.since||'—')}</b></div><div><small>Tiempo</small><b>${t.months||0} ${t.months===1?'mes':'meses'}</b></div><div><small>${mates.length?'Roomies':'Compañía'}</small><b>${mates.length?esc(mates.join(', ')):'Solitario'}</b></div><div><small>Próximo pago</small><b>${esc(t.next||'—')}</b></div></div></div>`}).join(''):`<p style="color:var(--ink3)">Ahora mismo no estás arrendando. Cuando te vincules a un arriendo, aparecerá aquí (con quién vives y hasta cuándo).</p>`}</div>
+  ${pend.length?`<div class="blk"><h3>Solicitudes de vinculación</h3>${pend.map(x=>{const l=L.find(z=>z.id===x.lid);return `<div class="tenant"><div class="th2"><div class="th" style="width:46px;height:46px;border-radius:12px;overflow:hidden;flex:none">${thumb(l)}</div><div style="flex:1"><b>${esc(l.t)}</b><small>${esc(agentOf(l).n)} quiere vincularte · sigue los pasos para pagar y subir el comprobante</small></div><button class="btn pri sm" data-act="linkWiz" data-id="${x.id}">Continuar</button></div></div>`}).join('')}</div>`:''}
+  <div class="blk"><h3>Historial de arriendos y tus reseñas</h3>${S.myHistory.map(h=>`<div class="tenant" style="margin-bottom:8px"><div class="th2"><div style="flex:1"><b>${esc(h.t)}</b><small>${esc(h.dur)}</small></div>${h.r?stars(h.r):'<span style="color:var(--ink3);font-size:12px">Sin reseña</span>'}</div>${h.t2?`<p style="color:var(--ink2);font-size:13px;margin:8px 0 0">${esc(h.t2)}</p>`:''}</div>`).join('')}</div>
+  <div class="blk"><h3>Tu cuenta</h3>
+    <div class="fld"><label>Número de teléfono (para llamadas)</label><input class="inp" id="spPhone" type="tel" placeholder="09X XXX XXXX" value="${esc(S.user.phone||'')}"></div>
+    <button class="btn pri sm" data-act="savePhone">Guardar teléfono</button>
+    <div style="display:grid;gap:8px;margin-top:16px"><button class="mi" data-act="reportBug">${ic('i-x','sm')}Reportar un error</button><button class="mi" data-act="support">${ic('i-msg','sm')}Contactar a servicio al cliente</button><button class="mi" data-act="delAcct" style="color:var(--bad)">${ic('i-logout','sm')}Eliminar mi cuenta</button></div>
+    <p style="font-size:12px;color:var(--ink3);margin-top:12px">Aquí solo puedes cambiar tu teléfono. Tu nombre y correo vienen de tu cuenta universitaria.</p>
+  </div>`;
+}
+
+function renderFriends(){
+  if(!S.user){go('ingresar');return;}
+  const inc=S.invites.filter(i=>i.to==='me'&&i.status==='pending');
+  const fr=[...S.friends].map(k=>({k,...FR[k]})).filter(x=>x.n);
+  $('#friends').innerHTML=`<div class="crumb"><button data-act="go" data-v="explorar">${ic('i-back','sm')}Volver a explorar</button></div>
+  <div class="ahead"><div><h1 style="font-size:28px;color:var(--navy);font-weight:900;font-family:var(--hf)">Mis amigos</h1><p style="color:var(--ink2)">Agrega a otros estudiantes para arrendar juntos y ver dónde están viviendo.</p></div><button class="btn pri" data-act="addFriend">${ic('i-plus','sm')}Agregar amigo</button></div>
+  ${inc.length?`<div class="blk"><h3>Invitaciones para arrendar</h3>${inc.map(i=>{const l=L.find(z=>z.id===i.lid),f=invFrom(i);return `<div class="tenant"><div class="th2"><div class="av" style="background:${f.col}">${f.n.split(' ').map(w=>w[0]).slice(0,2).join('')}</div><div style="flex:1"><b>${esc(f.n)} te invitó a arrendar</b><small>${esc(l.t)} · ${esc(l.zone)} · $${l.price}/mes</small></div></div><div style="display:flex;gap:8px;margin-top:10px"><button class="btn pri sm" data-act="invAccept" data-id="${i.id}">Aceptar</button><button class="btn ghost sm" data-act="invReject" data-id="${i.id}">Rechazar</button></div></div>`}).join('')}</div>`:''}
+  <div class="blk"><h3>Amigos (${fr.length})</h3>${fr.length?`<div class="prof-list">${fr.map(friendCard).join('')}</div>`:`<p style="color:var(--ink3)">Aún no agregas amigos. Toca “Agregar amigo”. Solo puedes agregar a otros estudiantes.</p>`}</div>`;
+}
+function friendCard(f){const r=f.renting;return `<div class="tenant"><div class="th2"><div class="av" style="background:${f.col}">${f.n.split(' ').map(w=>w[0]).slice(0,2).join('')}</div><div style="flex:1"><b>${esc(f.n)}</b><small>Viene de ${esc(f.from)} · ${esc(f.u)}</small></div><span style="display:flex;gap:4px;align-items:center">${stars(f.rating)}<b style="font-size:13px">${f.rating}</b></span></div>
+ <div class="tgrid"><div><small>Estado</small><b>${r?'Arrendando':'Disponible'}</b></div><div><small>${r?'Dónde y hasta':'Lugares que ha arrendado'}</small><b>${r?esc(r.where)+' · '+esc(r.until):f.places.length+' lugar'+(f.places.length===1?'':'es')}</b></div><div><small>Compañía</small><b>${r?((r.mates&&r.mates.length)?'Con '+esc(r.mates.join(', ')):'Solitario'):'—'}</b></div><div><small>Opiniones</small><b>${f.reviews} reseñas</b></div></div>
+ <div style="display:flex;gap:8px;margin-top:12px"><button class="btn sec sm" data-act="inviteFriend" data-k="${f.k}">${ic('i-users','xs')}Invitar a arrendar</button><button class="btn ghost sm" data-act="rmFriend" data-k="${f.k}">Quitar</button></div></div>`;
+}
+function addFriendModal(){const avail=Object.entries(FR).filter(([k])=>!S.friends.has(k));modal(`<div class="mh"><h3>Agregar amigo</h3><button class="iconbtn" data-act="close">${ic('i-x')}</button></div><div class="mb">${avail.length?avail.map(([k,f])=>`<div class="tenant" style="margin-bottom:10px"><div class="th2"><div class="av" style="background:${f.col}">${f.n.split(' ').map(w=>w[0]).slice(0,2).join('')}</div><div style="flex:1"><b>${esc(f.n)}</b><small>Viene de ${esc(f.from)} · estudia en ${esc(f.u)}</small></div><button class="btn pri sm" data-act="addFr2" data-k="${k}">Agregar</button></div></div>`).join(''):'<p style="color:var(--ink3)">Ya agregaste a todos los estudiantes de ejemplo.</p>'}<p style="font-size:12px;color:var(--ink3);margin-top:6px">Solo puedes agregar a otros estudiantes. Lista de ejemplo del prototipo.</p></div>`);}
+function inviteModal(fk){const cands=L.filter(l=>l.st&&!l.rented&&l.type==='Compartido');modal(`<div class="mh"><h3>Invitar a ${esc(FR[fk].n.split(' ')[0])}</h3><button class="iconbtn" data-act="close">${ic('i-x')}</button></div><div class="mb"><p style="color:var(--ink2);margin-bottom:12px">Elige un arriendo compartido para arrendar juntos.</p>${cands.length?cands.map(l=>`<div class="tenant" style="margin-bottom:8px"><div class="th2"><div class="th" style="width:44px;height:44px;border-radius:10px;overflow:hidden;flex:none">${thumb(l)}</div><div style="flex:1"><b>${esc(l.t)}</b><small>${esc(l.zone)} · $${l.price}/mes</small></div><button class="btn pri sm" data-act="shInv" data-k="${fk}" data-id="${l.id}">Invitar aquí</button></div></div>`).join(''):'<p style="color:var(--ink3)">No hay arriendos compartidos disponibles ahora.</p>'}</div>`);}
+function shareModal(lid){const l=L.find(x=>x.id===lid);const fr=[...S.friends].map(k=>({k,...FR[k]})).filter(x=>x.n&&!x.renting);
+  const fh=fr.length?fr.map(f=>`<div class="tenant" style="margin-bottom:8px"><div class="th2"><div class="av" style="background:${f.col}">${f.n.split(' ').map(w=>w[0]).slice(0,2).join('')}</div><div style="flex:1"><b>${esc(f.n)}</b><small>${esc(f.from)} · ${esc(f.u)}</small></div><button class="btn pri sm" data-act="shInv" data-k="${f.k}" data-id="${lid}">Invitar</button></div></div>`).join(''):'<p style="color:var(--ink3)">No tienes amigos disponibles. Agrégalos en “Mis amigos”.</p>';
+  modal(`<div class="mh"><h3>Arrendar con alguien</h3><button class="iconbtn" data-act="close">${ic('i-x')}</button></div><div class="mb"><p style="color:var(--ink2);margin-bottom:12px">${esc(l.t)} · $${l.price}/mes. Invita a un amigo o deja tu cupo abierto para otro estudiante.</p><div class="slab" style="margin-top:0"><span>Invitar a un amigo</span></div>${fh}<div class="slab"><span>o</span></div><button class="btn sec block" data-act="shOpen" data-id="${lid}">${ic('i-users','sm')}Dejar abierto para otro estudiante</button></div>`);}
+function joinShared(lid,mates){const l=L.find(x=>x.id===lid);if(!l)return;l.rented=true;l.tenants=l.tenants||[];let me=l.tenants.find(t=>t.n===S.user.name);if(!me){me={n:S.user.name,from:(ORIG[S.orig]||ORIG.otra).n,u:UNIS[S.uni].n,since:'nov 2026',months:0,pay:'al día',amount:l.price,next:'1 dic 2026',mates:[]};l.tenants.push(me);}me.mates=[...new Set([...(me.mates||[]),...mates])];}
+function createInvite(toKey,lid){const l=L.find(x=>x.id===lid);const id=++INVID;S.invites.push({id,lid,from:'me',to:toKey,status:'pending',h:'ahora'});closeModal();toast(`Invitación enviada a ${FR[toKey].n.split(' ')[0]}`);
+  setTimeout(()=>{const inv=S.invites.find(i=>i.id===id);if(inv&&inv.status==='pending'){inv.status='aceptado';joinShared(lid,[FR[toKey].n]);S.notifStudent.unshift({t:`${FR[toKey].n} aceptó tu invitación`,s:`Arrendarán juntos: ${l.t}`,id:lid,h:'ahora',k:'invite'});toast(`${FR[toKey].n.split(' ')[0]} aceptó tu invitación`);const v=location.hash.slice(1);if(v==='amigos')renderFriends();else if(v==='perfil')renderStudentProfile();else if($('#appTop'))$('#appTop').innerHTML=topbar(v);}},5000);}
+function createOpen(lid){const l=L.find(x=>x.id===lid);closeModal();toast('Dejamos tu cupo abierto. Te avisaremos cuando alguien quiera arrendar contigo');
+  setTimeout(()=>{const id=++INVID;S.invites.push({id,lid,from:'ext',extName:'Camila Ruiz',extFrom:'Portoviejo',to:'me',status:'pending',h:'ahora'});S.notifStudent.unshift({t:'Alguien quiere arrendar contigo',s:`Camila Ruiz (Portoviejo) · ${l.t}`,id:lid,h:'ahora',k:'invite'});const v=location.hash.slice(1);if(v==='amigos')renderFriends();else if($('#appTop'))$('#appTop').innerHTML=topbar(v);toast('Un estudiante quiere arrendar contigo');},6000);}
+function acceptInvite(id){const inv=S.invites.find(i=>i.id===id);if(!inv)return;const f=invFrom(inv),l=L.find(x=>x.id===inv.lid);inv.status='aceptado';joinShared(inv.lid,[f.n]);S.notifStudent.unshift({t:'Arriendo compartido confirmado',s:`Arrendarás ${l.t} con ${f.n}`,id:inv.lid,h:'ahora',k:'invite'});toast('¡Aceptaste! Ahora arriendan juntos');renderFriends();}
+function rejectInvite(id){const inv=S.invites.find(i=>i.id===id);if(!inv)return;inv.status='rechazado';toast('Invitación rechazada');renderFriends();}
+
+/* ---- Vinculación (agente -> estudiante) ---- */
+function sendLink(i){const m=S.msgs[i];const l=L.find(x=>x.id===m.lid);if(!l){toast('No encontramos el arriendo');return;}if(l.rented){toast('Ese arriendo ya está ocupado');return;}const id=++LINKID;S.links.push({id,lid:l.id,student:m.n,status:'pending',h:'ahora'});S.notifStudent.unshift({t:'Solicitud de vinculación',s:`${agentOf(l).n} quiere vincularte con ${l.t}`,id:l.id,linkId:id,h:'ahora',k:'link'});closeModal();toast('Solicitud de vinculación enviada al estudiante');}
+function linkWizard(id){const lk=S.links.find(x=>x.id===id);if(!lk){toast('Esa solicitud ya no existe');return;}if(lk.status==='done'){toast('Ya estás vinculado a este arriendo');return;}wizLink=lk;wizStep=1;wizPay='transfer';wizComp=false;renderWiz();}
+function renderWiz(){const lk=wizLink,l=L.find(x=>x.id===lk.lid),A=agentOf(l);
+  if(wizStep===1){modal(`<div class="mh"><h3>Vincularte · paso 1 de 3</h3><button class="iconbtn" data-act="close">${ic('i-x')}</button></div><div class="mb"><p style="color:var(--ink2);margin-bottom:12px">Ya acordaste las condiciones con el agente. Revisa y continúa para pagar y subir tu comprobante.</p>
+   <div class="tenant"><div class="th2"><div class="th" style="width:46px;height:46px;border-radius:12px;overflow:hidden;flex:none">${thumb(l)}</div><div style="flex:1"><b>${esc(l.t)}</b><small>${esc(l.zone)} · $${l.price}/mes</small></div></div><div class="tgrid"><div><small>Agente</small><b>${esc(A.n)}</b></div><div><small>Garantía</small><b>1 mes</b></div><div><small>Primer pago</small><b>$${l.price}</b></div><div><small>Estado</small><b>Por vincular</b></div></div></div></div>
+   <div class="mf"><button class="btn ghost" data-act="close">Cancelar</button><button class="btn pri" data-act="wizNext">Continuar al pago${ic('i-chev','sm')}</button></div>`);}
+  else if(wizStep===2){modal(`<div class="mh"><h3>Pago · paso 2 de 3</h3><button class="iconbtn" data-act="close">${ic('i-x')}</button></div><div class="mb">
+   <div class="seg" style="margin:0 0 14px"><button type="button" class="${wizPay==='transfer'?'on':''}" data-act="wizPayKind" data-k="transfer">Transferencia</button><button type="button" class="${wizPay==='card'?'on':''}" data-act="wizPayKind" data-k="card">Tarjeta</button></div>
+   <div id="wizPayBody"></div>
+   <div class="scam" style="margin-top:14px">${ic('i-shield','sm')}<div><b>Prototipo de NidU: no se cobra nada.</b> No ingreses datos reales de una tarjeta ni hagas transferencias; cualquier dato sirve solo para la demostración.</div></div></div>
+   <div class="mf"><button class="btn ghost" data-act="wizBack">Volver</button><button class="btn pri" data-act="wizNext">Ya realicé el pago${ic('i-chev','sm')}</button></div>`);wizPayBody();}
+  else if(wizStep===3){modal(`<div class="mh"><h3>Comprobante · paso 3 de 3</h3><button class="iconbtn" data-act="close">${ic('i-x')}</button></div><div class="mb"><p style="color:var(--ink2);margin-bottom:12px">Sube una foto o PDF del comprobante de pago para completar la vinculación.</p>
+   <label class="upl ${wizComp?'done':''}"><input type="file" id="wizFile" accept="image/*,.pdf">${ic('i-camera','sm')}<span id="wizFileLbl">${wizComp?'✓ Comprobante cargado':'Comprobante de pago (foto o PDF)'}</span></label>
+   <p style="font-size:12px;color:var(--ink3);margin-top:10px">El agente revisará tu comprobante. En el prototipo se acepta cualquier archivo.</p></div>
+   <div class="mf"><button class="btn ghost" data-act="wizBack">Volver</button><button class="btn pri" id="wizDone" data-act="wizFinish" ${wizComp?'':'disabled'}>Enviar y vincularme</button></div>`);
+   const f=$('#wizFile');if(f)f.onchange=()=>{if(f.files[0]){wizComp=true;$('#wizFileLbl').textContent='✓ '+f.files[0].name;f.closest('.upl').classList.add('done');const b=$('#wizDone');if(b)b.disabled=false;}};}
+}
+function wizPayBody(){const l=L.find(x=>x.id===wizLink.lid);const el=$('#wizPayBody');if(!el)return;
+  if(wizPay==='transfer'){el.innerHTML=`<div class="tenant"><div style="font-size:13.5px;color:var(--ink2)"><b style="color:var(--ink)">Datos para transferencia (demo)</b><div style="margin-top:8px;display:grid;gap:4px"><div>Banco: Banco del Prototipo</div><div>Cuenta de ahorros: 22-0000-0000</div><div>A nombre de: NidU S.A. (demostración)</div><div>Monto: <b>$${l.price}</b> · Referencia: NIDU-${wizLink.id}</div></div></div></div>`;}
+  else{el.innerHTML=`<div class="fld"><label>Número de tarjeta</label><input class="inp" inputmode="numeric" placeholder="4242 4242 4242 4242"></div><div class="row2"><div class="fld"><label>Vencimiento</label><input class="inp" placeholder="MM/AA"></div><div class="fld"><label>CVV</label><input class="inp" inputmode="numeric" placeholder="123"></div></div>`;}
+}
+function finishLink(){const lk=wizLink;const l=L.find(x=>x.id===lk.lid);lk.status='done';l.rented=true;l.tenants=[{n:S.user.name,from:(ORIG[S.orig]||ORIG.otra).n,u:UNIS[S.uni].n,since:'nov 2026',months:0,pay:'al día',amount:l.price,next:'1 dic 2026',mates:[]}];S.notifAgent.unshift({t:'Vinculación completada',s:`${S.user.name} se vinculó a ${l.t} y subió su comprobante`,id:l.id,h:'ahora',k:'link'});S.notifStudent.unshift({t:'¡Vinculación completada!',s:`Ya estás vinculado a ${l.t}. El arriendo quedó como ocupado`,id:l.id,h:'ahora',k:'link'});closeModal();toast('¡Vinculación completada! El arriendo quedó ocupado');go('perfil');}
 
 /* ===================== EVENTS ===================== */
 document.addEventListener('click',e=>{const a=e.target.closest('[data-act]');if(!a)return;const act=a.dataset.act,id=+a.dataset.id;
   switch(act){
-  case 'go':e.preventDefault();$('#menu')?.classList.remove('on');if(a.dataset.v==='registro'||a.dataset.v==='ingresar'){regRole='estudiante';sstep='pick';authUni=null;agentPay=false;agentTab=(a.dataset.v==='ingresar'?'login':'register');}go(a.dataset.v);break;
+  case 'go':e.preventDefault();closeModal();$('#menu')?.classList.remove('on');if(a.dataset.v==='registro'||a.dataset.v==='ingresar'){regRole='estudiante';sstep='pick';authUni=null;agentPay=false;agentTab=(a.dataset.v==='ingresar'?'login':'register');}go(a.dataset.v);break;
   case 'agentSignup':regRole='agente';go('registro');break;
   case 'role':e.preventDefault();regRole=a.dataset.r;sstep='pick';authUni=null;agentPay=false;reAuth();break;
   case 'agentTab':agentTab=a.dataset.t;agentPay=false;reAuth();break;
@@ -1204,7 +1305,7 @@ document.addEventListener('click',e=>{const a=e.target.closest('[data-act]');if(
   case 'ssoGo':submitSso();break;
   case 'guest':toast('Explorando como invitado');go('explorar');break;
   case 'sw':S.notify=!S.notify;a.classList.toggle('on',S.notify);break;
-  case 'demo':if(a.dataset.r==='agente'){S.verif='ok';S.subscribed=true;}S.user=a.dataset.r==='agente'?{name:'Carlos Ríos',email:'carlos.rios@nidu.ec',role:'agente'}:{name:'Juan Pablo Arenas',email:'jparenas@espol.edu.ec',role:'estudiante',uni:'espol'};S.prof=true;store();toast(`Entraste como ${S.user.name}`);go(S.user.role==='agente'?'agente':'explorar');break;
+  case 'demo':if(a.dataset.r==='agente'){S.verif='ok';S.subscribed=true;}S.user=a.dataset.r==='agente'?{name:'Carlos Ríos',email:'carlos.rios@nidu.ec',role:'agente'}:{name:'Juan Pablo Arenas',email:'jparenas@espol.edu.ec',role:'estudiante',uni:'espol',phone:'098 123 4567'};S.prof=true;store();toast(`Entraste como ${S.user.name}`);go(S.user.role==='agente'?'agente':'explorar');break;
   case 'forgot':e.preventDefault();toast('Te enviaríamos un enlace para restablecerla (demo)');break;
   case 'menu':openMenu('menu');break;
   case 'bell':openMenu('bell');break;
@@ -1256,6 +1357,27 @@ document.addEventListener('click',e=>{const a=e.target.closest('[data-act]');if(
   case 'addPh':$('#phIn').click();break;
   case 'pType':S.pub.type=a.dataset.t;a.parentNode.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b===a));pubPrev();break;
   case 'pSv':{const s=a.dataset.s;S.pub.sv.has(s)?S.pub.sv.delete(s):S.pub.sv.add(s);a.classList.toggle('on');pubPrev();break;}
+  case 'addFriend':addFriendModal();break;
+  case 'addFr2':S.friends.add(a.dataset.k);store();closeModal();toast('Amigo agregado');if(location.hash==='#amigos')renderFriends();break;
+  case 'rmFriend':S.friends.delete(a.dataset.k);store();renderFriends();break;
+  case 'inviteFriend':inviteModal(a.dataset.k);break;
+  case 'shareRent':shareModal(id);break;
+  case 'shInv':createInvite(a.dataset.k,id);break;
+  case 'shOpen':createOpen(id);break;
+  case 'invAccept':acceptInvite(id);break;
+  case 'invReject':rejectInvite(id);break;
+  case 'sendLink':sendLink(+a.dataset.i);break;
+  case 'linkWiz':$('#menu')?.classList.remove('on');closeModal();linkWizard(id);break;
+  case 'wizNext':wizStep++;renderWiz();break;
+  case 'wizBack':wizStep--;renderWiz();break;
+  case 'wizPayKind':wizPay=a.dataset.k;renderWiz();break;
+  case 'wizFinish':finishLink();break;
+  case 'savePhone':S.user.phone=$('#spPhone').value.trim();store();toast('Teléfono actualizado');break;
+  case 'reportBug':modal(`<div class="mh"><h3>Reportar un error</h3><button class="iconbtn" data-act="close">${ic('i-x')}</button></div><div class="mb"><div class="fld"><label>¿Qué salió mal?</label><textarea class="inp" rows="4" placeholder="Describe el error que viste en la app…"></textarea></div></div><div class="mf"><button class="btn pri" data-act="sendBug">Enviar reporte</button></div>`);break;
+  case 'sendBug':closeModal();toast('Gracias. Enviamos tu reporte al equipo de NidU');break;
+  case 'support':modal(`<div class="mh"><h3>Servicio al cliente</h3><button class="iconbtn" data-act="close">${ic('i-x')}</button></div><div class="mb"><p style="color:var(--ink2)">Estamos para ayudarte. En este prototipo los canales son de demostración.</p><div style="display:grid;gap:8px;margin-top:10px;color:var(--ink2)"><div>${ic('i-mail','sm')} ayuda@nidu.ec</div><div>${ic('i-phone','sm')} 04 500 0000</div><div>${ic('i-msg','sm')} Chat en la app (9:00–18:00)</div></div></div><div class="mf"><button class="btn pri" data-act="close">Entendido</button></div>`);break;
+  case 'delAcct':modal(`<div class="mh"><h3>Eliminar cuenta</h3><button class="iconbtn" data-act="close">${ic('i-x')}</button></div><div class="mb"><p style="color:var(--ink2)">¿Seguro que quieres eliminar tu cuenta? Perderás tus favoritos, amigos y vinculaciones. Esta acción no se puede deshacer.</p></div><div class="mf"><button class="btn ghost" data-act="close">Cancelar</button><button class="btn pri" style="background:var(--bad);box-shadow:none" data-act="delAcct2">Eliminar definitivamente</button></div>`);break;
+  case 'delAcct2':S.user=null;S.friends=new Set();S.fav=new Set();S.links=[];store();closeModal();toast('Tu cuenta fue eliminada (demo)');go('inicio');break;
   }});
 document.addEventListener('change',e=>{const up=e.target.dataset.up;if(up){const f=e.target.files[0];if(f){S.upl[up]=true;const lb=e.target.closest('.upl');lb.classList.add('done');lb.classList.remove('bad');lb.querySelector('span').textContent='✓ '+f.name;if(up==='ced')$('#cedErr').style.display='none';}return;}const c=e.target.dataset.chg;if(!c)return;if(c==='uni'){S.uni=e.target.value;store();const v=location.hash.slice(1);if(v==='arriendo')renderDetail();else{go('explorar');renderExplore();}}if(c==='sort'){S.f.sort=e.target.value;paintResults();}if(c==='orig'){S.orig=e.target.value;store();renderDetail();document.getElementById('costo').scrollIntoView({block:'center'});}});
 document.addEventListener('input',e=>{if(e.target.dataset.chg==='q'){S.f.q=e.target.value;if(location.hash!=='#explorar'){go('explorar');}else paintResults();}});
