@@ -19,7 +19,7 @@ js/
                     (renderLanding, renderAuth, renderExplore, renderDetail,
                     renderAgent, renderPublish, perfil/amigos/zonas y modales).
   app.js            Delegación de eventos (un solo listener por tipo) y arranque.
-icon*.png word*.png  Logotipos.
+resources/            Logotipos (.png) y el mapa de navegación del prototipo (nidu-mapa-navegacion.html).
 ```
 
 Los scripts se cargan como scripts clásicos en orden (`data → ui → app`) y

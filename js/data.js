@@ -73,6 +73,7 @@ L.forEach(l=>{const k=(l.id*7)%RPOOL.length;const n=(l.id===7||l.id===14)?1:(l.i
 const S={user:null,uni:'espol',budget:180,notify:true,fav:new Set([3]),sel:null,dir:'ida',orig:'milagro',verif:null,prof:false,authMail:null,cmp:new Set(),rvStar:5,upl:{},
   f:{min:80,max:350,zones:new Set(),types:new Set(),sv:new Set(),dist:8,sort:'cerca',q:'',safe:0,vph:false},
   subscribed:false,
+  preview:false,
   notifStudent:[{t:'Nuevo arriendo cerca de ESPOL',s:'Habitación amoblada en Prosperina · $170/mes',id:1,h:'hace 2 h',k:'new'},{t:'Bajó de precio',s:'Cuarto con baño privado · ahora $150',id:3,h:'ayer',k:'price'}],
   notifAgent:[{t:'Nuevo mensaje de Juan Pablo Arenas',s:'Sobre: Habitación amoblada en Prosperina',id:1,h:'10:24',k:'msg'},{t:'Nueva reseña · 4★',s:'Mini depa en Ceibos Norte: "Buen internet para clases"',id:2,h:'ayer',k:'rev'},{t:'Un usuario reportó un anuncio',s:'Cuarto en Urdesa Central: las fotos no coinciden',id:10,h:'hace 2 días',k:'report'},{t:'Pago atrasado',s:'Doménica Vera lleva 8 días de atraso · Mini depa en Ceibos',id:2,h:'hace 3 días',k:'pay'}],
   notifApp:[{t:'Novedad en NidU',s:'Ahora puedes comparar hasta 3 arriendos lado a lado',h:'esta semana',k:'app'},{t:'Mejoramos el mapa y las rutas de bus',s:'Más rápido y con líneas actualizadas por universidad',h:'hace 1 semana',k:'app'}],

@@ -2,7 +2,9 @@
    Prototipo de arriendos para estudiantes foráneos (ESPOL / Guayaquil).
    Archivo generado al refactorizar el HTML monolítico en módulos. */
 /* ===================== EVENTS ===================== */
+const GATED=new Set(['contact','visit','confirmVisit','review','star','fav','shareRent','shInv','shOpen','inviteFriend','addFriend','addFr2','rmFriend','invAccept','invReject','zoneOpine','zoneSend','linkWiz','savePhone','delAcct','delAcct2','support','reportBug','sendBug','sendChat','openChat','cancelVisit','reVisit','editL','toggleL','tenant','remind','reply','readMsg','sendLink']);
 document.addEventListener('click',e=>{const a=e.target.closest('[data-act]');if(!a)return;const act=a.dataset.act,id=+a.dataset.id;
+  if(needLogin()&&(GATED.has(act)||(act==='go'&&a.dataset.v==='publicar'))){e.preventDefault();loginGate();return;}
   switch(act){
   case 'go':e.preventDefault();closeModal();$('#menu')?.classList.remove('on');if(a.dataset.v==='registro'||a.dataset.v==='ingresar'){regRole='estudiante';sstep='pick';authUni=null;agentPay=false;agentTab=(a.dataset.v==='ingresar'?'login':'register');}go(a.dataset.v);break;
   case 'agentSignup':regRole='agente';go('registro');break;
@@ -17,13 +19,12 @@ document.addEventListener('click',e=>{const a=e.target.closest('[data-act]');if(
   case 'uniPick':authUni=a.dataset.u;sstep='sso';reAuth();break;
   case 'ssoBack':sstep='pick';authUni=null;reAuth();break;
   case 'ssoGo':submitSso();break;
-  case 'guest':toast('Explorando como invitado');go('explorar');break;
   case 'sw':S.notify=!S.notify;a.classList.toggle('on',S.notify);break;
-  case 'demo':if(a.dataset.r==='agente'){S.verif='ok';S.subscribed=true;}S.user=a.dataset.r==='agente'?{name:'Carlos Ríos',email:'carlos.rios@nidu.ec',role:'agente'}:{name:'Juan Pablo Arenas',email:'jparenas@espol.edu.ec',role:'estudiante',uni:'espol',phone:'098 123 4567'};S.prof=true;store();toast(`Entraste como ${S.user.name}`);go(S.user.role==='agente'?'agente':'explorar');break;
+  case 'demo':S.preview=true;if(a.dataset.r==='agente'){S.verif='ok';S.subscribed=true;}S.user=a.dataset.r==='agente'?{name:'Carlos Ríos',email:'carlos.rios@nidu.ec',role:'agente'}:{name:'Juan Pablo Arenas',email:'jparenas@espol.edu.ec',role:'estudiante',uni:'espol',phone:'098 123 4567'};S.prof=true;store();toast(`Entraste como ${S.user.name}`);go(S.user.role==='agente'?'agente':'explorar');break;
   case 'forgot':e.preventDefault();toast('Te enviaríamos un enlace para restablecerla (demo)');break;
   case 'menu':openMenu('menu');break;
   case 'bell':openMenu('bell');break;
-  case 'logout':S.user=null;store();toast('Sesión cerrada');go('inicio');break;
+  case 'logout':S.user=null;S.preview=false;store();toast('Sesión cerrada');go('inicio');break;
   case 'switchRole':S.user.role=S.user.role==='agente'?'estudiante':'agente';if(S.user.role==='agente'&&!S.verif)S.verif='ok';store();go(S.user.role==='agente'?'agente':'explorar');break;
   case 'favs':onlyFav=true;$('#menu').classList.remove('on');go('explorar');break;
   case 'budget':e.preventDefault();$('#menu')?.classList.remove('on');modal(`${mhead(`Tu presupuesto mensual`)}<div class="mb"><div class="budget" style="margin:0"><div class="v" id="mbv">$${S.budget}<small> /mes</small></div><input class="rng" id="mb" type="range" min="80" max="400" step="5" value="${S.budget}" style="--p:${(S.budget-80)/320*100}%"><div class="minmax"><span>$80</span><span>$400</span></div></div><p style="color:var(--ink2);font-size:13.5px;margin-top:12px">Usamos tu presupuesto para decirte si cada arriendo es justo, promedio o caro para ti.</p></div><div class="mf"><button class="btn pri" data-act="saveBudget">Guardar</button></div>`);const r=$('#mb');r.oninput=()=>{$('#mbv').innerHTML=`$${r.value}<small> /mes</small>`;r.style.setProperty('--p',(r.value-80)/320*100+'%');};break;

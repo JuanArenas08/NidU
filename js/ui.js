@@ -23,8 +23,8 @@ function toast(m){const t=$('#toast');t.querySelector('span').textContent=m;t.cl
 function modal(html,wide){$('#modal').className='modal'+(wide?' wide':'');$('#modal').innerHTML=html;$('#ov').classList.add('on');}
 function closeModal(){$('#ov').classList.remove('on');}
 $('#ov').addEventListener('click',e=>{if(e.target.id==='ov')closeModal();});
-function store(){try{localStorage.setItem('nidu',JSON.stringify({user:S.user,uni:S.uni,budget:S.budget,fav:[...S.fav],orig:S.orig,verif:S.verif,prof:S.prof,subscribed:S.subscribed,friends:[...S.friends]}));}catch(e){}}
-try{const d=JSON.parse(localStorage.getItem('nidu')||'null');if(d){S.user=d.user;S.uni=d.uni||'espol';S.budget=d.budget||180;S.fav=new Set(d.fav||[]);S.orig=d.orig||'milagro';S.verif=d.verif||null;if(S.verif==='rev')S.verif='ok';S.prof=!!d.prof;S.subscribed=!!d.subscribed;if(Array.isArray(d.friends))S.friends=new Set(d.friends);}}catch(e){}
+function store(){try{localStorage.setItem('nidu',JSON.stringify({user:S.user,uni:S.uni,budget:S.budget,fav:[...S.fav],orig:S.orig,verif:S.verif,prof:S.prof,subscribed:S.subscribed,preview:S.preview,friends:[...S.friends]}));}catch(e){}}
+try{const d=JSON.parse(localStorage.getItem('nidu')||'null');if(d){S.user=d.user;S.uni=d.uni||'espol';S.budget=d.budget||180;S.fav=new Set(d.fav||[]);S.orig=d.orig||'milagro';S.verif=d.verif||null;if(S.verif==='rev')S.verif='ok';S.prof=!!d.prof;S.subscribed=!!d.subscribed;S.preview=!!d.preview;if(Array.isArray(d.friends))S.friends=new Set(d.friends);}}catch(e){}
 
 /* room illustrations */
 const PAL=[{w1:'#EAF2FE',w2:'#D3E3FA',fl:'#C9A27E',bl:'#0469E6',ac:'#FFB012'},{w1:'#FBEFE3',w2:'#F2DCC6',fl:'#B98B66',bl:'#E2725B',ac:'#2F8F6B'},{w1:'#EAF5EE',w2:'#D2EADA',fl:'#A9876A',bl:'#07275C',ac:'#FFB012'},{w1:'#F3EEFA',w2:'#E2D8F2',fl:'#B08F74',bl:'#7C5CC4',ac:'#FFB012'},{w1:'#FFF6DE',w2:'#F7E5B3',fl:'#9C7A5E',bl:'#0469E6',ac:'#E2725B'}];
@@ -135,7 +135,7 @@ document.addEventListener('submit',e=>{const f=e.target.dataset.form;if(!f)retur
 
 /* ===================== AUTH ===================== */
 let regRole='estudiante';
-function authArt(){return `<div class="auth-art"><div class="atop"><img src="icon-w.png" alt="" style="height:46px"><img src="word-w.png" alt="NidU" style="height:30px"></div>
+function authArt(){return `<div class="auth-art"><div class="atop"><img src="resources/icon-w.png" alt="" style="height:46px"><img src="resources/word-w.png" alt="NidU" style="height:30px"></div>
 <div class="amsg"><h2>Encuentra tu <span>nido</span> cerca de la U.</h2><p>Arriendos seguros, cerca de tu universidad y a un precio que puedes pagar.</p><ul><li>${ic('i-check')}Compara precios con tu presupuesto</li><li>${ic('i-check')}Rutas de bus de ida y regreso</li><li>${ic('i-check')}Agentes verificados</li></ul></div>${cityArt()}</div>`;}
 function cityArt(){const w='rgba(255,255,255,.55)',g='rgba(255,176,18,.9)';
  const win=(x,y,c,r)=>{let s='';for(let i=0;i<r;i++)for(let j=0;j<c;j++)s+=`<rect x="${x+j*22}" y="${y+i*24}" width="12" height="14" rx="1.5"/>`;return s;};
@@ -154,7 +154,7 @@ const UCOL={espol:'#07275C',ug:'#0469E6',ucsg:'#2F8F6B',uees:'#7C5CC4'};
 const UIDENT={espol:{n:'Juan Pablo Arenas',e:'jparenas@espol.edu.ec'},ug:{n:'Juan Pablo Arenas',e:'jparenas@ug.edu.ec'},ucsg:{n:'Juan Pablo Arenas',e:'jparenas@cu.ucsg.edu.ec'},uees:{n:'Juan Pablo Arenas',e:'jparenas@uees.edu.ec'}};
 let authUni=null,sstep='pick',agentTab='register',agentPay=false,pendingAgent=null;
 function reAuth(){renderAuth(location.hash==='#ingresar'?'login':'reg');}
-function authHead(){return `<div class="head"><a class="brand" href="#inicio"><img class="i" src="icon.png" alt="" style="height:34px"><img class="w" src="word.png" alt="NidU" style="height:22px"></a><button class="btn ghost sm" data-act="go" data-v="inicio">${ic('i-back','sm')}Volver</button></div>`;}
+function authHead(){return `<div class="head"><a class="brand" href="#inicio"><img class="i" src="resources/icon.png" alt="" style="height:34px"><img class="w" src="resources/word.png" alt="NidU" style="height:22px"></a><button class="btn ghost sm" data-act="go" data-v="inicio">${ic('i-back','sm')}Volver</button></div>`;}
 function authFoot(){return `<div class="fl"><span>© 2026 NidU</span><a href="#inicio">Inicio</a><a href="#como">Ayuda</a><span>Prototipo</span></div>`;}
 function roleSeg(){return `<div class="seg"><button type="button" class="${regRole==='estudiante'?'on':''}" data-act="role" data-r="estudiante">${ic('i-cap','sm')}Soy estudiante</button><button type="button" class="${regRole==='agente'?'on':''}" data-act="role" data-r="agente">${ic('i-building','sm')}Soy agente</button></div>`;}
 function agentLoginBody(){return `<h1>Entra como agente</h1><p class="hint">Accede a tu panel para administrar tus arriendos.</p>
@@ -221,13 +221,12 @@ function studentAuth(mode){
     <p class="hint">No necesitas crear una cuenta nueva: NidU usa el mismo correo con el que entras a tu universidad.</p>
     <div class="unipick">${Object.keys(UNIS).map(k=>`<button type="button" class="unibtn" data-act="uniPick" data-u="${k}"><span class="ub-logo" style="background:${UCOL[k]}">${ic('i-cap','sm')}</span><span class="ub-t"><b>${UNIS[k].n}</b><small>${esc(UNIS[k].full)}</small></span>${ic('i-chev','sm')}</button>`).join('')}</div>
     <div class="or">o</div>
-    <button class="btn sec block" data-act="guest">${ic('i-map','sm')}Explorar sin iniciar sesión</button>
     <div class="demo" style="margin-top:12px"><button type="button" class="btn ghost sm" data-act="demo" data-r="estudiante">Probar como estudiante</button><button type="button" class="btn ghost sm" data-act="demo" data-r="agente">Probar como agente</button></div>
     <p class="legal">¿Eres agente inmobiliario? <a href="#registro" data-act="role" data-r="agente"><b>Crea una cuenta de agente</b></a></p>`;
 }
 function bindStudentAuth(){const r=$('#rgBudget');if(!r)return;const upc=()=>{const n=countFor(authUni||S.uni,+r.value);$('#rgCount').innerHTML=`${ic('i-home','xs')}${n} arriendo${n===1?'':'s'} dentro de tu presupuesto cerca de ${UNIS[authUni||S.uni].n}`;};r.oninput=()=>{$('#rgBv').innerHTML=`$${r.value}<small> /mes</small>`;r.style.setProperty('--p',(r.value-80)/320*100+'%');upc();};upc();}
-function studentSetup(){const ph=$('#stPhone')?$('#stPhone').value.trim():'';if(!/^\d{10}$/.test(ph)){vfld('#stPhone',false);toast('El teléfono debe tener exactamente 10 dígitos');return;}const bud=+$('#rgBudget').value,org=$('#rgOrig').value,uni=authUni,id=UIDENT[authUni],mail=S.authMail||id.e;smsVerify(ph,()=>{S.uni=uni;S.budget=bud;S.orig=org;S.user={name:id.n,email:mail,role:'estudiante',uni,phone:ph};S.prof=true;store();toast(`¡Listo, ${id.n.split(' ')[0]}! Bienvenid@ a NidU`);go('explorar');});}
-function submitSso(){const m=$('#ssoMail').value.trim(),p=$('#ssoPass').value;const dom=UIDENT[authUni].e.split('@')[1];const okMail=/^[^@\s]+@[^@\s]+$/.test(m)&&new RegExp('@'+dom.replace(/[.]/g,'\\.')+'$','i').test(m);const okPass=p.length>0;vfld('#ssoMail',okMail);vfld('#ssoPass',okPass);if(!(okMail&&okPass)){toast('Revisa el correo y la contraseña');return;}S.authMail=m;if(S.prof){S.uni=authUni;S.user={name:UIDENT[authUni].n,email:m,role:'estudiante',uni:authUni};store();toast(`Bienvenid@ de nuevo, ${UIDENT[authUni].n.split(' ')[0]}`);go('explorar');}else{sstep='setup';reAuth();}}
+function studentSetup(){const ph=$('#stPhone')?$('#stPhone').value.trim():'';if(!/^\d{10}$/.test(ph)){vfld('#stPhone',false);toast('El teléfono debe tener exactamente 10 dígitos');return;}const bud=+$('#rgBudget').value,org=$('#rgOrig').value,uni=authUni,id=UIDENT[authUni],mail=S.authMail||id.e;smsVerify(ph,()=>{S.uni=uni;S.budget=bud;S.orig=org;S.user={name:id.n,email:mail,role:'estudiante',uni,phone:ph};S.prof=true;S.preview=false;store();toast(`¡Listo, ${id.n.split(' ')[0]}! Bienvenid@ a NidU`);go('explorar');});}
+function submitSso(){const m=$('#ssoMail').value.trim(),p=$('#ssoPass').value;const dom=UIDENT[authUni].e.split('@')[1];const okMail=/^[^@\s]+@[^@\s]+$/.test(m)&&new RegExp('@'+dom.replace(/[.]/g,'\\.')+'$','i').test(m);const okPass=p.length>0;vfld('#ssoMail',okMail);vfld('#ssoPass',okPass);if(!(okMail&&okPass)){toast('Revisa el correo y la contraseña');return;}S.authMail=m;if(S.prof){S.uni=authUni;S.user={name:UIDENT[authUni].n,email:m,role:'estudiante',uni:authUni};S.preview=false;store();toast(`Bienvenid@ de nuevo, ${UIDENT[authUni].n.split(' ')[0]}`);go('explorar');}else{sstep='setup';reAuth();}}
 function vfld(id,ok){const i=$(id);const f=i.closest('.fld');f.classList.toggle('e',!ok);i.classList.toggle('err',!ok);return ok;}
 const pwRules=[{k:'len',t:'Mínimo 8 caracteres',re:v=>v.length>=8},{k:'upper',t:'1 letra mayúscula',re:v=>/[A-Z]/.test(v)},{k:'lower',t:'1 letra minúscula',re:v=>/[a-z]/.test(v)},{k:'num',t:'1 número',re:v=>/[0-9]/.test(v)},{k:'spec',t:'1 carácter especial (!@#$…)',re:v=>/[^A-Za-z0-9]/.test(v)}];
 function pwValid(v){return pwRules.every(r=>r.re(v));}
@@ -245,25 +244,27 @@ function submitPay(){
   const req=['#payNum','#payExp','#payCvv','#payName'];const ok=req.map(id=>vfld(id,$(id).value.trim().length>0)).every(Boolean);
   if(!ok){toast('Completa los datos de la tarjeta (son de demostración)');return;}
   const pa=pendingAgent||{name:'Agente',email:'agente@correo.com'};
-  S.user={name:pa.name,email:pa.email,role:'agente'};S.subscribed=true;S.verif='rev';agentPay=false;pendingAgent=null;store();
+  S.user={name:pa.name,email:pa.email,role:'agente'};S.subscribed=true;S.verif='rev';S.preview=false;agentPay=false;pendingAgent=null;store();
   setTimeout(()=>{S.verif='ok';store();S.notifAgent.unshift({t:'¡Tu identidad fue verificada!',s:'Tus anuncios ya muestran la insignia de agente verificado',h:'ahora',k:'verif'});toast('¡Listo! Tu cuenta de agente fue verificada');if(location.hash==='#agente')renderAgent();},7000);
   toast(`¡Bienvenid@, ${pa.name.split(' ')[0]}! Tu suscripción está activa`);go('agente');
 }
 function submitLogin(){const m=$('#lgMail').value.trim(),p=$('#lgPass').value;
   const ok=[vfld('#lgMail',/^\S+@\S+\.\S+$/.test(m)),vfld('#lgPass',p.length>0)].every(Boolean);if(!ok)return;
-  S.verif='ok';S.user=(S.user&&S.user.email===m)?S.user:{name:m.split('@')[0].replace(/[._]/g,' ').replace(/\b\w/g,c=>c.toUpperCase()),email:m,role:'agente'};S.user.role='agente';S.subscribed=true;store();toast('Sesión iniciada');go('agente');}
+  S.verif='ok';S.user=(S.user&&S.user.email===m)?S.user:{name:m.split('@')[0].replace(/[._]/g,' ').replace(/\b\w/g,c=>c.toUpperCase()),email:m,role:'agente'};S.user.role='agente';S.subscribed=true;S.preview=false;store();toast('Sesión iniciada');go('agente');}
 
 function notifList(){const base=S.user&&S.user.role==='agente'?S.notifAgent:S.notifStudent;return [...base,...S.notifApp];}
 function notifIcon(k){return {new:'i-pin',price:'i-tag',msg:'i-msg',rev:'i-star',report:'i-shield',pay:'i-tag',app:'i-bell',verif:'i-shield',visit:'i-clock',chat:'i-msg',invite:'i-users',link:'i-check'}[k]||'i-bell';}
+function needLogin(){return !S.user||S.preview;}
+function loginGate(){closeModal();modal(`${mhead('Inicia sesión para continuar')}<div class="mb" style="text-align:center"><div style="width:62px;height:62px;border-radius:50%;background:var(--blue-50);color:var(--blue);display:grid;place-items:center;margin:4px auto 14px">${ic('i-lock','lg')}</div><p style="color:var(--ink2)">Estás en <b>modo de prueba</b>. Esta funcionalidad solo está disponible cuando inicias sesión o creas una cuenta.</p></div><div class="mf"><button class="btn sec" data-act="go" data-v="registro">${ic('i-plus','sm')}Crear cuenta</button><button class="btn pri" data-act="go" data-v="ingresar">${ic('i-user','sm')}Iniciar sesión</button></div>`);}
 /* ===================== TOP BAR ===================== */
 function topbar(v){
   const ag=S.user?.role==='agente';const name=S.user?.name||'Invitado';const ini=initials(name).toUpperCase();
   const unis=Object.entries(UNIS).map(([k,u])=>`<option value="${k}" ${k===S.uni?'selected':''}>${u.n}</option>`).join('');
-  return `<div class="top"><div class="in"><a class="brand" href="${S.user?(S.user.role==='agente'?'#agente':'#explorar'):'#inicio'}"><img class="i" src="icon.png" alt="" style="height:34px"><img class="w" src="word.png" alt="NidU" style="height:22px"></a>
+  return `<div class="top"><div class="in"><a class="brand" href="${S.user?(S.user.role==='agente'?'#agente':'#explorar'):'#inicio'}"><img class="i" src="resources/icon.png" alt="" style="height:34px"><img class="w" src="resources/word.png" alt="NidU" style="height:22px"></a>
   ${ag&&v!=='explorar'&&v!=='arriendo'?`<div class="tag blue" style="height:30px;padding:0 12px">${ic('i-building','xs')}Modo agente</div>`:`${S.user&&S.user.role==='estudiante'?`<div class="unisel"><div class="cap">${ic('i-cap','sm')}</div><div><small>Tu universidad</small><b style="font-family:var(--hf);font-weight:800;color:var(--navy);font-size:15px">${UNIS[(S.user&&S.user.uni)||S.uni].n}</b></div></div>`:`<div class="unisel"><div class="cap">${ic('i-cap','sm')}</div><div><small>Tu universidad</small><select data-chg="uni">${unis}</select></div></div>`}
   <div class="tsearch">${ic('i-search','sm')}<input placeholder="Buscar zona o arriendo…" data-chg="q" value="${esc(S.f.q)}"></div>`}
   <div class="sp"></div>
-  ${S.user?'':`<button class="btn ghost sm gbtn" data-act="go" data-v="ingresar">Iniciar sesión</button><button class="btn pri sm gbtn" data-act="go" data-v="registro">Regístrate</button>`}
+  ${S.preview?`<span class="tag" style="background:#FFF3D6;color:#9A6B00;height:30px;padding:0 12px;display:inline-flex;align-items:center;gap:6px;border-radius:999px;font-weight:700;font-size:12.5px">${ic('i-eye','xs')}Modo prueba</span>`:''}${(!S.user||S.preview)?`<button class="btn ghost sm gbtn" data-act="go" data-v="ingresar">Iniciar sesión</button><button class="btn pri sm gbtn" data-act="go" data-v="registro">Regístrate</button>`:''}
   <button class="iconbtn" data-act="bell" aria-label="Notificaciones">${ic('i-bell')}${notifList().length?'<span class="dot"></span>':''}</button>
   <button class="avatar" data-act="menu" aria-label="Menú">${S.user?ini:ic('i-user','sm')}</button></div>
   <div class="menu" id="menu"></div></div>`;
