@@ -447,6 +447,37 @@ input[type=range]{width:100%;accent-color:var(--blue)}
 .idcard .av{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;color:#fff;font-family:var(--hf);font-weight:800;flex:none}
 .idcard b{display:flex;align-items:center;gap:6px}
 .idcard small{color:var(--ink3);font-size:12.5px}
+
+.paysum{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-radius:16px;background:var(--bg);margin-bottom:6px}
+.paysum b{font-size:15px}.paysum small{display:block;color:var(--ink3);font-size:12.5px}
+.paysum .pk{font-family:var(--hf);font-weight:900;font-size:26px;color:var(--navy)}
+.paysum .pk small{font-family:var(--bf);font-size:13px;color:var(--ink3);font-weight:500;display:inline}
+.tenant{border:1.5px solid var(--line);border-radius:16px;padding:14px;margin-bottom:12px}
+.tenant.late{border-color:var(--bad);background:var(--bad-50)}
+.tenant .th2{display:flex;align-items:center;gap:10px}
+.tenant .av{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:800;font-size:13px;flex:none}
+.tenant small{color:var(--ink3);font-size:12.5px;display:block}
+.tgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.tgrid div small{color:var(--ink3);font-size:12px;display:block}
+.tgrid div b{font-size:15px}
+.prof{max-width:760px}
+.prof-head{display:flex;gap:16px;align-items:flex-start}
+.prof-head .av{width:72px;height:72px;border-radius:20px;display:grid;place-items:center;color:#fff;font-family:var(--hf);font-weight:800;font-size:26px;flex:none}
+.prof-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0 6px}
+.prof-stats>div{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px;text-align:center}
+.prof-stats b{font-family:var(--hf);font-weight:900;font-size:24px;color:var(--navy);display:block}
+.prof-stats small{color:var(--ink3);font-size:12.5px}
+.prof-sec{margin-top:22px}
+.prof-sec h3{font-size:18px;color:var(--navy);margin-bottom:12px}
+.prof-contact{display:grid;gap:10px}
+.prof-contact>div{display:flex;align-items:center;gap:10px;color:var(--ink2);font-size:14.5px}
+.prof-contact .ico{color:var(--blue);flex:none}
+.prof-list{display:grid;gap:10px}
+.prof-item{display:flex;align-items:center;gap:12px;padding:10px;border:1px solid var(--line);border-radius:14px}
+.prof-item .th{width:56px;height:56px;border-radius:12px;overflow:hidden;flex:none}
+.prof-item b{display:block;font-size:14px}.prof-item small{color:var(--ink3);font-size:12.5px}
+@media (max-width:600px){.prof-stats{grid-template-columns:1fr 1fr}.tgrid{grid-template-columns:1fr}}
+
 @media (max-width:1000px){
   .hero{grid-template-columns:1fr}.hero-vis{height:400px}
   .steps,.feat{grid-template-columns:1fr 1fr}
@@ -623,10 +654,10 @@ const ZSAFE={Prosperina:{s:3.6,l:'Media en calles internas',upc:'UPC a 400 m',r:
 const ORIG={milagro:{n:'Milagro',c:1.50,t:75},daule:{n:'Daule',c:1.00,t:50},duran:{n:'Durán',c:0.60,t:45},babahoyo:{n:'Babahoyo',c:2.25,t:100},salinas:{n:'Salinas',c:4.00,t:150},quevedo:{n:'Quevedo',c:6.50,t:180},machala:{n:'Machala',c:7.00,t:210},manta:{n:'Manta',c:8.00,t:240},otra:{n:'Otra ciudad',c:5.00,t:180}};
 const EXTRA={wifi:25,luz:18,agua:8};
 const AGENTS={
-  carlos:{n:'Carlos Ríos',ini:'CR',col:'#07275C',v:true,r:4.8,rv:32,ph:'099 412 3388'},
-  puerto:{n:'Inmobiliaria Puerto Sol',ini:'PS',col:'#0469E6',v:true,r:4.6,rv:58,ph:'04 268 1190'},
-  andrea:{n:'Andrea Mora',ini:'AM',col:'#7C5CC4',v:true,r:4.9,rv:21,ph:'098 776 1203'},
-  luis:{n:'Luis Vera',ini:'LV',col:'#2F8F6B',v:false,r:4.2,rv:9,ph:'096 330 5521'}
+  carlos:{n:'Carlos Ríos',ini:'CR',col:'#07275C',v:true,r:4.8,rv:32,ph:'099 412 3388',email:'carlos.rios@nidu.ec',agency:'Agente independiente',lic:'RUC 0912345678001',joined:'marzo 2025',bio:'Agente independiente enfocado en arriendos para estudiantes foráneos cerca de ESPOL y la Vía a la Costa. Respondo rápido y acompaño la visita.'},
+  puerto:{n:'Inmobiliaria Puerto Sol',ini:'PS',col:'#0469E6',v:true,r:4.6,rv:58,ph:'04 268 1190',email:'contacto@puertosol.ec',agency:'Inmobiliaria',lic:'RUC 0991234567001',joined:'enero 2024',bio:'Inmobiliaria con cartera de suites y mini departamentos en el norte de Guayaquil.'},
+  andrea:{n:'Andrea Mora',ini:'AM',col:'#7C5CC4',v:true,r:4.9,rv:21,ph:'098 776 1203',email:'andrea.mora@nidu.ec',agency:'Agente independiente',lic:'RUC 0923456789001',joined:'agosto 2025',bio:'Propietaria de varias habitaciones cerca de la UG y la UCSG.'},
+  luis:{n:'Luis Vera',ini:'LV',col:'#2F8F6B',v:false,r:4.2,rv:9,ph:'096 330 5521',email:'luis.vera@correo.com',agency:'Propietario',lic:'En verificación',joined:'octubre 2026',bio:'Propietario de habitaciones económicas cerca de la Perimetral.'}
 };
 const SVC={wifi:['Wifi','i-wifi'],agua:['Agua','i-drop'],luz:['Luz eléctrica','i-zap'],amoblado:['Amoblado','i-sofa'],lavanderia:['Lavandería','i-wash'],parqueo:['Parqueo','i-car'],aire:['Aire acondicionado','i-snow']};
 const TYPES={'Habitación':'i-bed','Mini depa':'i-home','Compartido':'i-users','Suite':'i-building'};
@@ -651,6 +682,8 @@ const L=[
 ];
 
 [1,2,5,6,8,9,12,15,16].forEach(i=>L.find(l=>l.id===i).vph=true);
+const TEN={1:[{n:'Juan Pablo Arenas',from:'Milagro',u:'ESPOL',since:'15 ago 2026',months:3,pay:'al día',amount:170,next:'1 dic 2026'}],2:[{n:'Doménica Vera',from:'Manta',u:'ESPOL',since:'1 jun 2026',months:5,pay:'atrasado',lateDays:8,amount:240,next:'5 nov 2026'}],16:[{n:'Mateo Salas',from:'Quevedo',u:'ESPOL',since:'1 oct 2026',months:1,pay:'al día',amount:210,next:'1 dic 2026'}]};
+Object.entries(TEN).forEach(([id,t])=>{const l=L.find(x=>x.id==id);if(l){l.rented=true;l.tenants=t;}});
 const RPOOL=[
  {n:'Daniela P.',from:'Milagro',u:'ESPOL',r:5,a:[5,4,5,5],t:'El cuarto es tal cual las fotos. El dueño responde rápido y la parada de bus está a una cuadra.'},
  {n:'Kevin M.',from:'Quevedo',u:'ESPOL',r:4,a:[4,3,5,4],t:'Buen internet para clases virtuales. A veces hay ruido el fin de semana.'},
@@ -663,7 +696,10 @@ const REV={};
 L.forEach(l=>{const k=(l.id*7)%RPOOL.length;const n=(l.id===7||l.id===14)?1:(l.id%3)+2;const low=(ZSAFE[l.zone]||{s:4}).s<3.2;REV[l.id]=Array.from({length:n},(_,i)=>{const b=RPOOL[(k+i*2)%RPOOL.length];return {...b,a:[low?Math.min(b.a[0],3):b.a[0],...b.a.slice(1)],h:['hace 2 semanas','hace 1 mes','hace 3 meses','hace 5 meses'][i%4],col:RCOL[(k+i)%RCOL.length]};});});
 const S={user:null,uni:'espol',budget:180,notify:true,fav:new Set([3]),sel:null,dir:'ida',orig:'milagro',verif:null,prof:false,authMail:null,cmp:new Set(),rvStar:5,upl:{},
   f:{min:80,max:350,zones:new Set(),types:new Set(),sv:new Set(),dist:8,sort:'cerca',q:'',safe:0,vph:false},
-  notifs:[{t:'Nuevo arriendo en Prosperina',s:'Habitación amoblada · $170/mes · a 1.4 km',id:1,h:'hace 2 h'},{t:'Bajó de precio',s:'Cuarto con baño privado · ahora $150',id:3,h:'ayer'}],
+  subscribed:false,
+  notifStudent:[{t:'Nuevo arriendo cerca de ESPOL',s:'Habitación amoblada en Prosperina · $170/mes',id:1,h:'hace 2 h',k:'new'},{t:'Bajó de precio',s:'Cuarto con baño privado · ahora $150',id:3,h:'ayer',k:'price'}],
+  notifAgent:[{t:'Nuevo mensaje de Juan Pablo Arenas',s:'Sobre: Habitación amoblada en Prosperina',id:1,h:'10:24',k:'msg'},{t:'Nueva reseña · 4★',s:'Mini depa en Ceibos Norte: "Buen internet para clases"',id:2,h:'ayer',k:'rev'},{t:'Un usuario reportó un anuncio',s:'Cuarto en Urdesa Central: las fotos no coinciden',id:10,h:'hace 2 días',k:'report'},{t:'Pago atrasado',s:'Doménica Vera lleva 8 días de atraso · Mini depa en Ceibos',id:2,h:'hace 3 días',k:'pay'}],
+  notifApp:[{t:'Novedad en NidU',s:'Ahora puedes comparar hasta 3 arriendos lado a lado',h:'esta semana',k:'app'},{t:'Mejoramos el mapa y las rutas de bus',s:'Más rápido y con líneas actualizadas por universidad',h:'hace 1 semana',k:'app'}],
   msgs:[{n:'Juan Pablo Arenas',ini:'JP',col:'#0469E6',lid:1,m:'Hola, ¿la habitación sigue disponible? Soy estudiante foráneo y entro a ESPOL este semestre.',h:'10:24',u:true},{n:'José Andrade',ini:'JA',col:'#2F8F6B',lid:2,m:'¿Se puede visitar el sábado en la mañana?',h:'ayer',u:true},{n:'Valentina Cruz',ini:'VC',col:'#7C5CC4',lid:10,m:'¿El precio incluye el internet?',h:'lun',u:false}],
   pub:null, aTab:'panel'};
 
@@ -689,8 +725,8 @@ function toast(m){const t=$('#toast');t.querySelector('span').textContent=m;t.cl
 function modal(html,wide){$('#modal').className='modal'+(wide?' wide':'');$('#modal').innerHTML=html;$('#ov').classList.add('on');}
 function closeModal(){$('#ov').classList.remove('on');}
 $('#ov').addEventListener('click',e=>{if(e.target.id==='ov')closeModal();});
-function store(){try{localStorage.setItem('nidu',JSON.stringify({user:S.user,uni:S.uni,budget:S.budget,fav:[...S.fav],orig:S.orig,verif:S.verif,prof:S.prof}));}catch(e){}}
-try{const d=JSON.parse(localStorage.getItem('nidu')||'null');if(d){S.user=d.user;S.uni=d.uni||'espol';S.budget=d.budget||180;S.fav=new Set(d.fav||[]);S.orig=d.orig||'milagro';S.verif=d.verif||null;if(S.verif==='rev')S.verif='ok';S.prof=!!d.prof;}}catch(e){}
+function store(){try{localStorage.setItem('nidu',JSON.stringify({user:S.user,uni:S.uni,budget:S.budget,fav:[...S.fav],orig:S.orig,verif:S.verif,prof:S.prof,subscribed:S.subscribed}));}catch(e){}}
+try{const d=JSON.parse(localStorage.getItem('nidu')||'null');if(d){S.user=d.user;S.uni=d.uni||'espol';S.budget=d.budget||180;S.fav=new Set(d.fav||[]);S.orig=d.orig||'milagro';S.verif=d.verif||null;if(S.verif==='rev')S.verif='ok';S.prof=!!d.prof;S.subscribed=!!d.subscribed;}}catch(e){}
 
 /* room illustrations */
 const PAL=[{w1:'#EAF2FE',w2:'#D3E3FA',fl:'#C9A27E',bl:'#0469E6',ac:'#FFB012'},{w1:'#FBEFE3',w2:'#F2DCC6',fl:'#B98B66',bl:'#E2725B',ac:'#2F8F6B'},{w1:'#EAF5EE',w2:'#D2EADA',fl:'#A9876A',bl:'#07275C',ac:'#FFB012'},{w1:'#F3EEFA',w2:'#E2D8F2',fl:'#B08F74',bl:'#7C5CC4',ac:'#FFB012'},{w1:'#FFF6DE',w2:'#F7E5B3',fl:'#9C7A5E',bl:'#0469E6',ac:'#E2725B'}];
@@ -773,7 +809,7 @@ function render(){
   if(v==='arriendo'&&!S.sel)v='explorar';
   if((v==='agente'||v==='publicar')&&S.user?.role!=='agente'){v='ingresar';}
   showView(v);window.scrollTo(0,0);
-  if((v==='registro'||v==='ingresar')&&prevView!==v){sstep='pick';authUni=null;}
+  if((v==='registro'||v==='ingresar')&&prevView!==v){sstep='pick';authUni=null;agentPay=false;agentTab=(v==='ingresar'?'login':'register');}
   ({inicio:renderLanding,registro:()=>renderAuth('reg'),ingresar:()=>renderAuth('login'),explorar:renderExplore,arriendo:renderDetail,agente:renderAgent,publicar:renderPublish})[v]();
   prevView=v;
 }
@@ -793,7 +829,7 @@ function renderLanding(){
 }
 document.addEventListener('submit',e=>{const f=e.target.dataset.form;if(!f)return;e.preventDefault();
   if(f==='hero'){S.uni=$('#heroUni').value;S.budget=Math.max(60,+$('#heroBudget').value||180);store();go('explorar');}
-  if(f==='reg')submitReg();if(f==='login')submitLogin();if(f==='contact')sendContact();if(f==='pub')submitPub();if(f==='review')sendReview();if(f==='sso'){e.preventDefault();submitSso();}if(f==='setup'){e.preventDefault();studentSetup();}});
+  if(f==='reg')submitReg();if(f==='login')submitLogin();if(f==='contact')sendContact();if(f==='pub')submitPub();if(f==='review')sendReview();if(f==='sso'){e.preventDefault();submitSso();}if(f==='setup'){e.preventDefault();studentSetup();}if(f==='pay'){e.preventDefault();submitPay();}});
 
 /* ===================== AUTH ===================== */
 let regRole='estudiante';
@@ -814,40 +850,48 @@ function cityArt(){const w='rgba(255,255,255,.55)',g='rgba(255,176,18,.9)';
  <path d="M0 300h800"/></svg>`;}
 const UCOL={espol:'#07275C',ug:'#0469E6',ucsg:'#2F8F6B',uees:'#7C5CC4'};
 const UIDENT={espol:{n:'Juan Pablo Arenas',e:'jparenas@espol.edu.ec'},ug:{n:'Juan Pablo Arenas',e:'jparenas@ug.edu.ec'},ucsg:{n:'Juan Pablo Arenas',e:'jparenas@cu.ucsg.edu.ec'},uees:{n:'Juan Pablo Arenas',e:'jparenas@uees.edu.ec'}};
-let authUni=null,sstep='pick';
+let authUni=null,sstep='pick',agentTab='register',agentPay=false,pendingAgent=null;
 function reAuth(){renderAuth(location.hash==='#ingresar'?'login':'reg');}
 function authHead(){return `<div class="head"><a class="brand" href="#inicio"><img class="i" src="icon.png" alt="" style="height:34px"><img class="w" src="word.png" alt="NidU" style="height:22px"></a><button class="btn ghost sm" data-act="go" data-v="inicio">${ic('i-back','sm')}Volver</button></div>`;}
 function authFoot(){return `<div class="fl"><span>© 2026 NidU</span><a href="#inicio">Inicio</a><a href="#como">Ayuda</a><span>Prototipo</span></div>`;}
-function renderAuth(mode){
-  const cont=mode==='login'?'#authLogin':'#authReg';
-  if(regRole==='estudiante'){$(cont).innerHTML=authArt()+`<div class="auth-form">${authHead()}<div class="box">${studentAuth(mode)}</div>${authFoot()}</div>`;bindStudentAuth();return;}
-  // ---- agent ----
-  if(mode==='login'){
-    $(cont).innerHTML=authArt()+`<div class="auth-form">${authHead()}<form class="box" data-form="login" novalidate><h1>Entra como agente</h1><p class="hint">Accede a tu panel para administrar tus arriendos.</p>
-    <div class="seg"><button type="button" data-act="role" data-r="estudiante">${ic('i-cap','sm')}Soy estudiante</button><button type="button" class="on" data-act="role" data-r="agente">${ic('i-building','sm')}Soy agente</button></div>
-    <div class="fld"><label>Correo electrónico</label><input class="inp" id="lgMail" type="email" placeholder="nombre@correo.com" value="${esc(S.user?.role==='agente'?S.user.email:'')}"><div class="errtxt">Escribe un correo válido.</div></div>
+function roleSeg(){return `<div class="seg"><button type="button" class="${regRole==='estudiante'?'on':''}" data-act="role" data-r="estudiante">${ic('i-cap','sm')}Soy estudiante</button><button type="button" class="${regRole==='agente'?'on':''}" data-act="role" data-r="agente">${ic('i-building','sm')}Soy agente</button></div>`;}
+function agentLoginBody(){return `<h1>Entra como agente</h1><p class="hint">Accede a tu panel para administrar tus arriendos.</p>
+    <div class="fld"><label>Correo electrónico</label><input class="inp" id="lgMail" type="email" placeholder="nombre@correo.com" value="${esc(S.user&&S.user.role==='agente'?S.user.email:'')}"><div class="errtxt">Escribe un correo válido.</div></div>
     <div class="fld"><label>Contraseña</label><input class="inp" id="lgPass" type="password" placeholder="Contraseña"><div class="errtxt">Escribe tu contraseña.</div></div>
     <button class="btn pri block" type="submit">Iniciar sesión</button>
     <div class="or">o prueba el prototipo</div>
-    <div class="demo"><button type="button" class="btn sec" data-act="demo" data-r="estudiante">${ic('i-cap','sm')}Estudiante</button><button type="button" class="btn sec" data-act="demo" data-r="agente">${ic('i-building','sm')}Agente</button></div>
-    <p class="legal">¿Eres agente nuevo? <a href="#registro"><b>Crea tu cuenta de agente</b></a></p></form>${authFoot()}</div>`;
-    return;
-  }
-  const unis=Object.entries(ORIG).map(([k,o])=>`<option value="${k}" ${k===S.orig?'selected':''}>${o.n}</option>`).join('');
-  $(cont).innerHTML=authArt()+`<div class="auth-form">${authHead()}<form class="box" data-form="reg" novalidate><h1>Crea tu cuenta de agente</h1><p class="hint">Publica tus arriendos y llega directo a estudiantes foráneos.</p>
-  <div class="seg"><button type="button" data-act="role" data-r="estudiante">${ic('i-cap','sm')}Soy estudiante</button><button type="button" class="on" data-act="role" data-r="agente">${ic('i-building','sm')}Soy agente</button></div>
-  <div class="fld"><label>Nombre completo</label><input class="inp" id="rgName" placeholder="Ej. Carlos Ríos"><div class="errtxt">Escribe tu nombre.</div></div>
-  <div class="fld"><label>Correo electrónico</label><input class="inp" id="rgMail" type="email" placeholder="nombre@correo.com"><div class="errtxt">Escribe un correo válido.</div></div>
-  <div class="row2"><div class="fld"><label>Teléfono</label><input class="inp" id="rgPhone" placeholder="09X XXX XXXX"></div><div class="fld"><label>Tipo</label><select class="inp"><option>Agente independiente</option><option>Inmobiliaria</option><option>Propietario</option></select></div></div>
-  <div class="slab" style="margin-top:4px"><span>Verificación de identidad</span><span style="color:var(--ink3);font-weight:500">Así los estudiantes confían en ti</span></div>
-  <label class="upl" id="uplced"><input type="file" accept="image/*,.pdf" data-up="ced">${ic('i-user','sm')}<span>Cédula o RUC (foto o PDF) · obligatorio</span></label>
+    <div class="demo"><button type="button" class="btn sec" data-act="demo" data-r="estudiante">${ic('i-cap','sm')}Estudiante</button><button type="button" class="btn sec" data-act="demo" data-r="agente">${ic('i-building','sm')}Agente</button></div>`;}
+function agentRegBody(){return `<h1>Crea tu cuenta de agente</h1><p class="hint">Publica tus arriendos y llega directo a estudiantes foráneos.</p>
+  <div class="fld"><label>Nombre completo</label><input class="inp" id="rgName" placeholder="Ej. Carlos Ríos" value="${esc(pendingAgent?pendingAgent.name:'')}"><div class="errtxt">Escribe tu nombre.</div></div>
+  <div class="fld"><label>Correo electrónico</label><input class="inp" id="rgMail" type="email" placeholder="nombre@correo.com" value="${esc(pendingAgent?pendingAgent.email:'')}"><div class="errtxt">Escribe un correo válido.</div></div>
+  <div class="row2"><div class="fld"><label>Teléfono</label><input class="inp" id="rgPhone" placeholder="09X XXX XXXX" value="${esc(pendingAgent?pendingAgent.phone||'':'')}"></div><div class="fld"><label>Tipo</label><select class="inp" id="rgType"><option>Agente independiente</option><option>Inmobiliaria</option><option>Propietario</option></select></div></div>
+  <div class="slab" style="margin-top:4px"><span>Verificación · obligatoria</span><span style="color:var(--ink3);font-weight:500">Así los estudiantes confían en ti</span></div>
+  <label class="upl ${S.upl.ced?'done':''}" id="uplced"><input type="file" accept="image/*,.pdf" data-up="ced">${ic('i-user','sm')}<span>${S.upl.ced?'✓ Cédula o RUC cargado':'Cédula o RUC (foto o PDF) · obligatorio'}</span></label>
   <div class="errtxt" id="cedErr" style="margin:-4px 0 10px">Sube tu cédula o RUC para poder verificarte.</div>
-  <label class="upl" id="upldoc"><input type="file" accept="image/*,.pdf" data-up="doc">${ic('i-home','sm')}<span>Documento del inmueble · opcional (predio o contrato)</span></label>
-  <div class="switchrow" style="background:var(--gold-50)"><div class="t"><b>Plan Agente · $5/mes</b><small>Publica arriendos ilimitados. El primer mes es gratis.</small></div>${ic('i-star')}</div>
+  <label class="upl ${S.upl.doc?'done':''}" id="upldoc"><input type="file" accept="image/*,.pdf" data-up="doc">${ic('i-home','sm')}<span>${S.upl.doc?'✓ Documento del inmueble cargado':'Documento del inmueble (predio o contrato) · obligatorio'}</span></label>
+  <div class="errtxt" id="docErr" style="margin:-4px 0 10px">Sube el documento del inmueble (predio o contrato).</div>
+  <div class="switchrow" style="background:var(--gold-50)"><div class="t"><b>Plan Agente · $5/mes</b><small>En el siguiente paso eliges tu método de pago.</small></div>${ic('i-star')}</div>
   <div class="fld"><label>Contraseña</label><input class="inp" id="rgPass" type="password" placeholder="Mínimo 6 caracteres"><div class="errtxt">Usa al menos 6 caracteres.</div></div>
-  <button class="btn pri block" type="submit">Crear cuenta de agente</button>
-  <p class="legal">Al registrarte aceptas los Términos y la Política de privacidad.<br>¿Ya tienes cuenta? <a href="#ingresar"><b>Inicia sesión</b></a></p></form>${authFoot()}</div>`;
-  S.upl={};
+  <button class="btn pri block" type="submit">Continuar al pago${ic('i-chev','sm')}</button>
+  <p class="legal">Al registrarte aceptas los Términos y la Política de privacidad.</p>`;}
+function paymentBody(){return `<div class="ssobadge">${ic('i-lock','xs')}Paso 2 de 2 · Suscripción</div>
+  <h1>Activa tu Plan Agente</h1><p class="hint">Elige tu método de pago para publicar arriendos. El primer mes es gratis y puedes cancelar cuando quieras.</p>
+  <div class="paysum"><div><b>Plan Agente</b><small>Arriendos ilimitados · insignia de verificado</small></div><div class="pk">$5<small>/mes</small></div></div>
+  <div class="seg" style="margin:4px 0 14px"><button type="button" class="on" data-act="payKind" data-k="credito">Crédito</button><button type="button" data-act="payKind" data-k="debito">Débito</button></div>
+  <div class="fld"><label>Número de tarjeta</label><input class="inp" id="payNum" inputmode="numeric" placeholder="4242 4242 4242 4242"><div class="errtxt">Ingresa el número de la tarjeta.</div></div>
+  <div class="row2"><div class="fld"><label>Vencimiento</label><input class="inp" id="payExp" placeholder="MM/AA"><div class="errtxt">MM/AA</div></div><div class="fld"><label>CVV</label><input class="inp" id="payCvv" inputmode="numeric" placeholder="123"><div class="errtxt">CVV</div></div></div>
+  <div class="fld"><label>Nombre en la tarjeta</label><input class="inp" id="payName" placeholder="Como aparece en la tarjeta"><div class="errtxt">Escribe el nombre.</div></div>
+  <button class="btn pri block" type="submit">${ic('i-lock','sm')}Pagar y crear mi cuenta</button>
+  <button class="btn ghost block" type="button" data-act="payBack" style="margin-top:6px">Volver a mis datos</button>
+  <div class="scam" style="margin-top:14px">${ic('i-shield','sm')}<div><b>Prototipo de NidU: no se cobra nada.</b> No ingreses datos reales de una tarjeta; cualquier número sirve solo para la demostración.</div></div>`;}
+function renderAuth(mode){
+  const cont=mode==='login'?'#authLogin':'#authReg';
+  if(regRole==='estudiante'){const seg=sstep==='pick'?roleSeg():'';$(cont).innerHTML=authArt()+`<div class="auth-form">${authHead()}<div class="box">${seg}${studentAuth(mode)}</div>${authFoot()}</div>`;bindStudentAuth();return;}
+  if(agentPay){$(cont).innerHTML=authArt()+`<div class="auth-form">${authHead()}<form class="box" data-form="pay" novalidate>${paymentBody()}</form>${authFoot()}</div>`;return;}
+  const tab=agentTab;
+  const sub=`<div class="seg" style="margin-top:10px"><button type="button" class="${tab==='login'?'on':''}" data-act="agentTab" data-t="login">Iniciar sesión</button><button type="button" class="${tab==='register'?'on':''}" data-act="agentTab" data-t="register">Crear cuenta</button></div>`;
+  const body=tab==='login'?agentLoginBody():agentRegBody();
+  $(cont).innerHTML=authArt()+`<div class="auth-form">${authHead()}<form class="box" data-form="${tab==='login'?'login':'reg'}" novalidate>${roleSeg()}${sub}${body}</form>${authFoot()}</div>`;
 }
 function studentAuth(mode){
   if(sstep==='sso'&&authUni){const u=UNIS[authUni],id=UIDENT[authUni],dom=id.e.split('@')[1];return `<div class="sso">
@@ -886,16 +930,25 @@ function submitReg(){
   const n=$('#rgName').value.trim(),m=$('#rgMail').value.trim(),p=$('#rgPass').value;
   const ok=[vfld('#rgName',n.length>1),vfld('#rgMail',/^\S+@\S+\.\S+$/.test(m)),vfld('#rgPass',p.length>=6)].every(Boolean);
   const c=!!S.upl.ced;$('#cedErr').style.display=c?'none':'block';$('#uplced').classList.toggle('bad',!c);
-  if(!(ok&&c)){toast('Revisa los campos marcados');return;}
-  S.verif='rev';setTimeout(()=>{S.verif='ok';store();S.notifs.unshift({t:'¡Tu identidad fue verificada!',s:'Tus anuncios ya muestran la insignia de agente verificado',id:0,h:'ahora'});toast('¡Listo! Tu cuenta de agente fue verificada');if(location.hash==='#agente')renderAgent();},7000);
-  S.user={name:n,email:m,role:'agente'};store();
-  toast(`¡Bienvenid@, ${n.split(' ')[0]}! Tu cuenta está lista`);
-  go('agente');
+  const dc=!!S.upl.doc;$('#docErr').style.display=dc?'none':'block';$('#upldoc').classList.toggle('bad',!dc);
+  if(!(ok&&c&&dc)){toast('Revisa los campos y los dos documentos');return;}
+  pendingAgent={name:n,email:m,phone:$('#rgPhone')?$('#rgPhone').value.trim():''};
+  agentPay=true;reAuth();
+}
+function submitPay(){
+  const req=['#payNum','#payExp','#payCvv','#payName'];const ok=req.map(id=>vfld(id,$(id).value.trim().length>0)).every(Boolean);
+  if(!ok){toast('Completa los datos de la tarjeta (son de demostración)');return;}
+  const pa=pendingAgent||{name:'Agente',email:'agente@correo.com'};
+  S.user={name:pa.name,email:pa.email,role:'agente'};S.subscribed=true;S.verif='rev';agentPay=false;pendingAgent=null;store();
+  setTimeout(()=>{S.verif='ok';store();S.notifAgent.unshift({t:'¡Tu identidad fue verificada!',s:'Tus anuncios ya muestran la insignia de agente verificado',h:'ahora',k:'verif'});toast('¡Listo! Tu cuenta de agente fue verificada');if(location.hash==='#agente')renderAgent();},7000);
+  toast(`¡Bienvenid@, ${pa.name.split(' ')[0]}! Tu suscripción está activa`);go('agente');
 }
 function submitLogin(){const m=$('#lgMail').value.trim(),p=$('#lgPass').value;
   const ok=[vfld('#lgMail',/^\S+@\S+\.\S+$/.test(m)),vfld('#lgPass',p.length>0)].every(Boolean);if(!ok)return;
-  S.verif='ok';S.user=(S.user&&S.user.email===m)?S.user:{name:m.split('@')[0].replace(/[._]/g,' ').replace(/\b\w/g,c=>c.toUpperCase()),email:m,role:'agente'};S.user.role='agente';store();toast('Sesión iniciada');go('agente');}
+  S.verif='ok';S.user=(S.user&&S.user.email===m)?S.user:{name:m.split('@')[0].replace(/[._]/g,' ').replace(/\b\w/g,c=>c.toUpperCase()),email:m,role:'agente'};S.user.role='agente';S.subscribed=true;store();toast('Sesión iniciada');go('agente');}
 
+function notifList(){const base=S.user&&S.user.role==='agente'?S.notifAgent:S.notifStudent;return [...base,...S.notifApp];}
+function notifIcon(k){return {new:'i-pin',price:'i-tag',msg:'i-msg',rev:'i-star',report:'i-shield',pay:'i-tag',app:'i-bell',verif:'i-shield'}[k]||'i-bell';}
 /* ===================== TOP BAR ===================== */
 function topbar(v){
   const ag=S.user?.role==='agente';const name=S.user?.name||'Invitado';const ini=name.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase();
@@ -905,12 +958,12 @@ function topbar(v){
   <div class="tsearch">${ic('i-search','sm')}<input placeholder="Buscar zona o arriendo…" data-chg="q" value="${esc(S.f.q)}"></div>`}
   <div class="sp"></div>
   ${S.user?'':`<button class="btn ghost sm gbtn" data-act="go" data-v="ingresar">Iniciar sesión</button><button class="btn pri sm gbtn" data-act="go" data-v="registro">Regístrate</button>`}
-  <button class="iconbtn" data-act="bell" aria-label="Notificaciones">${ic('i-bell')}${S.notifs.length?'<span class="dot"></span>':''}</button>
+  <button class="iconbtn" data-act="bell" aria-label="Notificaciones">${ic('i-bell')}${notifList().length?'<span class="dot"></span>':''}</button>
   <button class="avatar" data-act="menu" aria-label="Menú">${S.user?ini:ic('i-user','sm')}</button></div>
   <div class="menu" id="menu"></div></div>`;
 }
 function openMenu(kind){const m=$('#menu');if(m.classList.contains('on')&&m.dataset.k===kind){m.classList.remove('on');return;}m.dataset.k=kind;
-  if(kind==='bell')m.innerHTML=`<h5>Notificaciones</h5>${S.notifs.length?S.notifs.map((n,i)=>`<div class="nt" data-act="openL" data-id="${n.id}" style="cursor:pointer"><div class="ib">${ic('i-bell','sm')}</div><div><b>${esc(n.t)}</b><small>${esc(n.s)} · ${n.h}</small></div></div>`).join(''):'<p style="padding:10px;color:var(--ink3)">Sin novedades</p>'}`;
+  if(kind==='bell'){const list=notifList();m.innerHTML=`<h5>Notificaciones</h5>${list.length?list.map(n=>{const clk=n.id&&n.k!=='app';return `<div class="nt"${clk?` data-act="openL" data-id="${n.id}" style="cursor:pointer"`:''}><div class="ib">${ic(notifIcon(n.k),'sm')}</div><div><b>${esc(n.t)}</b><small>${esc(n.s)} · ${n.h}</small></div></div>`}).join(''):'<p style="padding:10px;color:var(--ink3)">Sin novedades</p>'}`;}
   else{const ag=S.user?.role==='agente';m.innerHTML=S.user?`<div style="padding:10px"><b>${esc(S.user.name)}</b><div style="color:var(--ink3);font-size:13px">${esc(S.user.email)}</div></div>
    ${ag?`<button class="mi" data-act="go" data-v="agente">${ic('i-grid','sm')}Panel del agente</button><button class="mi" data-act="go" data-v="publicar">${ic('i-plus','sm')}Publicar arriendo</button><button class="mi" data-act="go" data-v="explorar">${ic('i-eye','sm')}Ver como estudiante</button>`:`<button class="mi" data-act="go" data-v="explorar">${ic('i-map','sm')}Explorar arriendos</button><button class="mi" data-act="favs">${ic('i-heart','sm')}Mis favoritos (${S.fav.size})</button><button class="mi" data-act="budget">${ic('i-tag','sm')}Cambiar presupuesto ($${S.budget})</button>`}
    <button class="mi" data-act="switchRole">${ic('i-swap','sm')}Cambiar a ${ag?'estudiante':'agente'} (demo)</button><button class="mi" data-act="logout" style="color:var(--bad)">${ic('i-logout','sm')}Cerrar sesión</button>`
@@ -1017,7 +1070,7 @@ function renderDetail(){const l=S.sel,A=agentOf(l),d=km(l),f=fair(l.price),z=zfa
       <a href="#arriendo" data-act="toCost" class="r" style="display:flex;justify-content:space-between;align-items:center;color:var(--ink)"><span style="font-size:13px;font-weight:700;color:var(--ink2)">COSTO REAL ESTIMADO</span><b style="font-family:var(--hf);font-size:20px;color:var(--navy)">$${c.tot}/mes</b></a>
     </div>
     <div style="display:grid;gap:10px;margin-top:18px"><button class="btn pri block" data-act="contact">${ic('i-msg','sm')}Contactar al agente</button><button class="btn sec block" data-act="visit">${ic('i-clock','sm')}Agendar visita</button><button class="btn ghost block sm" data-act="cmp" data-id="${l.id}">${ic('i-list','sm')}${S.cmp.has(l.id)?'Quitar de comparar':'Agregar a comparar'}</button></div>
-    <div class="agent"><div class="av" style="background:${A.col}">${A.ini}</div><div style="flex:1"><b>${esc(A.n)} ${A.v?`<span style="color:var(--good)">${ic('i-shield','xs')}</span>`:''}</b><small>${A.rv?`${ic('i-star','xs')} ${A.r} (${A.rv} reseñas) · `:''}${A.v?'Identidad verificada':'En verificación'}</small></div><button class="iconbtn" data-act="call" aria-label="Llamar">${ic('i-phone','sm')}</button></div>
+    <div class="agent" data-act="agentProfile" data-ag="${l.ag}" style="cursor:pointer"><div class="av" style="background:${A.col}">${A.ini}</div><div style="flex:1"><b>${esc(A.n)} ${A.v?`<span style="color:var(--good)">${ic('i-shield','xs')}</span>`:''}</b><small>${A.rv?`${ic('i-star','xs')} ${A.r} (${A.rv} reseñas) · `:''}Ver perfil completo</small></div><button class="iconbtn" data-act="call" aria-label="Llamar">${ic('i-phone','sm')}</button></div>
     <p style="font-size:12px;color:var(--ink3);margin-top:14px;display:flex;gap:6px">${ic('i-shield','xs')}Nunca pagues sin visitar el arriendo y firmar contrato.</p></div></aside></div>
   <div class="mbar"><div><span class="price" style="font-size:22px">$${l.price}<small>/mes</small></span><div><span class="badge ${f.k}">${f.s}</span></div></div><button class="btn pri" data-act="contact">${ic('i-msg','sm')}Contactar</button></div>`;
   const m=initMap($('#dMap'),{onCenter:()=>fitR()});const U=UNIS[S.uni];
@@ -1062,7 +1115,7 @@ function myMsgs(){const ids=new Set(mine().map(l=>l.id));return S.msgs.filter(m=
 function renderAgent(){const my=mine(),act=my.filter(l=>l.st).length,views=my.reduce((a,l)=>a+l.views,0),con=my.reduce((a,l)=>a+l.contacts,0),unread=myMsgs().filter(m=>m.u).length;
   const days=['L','M','M','J','V','S','D'],vals=views?[32,41,38,55,47,62,37].map(v=>Math.round(v*views/312)):[0,0,0,0,0,0,0];const mx=Math.max(1,...vals);const tab=S.aTab;
   const name=S.user?.name||'Carlos Ríos';
-  $('#agent').innerHTML=`<nav class="anav"><button class="${tab==='panel'?'on':''}" data-act="aTab" data-t="panel">${ic('i-grid')}Panel</button><button class="${tab==='list'?'on':''}" data-act="aTab" data-t="list">${ic('i-home')}Mis arriendos<span class="count" style="background:var(--blue-50);color:var(--blue)">${my.length}</span></button><button class="${tab==='msgs'?'on':''}" data-act="aTab" data-t="msgs">${ic('i-msg')}Mensajes${unread?`<span class="count">${unread}</span>`:''}</button><button data-act="go" data-v="publicar">${ic('i-plus')}Publicar arriendo</button><button data-act="go" data-v="explorar">${ic('i-eye')}Ver como estudiante</button>
+  $('#agent').innerHTML=`<nav class="anav"><button class="${tab==='panel'?'on':''}" data-act="aTab" data-t="panel">${ic('i-grid')}Panel</button><button class="${tab==='list'?'on':''}" data-act="aTab" data-t="list">${ic('i-home')}Mis arriendos<span class="count" style="background:var(--blue-50);color:var(--blue)">${my.length}</span></button><button class="${tab==='msgs'?'on':''}" data-act="aTab" data-t="msgs">${ic('i-msg')}Mensajes${unread?`<span class="count">${unread}</span>`:''}</button><button class="${tab==='perfil'?'on':''}" data-act="aTab" data-t="perfil">${ic('i-user')}Mi perfil</button><button data-act="go" data-v="publicar">${ic('i-plus')}Publicar arriendo</button><button data-act="go" data-v="explorar">${ic('i-eye')}Ver como estudiante</button>
   <div class="plan"><div class="ring" style="width:160px;height:160px;right:-60px;top:-60px"></div><small style="opacity:.7;font-weight:700;letter-spacing:.08em;font-size:11px">PLAN AGENTE</small><div class="k">$5<small style="font-size:13px;opacity:.7;font-family:var(--bf)">/mes</small></div><small style="opacity:.75">Se renueva el 30 de nov.</small></div></nav>
   <main class="amain"><div class="ahead"><div><p>Buenos días,</p><h1>${esc(name)}</h1>${S.verif==='ok'?`<div style="display:flex;gap:6px;align-items:center;color:var(--good);font-weight:700;font-size:13px;margin-top:4px">${ic('i-shield','sm')}Agente verificado</div>`:`<div style="display:flex;gap:6px;align-items:center;color:var(--mid);font-weight:700;font-size:13px;margin-top:4px">${ic('i-clock','sm')}Verificación en curso</div>`}</div><button class="btn pri" data-act="go" data-v="publicar">${ic('i-plus','sm')}Publicar arriendo</button></div>
   ${S.verif==='rev'?`<div class="verif rev"><div class="spin"></div><div><b>Estamos verificando tu identidad</b><div style="font-size:13px">Revisamos tu cédula o RUC. Mientras tanto puedes publicar; tus anuncios mostrarán la insignia de verificado al terminar.</div></div></div>`:''}
@@ -1073,16 +1126,34 @@ function renderAgent(){const my=mine(),act=my.filter(l=>l.st).length,views=my.re
    <div class="blk" style="margin:0"><h3>Mensajes recientes <button class="btn ghost sm" data-act="aTab" data-t="msgs">Ver todos</button></h3>${myMsgs().length?myMsgs().slice(0,3).map(m=>msgRow(m,S.msgs.indexOf(m))).join(''):'<p style="color:var(--ink3)">Cuando un estudiante te escriba, lo verás aquí.</p>'}</div></div>
    <div class="blk" style="margin-top:16px"><h3>Mis arriendos <button class="btn ghost sm" data-act="aTab" data-t="list">Ver todos</button></h3>${tbl(my.slice(0,3))}</div>`
   :tab==='list'?`<div class="blk">${tbl(my)}</div>`
+  :tab==='perfil'?`<div class="blk">${agentProfileHTML(selfKey(),'agent')}</div>`
   :`<div class="blk">${myMsgs().length?myMsgs().map(m=>msgRow(m,S.msgs.indexOf(m))).join(''):'<p style="color:var(--ink3)">Aún no tienes mensajes.</p>'}</div>`}
   </main>`;}
-function tbl(rows){if(!rows.length)return `<div class="empty"><div class="ib">${ic('i-home','lg')}</div><b>Aún no tienes arriendos publicados</b><p style="margin:6px 0 14px">Publica el primero y aparecerá en el mapa de los estudiantes.</p><button class="btn pri sm" data-act="go" data-v="publicar">${ic('i-plus','sm')}Publicar arriendo</button></div>`;return `<table class="tbl"><thead><tr><th>Arriendo</th><th class="hide">Precio</th><th class="hide">Vistas</th><th class="hide">Contactos</th><th>Estado</th><th></th></tr></thead><tbody>${rows.map(l=>`<tr><td><div class="tt"><div class="th">${thumb(l)}</div><div><b>${esc(l.t)}</b><small>${esc(l.zone)} · ${km(l,'espol')} km de ESPOL</small></div></div></td><td class="hide"><b>$${l.price}</b><br><span class="badge ${zfair(l.price,l.zone).k}" style="margin-top:4px">${{good:'Justo',mid:'Promedio',bad:'Alto'}[zfair(l.price,l.zone).k]}</span></td><td class="hide">${ic('i-eye','xs')} ${l.views}</td><td class="hide">${ic('i-msg','xs')} ${l.contacts}</td><td><span class="st"><button class="sw ${l.st?'on':''}" data-act="toggleL" data-id="${l.id}" aria-label="Activar"></button>${l.st?'Activo':'Pausado'}</span></td><td><button class="iconbtn" data-act="openL" data-id="${l.id}" aria-label="Ver">${ic('i-eye','sm')}</button></td></tr>`).join('')}</tbody></table>`;}
+function tbl(rows){if(!rows.length)return `<div class="empty"><div class="ib">${ic('i-home','lg')}</div><b>Aún no tienes arriendos publicados</b><p style="margin:6px 0 14px">Publica el primero y aparecerá en el mapa de los estudiantes.</p><button class="btn pri sm" data-act="go" data-v="publicar">${ic('i-plus','sm')}Publicar arriendo</button></div>`;return `<table class="tbl"><thead><tr><th>Arriendo</th><th class="hide">Precio</th><th class="hide">Interés</th><th>Estado</th><th></th></tr></thead><tbody>${rows.map(l=>{const occ=l.rented;return `<tr><td><div class="tt"><div class="th">${thumb(l)}</div><div><b>${esc(l.t)}</b><small>${esc(l.zone)} · ${km(l,'espol')} km de ESPOL</small></div></div></td><td class="hide"><b>$${l.price}</b><br><span class="badge ${zfair(l.price,l.zone).k}" style="margin-top:4px">${{good:'Justo',mid:'Promedio',bad:'Alto'}[zfair(l.price,l.zone).k]}</span></td><td class="hide">${ic('i-eye','xs')} ${l.views} · ${ic('i-msg','xs')} ${l.contacts}</td><td>${occ?`<span class="badge" style="background:var(--blue-50);color:var(--blue)">Arrendado</span>`:`<span class="st"><button class="sw ${l.st?'on':''}" data-act="toggleL" data-id="${l.id}" aria-label="Activar"></button>${l.st?'Disponible':'Pausado'}</span>`}</td><td><div style="display:flex;gap:6px;justify-content:flex-end;align-items:center">${occ?`<button class="btn sec sm" data-act="tenant" data-id="${l.id}">${ic('i-users','xs')}Inquilino</button>`:`<button class="btn sec sm" data-act="editL" data-id="${l.id}">${ic('i-edit','xs')}Editar</button>`}<button class="iconbtn" data-act="openL" data-id="${l.id}" aria-label="Ver">${ic('i-eye','sm')}</button></div></td></tr>`}).join('')}</tbody></table>`;}
+const selfKey=()=>isCarlos()?'carlos':'me';
+function agentListings(key){return L.filter(l=>key==='me'?l.ag==='me':(l.ag===key||(key==='carlos'&&l.mine)));}
+function agentReviews(key){const out=[];agentListings(key).forEach(l=>(REV[l.id]||[]).forEach(r=>out.push({...r,lt:l.t})));return out;}
+function tenantModal(id){const l=L.find(x=>x.id===id);const ts=l.tenants||[];modal(`<div class="mh"><h3>Inquilino${ts.length>1?'s':''}</h3><button class="iconbtn" data-act="close">${ic('i-x')}</button></div><div class="mb"><div style="display:flex;gap:10px;align-items:center;margin-bottom:14px"><div style="width:48px;height:48px;border-radius:12px;overflow:hidden;flex:none">${thumb(l)}</div><div><b>${esc(l.t)}</b><div style="color:var(--ink3);font-size:13px">${esc(l.zone)} · $${l.price}/mes</div></div></div>${ts.map(t=>`<div class="tenant ${t.pay==='atrasado'?'late':''}"><div class="th2"><div class="av" style="background:var(--navy)">${t.n.split(' ').map(w=>w[0]).slice(0,2).join('')}</div><div style="flex:1"><b>${esc(t.n)}</b><small>Viene de ${esc(t.from)} · estudia en ${esc(t.u)}</small></div>${t.pay==='atrasado'?`<span class="badge bad">${t.lateDays} días de atraso</span>`:`<span class="badge good">Al día</span>`}</div><div class="tgrid"><div><small>Tiempo arrendando</small><b>${t.months} ${t.months===1?'mes':'meses'}</b></div><div><small>Desde</small><b>${esc(t.since)}</b></div><div><small>Renta mensual</small><b>$${t.amount}</b></div><div><small>Próximo pago</small><b>${esc(t.next)}</b></div></div>${t.pay==='atrasado'?`<button class="btn pri block sm" style="margin-top:12px" data-act="remind" data-id="${id}">${ic('i-bell','sm')}Enviar recordatorio de pago</button>`:''}</div>`).join('')}</div>`);}
+function editListing(id){const l=L.find(x=>x.id===id);if(!l)return;if(l.rented){toast('No puedes editar un arriendo que ya está arrendado');return;}S.pub={editId:id,t:l.t,type:l.type,zone:l.zone,price:l.price,m2:l.m2,bath:l.bath,sv:new Set(l.sv),x:l.x,y:l.y,imgs:(l.imgs||[]).slice(),g:'1 mes',c:'6 meses',r:'Solo estudiantes',desc:l.desc||''};go('publicar');}
+function agentProfileHTML(key,viewer){const A=key==='me'?{n:(S.user&&S.user.name)||'Tú',ini:((S.user&&S.user.name)||'TU').split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase(),col:'#0469E6',v:S.verif==='ok',r:0,rv:0,ph:'—',email:(S.user&&S.user.email)||'',agency:'Agente independiente',lic:S.verif==='ok'?'Verificado por NidU':'En verificación',joined:'este mes',bio:'Agente en NidU.'}:AGENTS[key];
+ const ls=agentListings(key);const occ=ls.filter(l=>l.rented).length;const free=ls.length-occ;
+ const revs=agentReviews(key);const avg=revs.length?Math.round(revs.reduce((a,r)=>a+r.r,0)/revs.length*10)/10:(A.r||0);
+ return `<div class="prof">
+  <div class="prof-head"><div class="av" style="background:${A.col}">${A.ini}</div><div style="flex:1"><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><h2 style="font-size:24px;color:var(--navy)">${esc(A.n)}</h2>${A.v?`<span class="badge good">${ic('i-shield','xs')}Verificado</span>`:`<span class="badge mid">En verificación</span>`}</div><div style="color:var(--ink2);margin-top:4px">${esc(A.agency||'Agente')} · en NidU desde ${esc(A.joined||'—')}</div><div style="display:flex;gap:5px;align-items:center;margin-top:6px">${stars(avg)} <b>${avg||'—'}</b><span style="color:var(--ink3)">(${revs.length} reseñas)</span></div></div></div>
+  ${A.bio?`<p style="color:var(--ink2);margin-top:12px">${esc(A.bio)}</p>`:''}
+  <div class="prof-stats"><div><b>${ls.length}</b><small>Arriendos</small></div><div><b>${occ}</b><small>Ocupados</small></div><div><b>${free}</b><small>Libres</small></div><div><b>${avg||'—'}</b><small>Calificación</small></div></div>
+  <div class="prof-sec"><h3>Contacto</h3><div class="prof-contact"><div>${ic('i-phone','sm')}${esc(A.ph||'—')}</div><div>${ic('i-mail','sm')}${esc(A.email||'—')}</div><div>${ic('i-shield','sm')}Licencia / documento: <b style="margin:0 4px">${esc(A.lic||'—')}</b>${A.v?`<span style="color:var(--good)">verificado</span>`:''}</div></div></div>
+  <div class="prof-sec"><h3>Sus arriendos</h3><div class="prof-list">${ls.length?ls.map(l=>`<div class="prof-item" ${viewer==='student'?`data-act="openL" data-id="${l.id}" style="cursor:pointer"`:''}><div class="th">${thumb(l)}</div><div style="flex:1"><b>${esc(l.t)}</b><small>${esc(l.zone)} · $${l.price}/mes</small></div>${l.rented?`<span class="badge" style="background:var(--blue-50);color:var(--blue)">Ocupado</span>`:`<span class="badge good">Libre</span>`}</div>`).join(''):'<p style="color:var(--ink3)">Sin arriendos publicados.</p>'}</div></div>
+  ${revs.length?`<div class="prof-sec"><h3>Reseñas de estudiantes</h3>${revs.slice(0,4).map(r=>`<div class="rv"><div class="h"><div class="av" style="background:${r.col};width:34px;height:34px;font-size:12px">${r.n.split(' ').map(w=>w[0]).join('').slice(0,2)}</div><div style="flex:1"><b>${esc(r.n)}</b><small style="color:var(--blue);display:block">${esc(r.lt)}</small></div>${stars(r.r)}</div><p>${esc(r.t)}</p></div>`).join('')}</div>`:''}
+ </div>`;}
+function openAgentProfile(key){modal(`<div class="mh"><h3>Perfil del agente</h3><button class="iconbtn" data-act="close">${ic('i-x')}</button></div><div class="mb">${agentProfileHTML(key,'student')}</div>`,true);}
 function msgRow(m,i){const l=L.find(x=>x.id===m.lid);return `<div class="msg ${m.u?'unread':''}" data-act="readMsg" data-i="${i}"><div class="av" style="background:${m.col}">${m.ini}</div><div style="flex:1;min-width:0"><div style="display:flex;justify-content:space-between"><b>${esc(m.n)}</b><small>${m.h}</small></div><small style="color:var(--blue)">${esc(l?l.t:'')}</small><p>${esc(m.m)}</p></div></div>`;}
 function readMsg(i){const m=S.msgs[i];m.u=false;const l=L.find(x=>x.id===m.lid);modal(`<div class="mh"><h3>${esc(m.n)}</h3><button class="iconbtn" data-act="close">${ic('i-x')}</button></div><div class="mb"><small style="color:var(--blue);font-weight:600">${esc(l?.t||'')}</small><div style="background:var(--bg);padding:12px 14px;border-radius:14px 14px 14px 4px;margin:10px 0 16px;max-width:85%">${esc(m.m)}</div><div class="fld"><label>Tu respuesta</label><textarea class="inp" rows="3">¡Hola! Sí, sigue disponible. Puedes visitarlo el sábado a las 10:00. ¿Te queda bien?</textarea></div></div><div class="mf"><button class="btn pri" data-act="reply">${ic('i-msg','sm')}Responder</button></div>`);renderAgent();}
 
 /* ===================== PUBLISH ===================== */
 function renderPublish(){if(!S.pub)S.pub={t:'',type:'Habitación',zone:'Prosperina',price:170,m2:14,bath:'Privado',sv:new Set(['wifi','agua','luz']),x:360,y:304,imgs:[],g:'1 mes',c:'6 meses',r:'Solo estudiantes'};const P=S.pub;
   $('#publish').innerHTML=`<div class="crumb"><button data-act="go" data-v="agente">${ic('i-back','sm')}Volver al panel</button></div>
-  <div class="ahead"><div><h1 style="font-size:30px;color:var(--navy);font-weight:900;font-family:var(--hf)">Publicar un arriendo</h1><p style="color:var(--ink2)">Los estudiantes verán tu anuncio en el mapa, comparado con su presupuesto.</p></div></div>
+  <div class="ahead"><div><h1 style="font-size:30px;color:var(--navy);font-weight:900;font-family:var(--hf)">${S.pub.editId?'Editar arriendo':'Publicar un arriendo'}</h1><p style="color:var(--ink2)">Los estudiantes verán tu anuncio en el mapa, comparado con su presupuesto.</p></div></div>
   <form class="pubgrid" data-form="pub" novalidate><div>
    <div class="blk"><h3>Fotos</h3><div class="photos" id="phs"></div><input type="file" id="phIn" accept="image/*" multiple hidden><p style="font-size:12.5px;color:var(--ink3);margin-top:10px">Sube fotos reales desde tu computador. Si no subes ninguna, mostramos una ilustración.</p></div>
    <div class="blk"><h3>Información básica</h3>
@@ -1093,10 +1164,10 @@ function renderPublish(){if(!S.pub)S.pub={t:'',type:'Habitación',zone:'Prosperi
     <div class="row2" style="margin-top:14px"><div class="fld"><label>Zona</label><select class="inp" id="pZ">${Object.keys(ZAVG).map(z=>`<option ${z===P.zone?'selected':''}>${z}</option>`).join('')}</select></div><div class="fld"><label>Baño</label><select class="inp" id="pB"><option ${P.bath==='Privado'?'selected':''}>Privado</option><option ${P.bath==='Compartido'?'selected':''}>Compartido</option></select></div></div></div>
    <div class="blk"><h3>Ubicación <span style="font-size:13px;color:var(--ink3);font-family:var(--bf);font-weight:600">Toca el mapa para mover el pin</span></h3><div class="map" id="pMap"></div><div class="locinfo" id="pLoc"></div></div>
    <div class="blk"><h3>Servicios incluidos</h3><div class="chips">${Object.entries(SVC).map(([k,[n,i]])=>`<button type="button" class="chip ${P.sv.has(k)?'on':''}" data-act="pSv" data-s="${k}">${ic(i,'sm')}${n}</button>`).join('')}</div></div>
-   <div class="blk"><h3>Condiciones</h3><div class="row2"><div class="fld"><label>Garantía</label><select class="inp" id="pG"><option>Sin garantía</option><option selected>1 mes</option><option>2 meses</option></select></div><div class="fld"><label>Contrato mínimo</label><select class="inp" id="pC"><option>Mes a mes</option><option selected>6 meses</option><option>12 meses</option></select></div></div><div class="fld"><label>Reglas de la casa</label><input class="inp" id="pR" value="${esc(P.r)}"></div><div class="fld"><label>Descripción</label><textarea class="inp" id="pD" rows="3" placeholder="Cuenta qué hace especial a tu arriendo…"></textarea></div></div>
+   <div class="blk"><h3>Condiciones</h3><div class="row2"><div class="fld"><label>Garantía</label><select class="inp" id="pG"><option>Sin garantía</option><option selected>1 mes</option><option>2 meses</option></select></div><div class="fld"><label>Contrato mínimo</label><select class="inp" id="pC"><option>Mes a mes</option><option selected>6 meses</option><option>12 meses</option></select></div></div><div class="fld"><label>Reglas de la casa</label><input class="inp" id="pR" value="${esc(P.r)}"></div><div class="fld"><label>Descripción</label><textarea class="inp" id="pD" rows="3" placeholder="Cuenta qué hace especial a tu arriendo…">${esc(P.desc||'')}</textarea></div></div>
   </div>
   <aside class="preview"><div class="blk"><h3>Vista previa</h3><p style="font-size:13px;color:var(--ink3);margin:-8px 0 12px">Así lo verá un estudiante con presupuesto de $180</p><div id="pPrev"></div>
-   <button class="btn pri block" type="submit" style="margin-top:16px">${ic('i-check','sm')}Publicar arriendo</button><button class="btn ghost block" type="button" data-act="go" data-v="agente" style="margin-top:6px">Guardar borrador</button></div></aside></form>`;
+   <button class="btn pri block" type="submit" style="margin-top:16px">${ic('i-check','sm')}${S.pub.editId?'Guardar cambios':'Publicar arriendo'}</button><button class="btn ghost block" type="button" data-act="go" data-v="agente" style="margin-top:6px">Guardar borrador</button></div></aside></form>`;
   const m=initMap($('#pMap'),{ctl:true,onClick:(x,y)=>{P.x=Math.round(x);P.y=Math.round(y);pubPin();pubPrev();},onCenter:()=>m.center(P.x,P.y,1.4)});
   requestAnimationFrame(()=>m.center(P.x,P.y,1.4));
   ['pT','pP','pM','pZ','pB','pR'].forEach(id=>$('#'+id).addEventListener('input',pubPrev));
@@ -1110,6 +1181,7 @@ function pubPrev(){const P=S.pub;P.t=$('#pT').value;P.price=+$('#pP').value||0;P
   const [u]=nearestUni(P.x,P.y);const fake={id:0,t:P.t||'Título de tu arriendo',type:P.type,zone:P.zone,x:P.x,y:P.y,price:P.price,m2:P.m2,pal:0,ag:'carlos',sv:[...P.sv],img:P.imgs[0],isNew:true};
   const old=S.uni;S.uni=u;const b=S.budget;S.budget=180;$('#pPrev').innerHTML=cardHTML(fake,{nofav:true}).replace('data-act="openL"','');S.uni=old;S.budget=b;}
 function submitPub(){const P=S.pub;pubPrev();if(!vfld('#pT',P.t.trim().length>=8)){toast('Falta el título del anuncio');$('#pT').focus();return;}
+  if(P.editId){const l=L.find(x=>x.id===P.editId);if(l){Object.assign(l,{t:P.t.trim(),type:P.type,zone:P.zone,x:P.x,y:P.y,price:P.price,m2:P.m2,bath:P.bath,sv:[...P.sv],cond:[`Garantía: ${$('#pG').value}`,`Contrato mínimo: ${$('#pC').value}`,P.r].filter(Boolean),img:P.imgs[0],imgs:P.imgs.slice(),desc:$('#pD').value||l.desc});}S.pub=null;toast('Cambios guardados');S.aTab='list';go('agente');return;}
   const l={id:++NID,t:P.t.trim(),type:P.type,zone:P.zone,x:P.x,y:P.y,price:P.price,m2:P.m2,bath:P.bath,sv:[...P.sv],cond:[`Garantía: ${$('#pG').value}`,`Contrato mínimo: ${$('#pC').value}`,P.r].filter(Boolean),ag:(S.user?.name==='Carlos Ríos'?'carlos':'me'),pal:NID%5,isNew:true,views:0,contacts:0,st:true,mine:true,vph:false,img:P.imgs[0],imgs:P.imgs.slice(),desc:$('#pD').value||'Arriendo publicado recientemente en NidU.'};
   L.unshift(l);REV[l.id]=[];const [u,d]=nearestUni(l.x,l.y);S.notifs.unshift({t:`Nuevo arriendo en ${l.zone}`,s:`${l.t} · $${l.price}/mes`,id:l.id,h:'ahora'});S.pub=null;
   toast('¡Publicado! Ya aparece en el mapa de los estudiantes');S.aTab='list';go('agente');}
@@ -1117,15 +1189,22 @@ function submitPub(){const P=S.pub;pubPrev();if(!vfld('#pT',P.t.trim().length>=8
 /* ===================== EVENTS ===================== */
 document.addEventListener('click',e=>{const a=e.target.closest('[data-act]');if(!a)return;const act=a.dataset.act,id=+a.dataset.id;
   switch(act){
-  case 'go':e.preventDefault();$('#menu')?.classList.remove('on');if(a.dataset.v==='registro'||a.dataset.v==='ingresar'){regRole='estudiante';sstep='pick';authUni=null;}go(a.dataset.v);break;
+  case 'go':e.preventDefault();$('#menu')?.classList.remove('on');if(a.dataset.v==='registro'||a.dataset.v==='ingresar'){regRole='estudiante';sstep='pick';authUni=null;agentPay=false;agentTab=(a.dataset.v==='ingresar'?'login':'register');}go(a.dataset.v);break;
   case 'agentSignup':regRole='agente';go('registro');break;
-  case 'role':e.preventDefault();regRole=a.dataset.r;sstep='pick';authUni=null;reAuth();break;
+  case 'role':e.preventDefault();regRole=a.dataset.r;sstep='pick';authUni=null;agentPay=false;reAuth();break;
+  case 'agentTab':agentTab=a.dataset.t;agentPay=false;reAuth();break;
+  case 'payKind':a.parentNode.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b===a));break;
+  case 'payBack':agentPay=false;reAuth();break;
+  case 'editL':editListing(id);break;
+  case 'tenant':tenantModal(id);break;
+  case 'remind':closeModal();toast('Recordatorio de pago enviado al inquilino (demo)');break;
+  case 'agentProfile':openAgentProfile(a.dataset.ag);break;
   case 'uniPick':authUni=a.dataset.u;sstep='sso';reAuth();break;
   case 'ssoBack':sstep='pick';authUni=null;reAuth();break;
   case 'ssoGo':submitSso();break;
   case 'guest':toast('Explorando como invitado');go('explorar');break;
   case 'sw':S.notify=!S.notify;a.classList.toggle('on',S.notify);break;
-  case 'demo':if(a.dataset.r==='agente')S.verif='ok';S.user=a.dataset.r==='agente'?{name:'Carlos Ríos',email:'carlos.rios@nidu.ec',role:'agente'}:{name:'Juan Pablo Arenas',email:'jparenas@espol.edu.ec',role:'estudiante',uni:'espol'};S.prof=true;store();toast(`Entraste como ${S.user.name}`);go(S.user.role==='agente'?'agente':'explorar');break;
+  case 'demo':if(a.dataset.r==='agente'){S.verif='ok';S.subscribed=true;}S.user=a.dataset.r==='agente'?{name:'Carlos Ríos',email:'carlos.rios@nidu.ec',role:'agente'}:{name:'Juan Pablo Arenas',email:'jparenas@espol.edu.ec',role:'estudiante',uni:'espol'};S.prof=true;store();toast(`Entraste como ${S.user.name}`);go(S.user.role==='agente'?'agente':'explorar');break;
   case 'forgot':e.preventDefault();toast('Te enviaríamos un enlace para restablecerla (demo)');break;
   case 'menu':openMenu('menu');break;
   case 'bell':openMenu('bell');break;
