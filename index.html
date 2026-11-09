@@ -1,0 +1,1188 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NidU · Prototipo interactivo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#07275C; --navy2:#0C3478; --blue:#0469E6; --blue-50:#EAF2FE; --blue-100:#D4E5FD;
+  --gold:#FFB012; --gold-50:#FFF4DB;
+  --ink:#0B1B3F; --ink2:#4A5878; --ink3:#8A96B0; --line:#E3E9F3; --bg:#F4F7FC; --white:#fff;
+  --good:#12A06A; --good-50:#E3F6EE; --mid:#E08A00; --mid-50:#FFF1D9; --bad:#E0473B; --bad-50:#FDE7E5;
+  --r:18px; --sh:0 1px 2px rgba(7,39,92,.05),0 8px 24px rgba(7,39,92,.07); --sh2:0 18px 50px rgba(7,39,92,.18);
+  --hf:'Nunito',system-ui,sans-serif; --bf:'DM Sans',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:var(--bf);color:var(--ink);background:var(--bg);font-size:15px;line-height:1.45;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+input,select,textarea{font:inherit;color:inherit}
+a{color:var(--blue);text-decoration:none}
+h1,h2,h3,h4{font-family:var(--hf);letter-spacing:-.02em;line-height:1.1}
+svg{display:block}
+.view{display:none;min-height:100vh}
+.view.on{display:block}
+.ico{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.ico.sm{width:16px;height:16px}.ico.xs{width:14px;height:14px}.ico.lg{width:24px;height:24px}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:48px;padding:0 22px;border-radius:14px;font-weight:700;font-size:15px;transition:.15s;white-space:nowrap}
+.btn.pri{background:var(--blue);color:#fff;box-shadow:0 8px 20px rgba(4,105,230,.28)}
+.btn.pri:hover{background:#0359C4;transform:translateY(-1px)}
+.btn.sec{background:#fff;border:1.5px solid var(--line);color:var(--ink)}
+.btn.sec:hover{border-color:var(--blue);color:var(--blue)}
+.btn.dark{background:var(--navy);color:#fff}
+.btn.gold{background:var(--gold);color:var(--navy)}
+.btn.ghost{color:var(--ink2);padding:0 12px}
+.btn.ghost:hover{color:var(--blue)}
+.btn.sm{height:38px;padding:0 14px;border-radius:11px;font-size:14px}
+.btn.block{width:100%}
+.iconbtn{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:#fff;border:1.5px solid var(--line);position:relative;transition:.15s}
+.iconbtn:hover{border-color:var(--blue);color:var(--blue)}
+.dot{position:absolute;top:7px;right:8px;width:9px;height:9px;border-radius:50%;background:var(--gold);border:2px solid #fff}
+
+/* chips & badges */
+.chip{display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 14px;border-radius:999px;border:1.5px solid var(--line);background:#fff;font-weight:600;font-size:13.5px;transition:.15s}
+.chip:hover{border-color:var(--blue)}
+.chip.on{background:var(--navy);border-color:var(--navy);color:#fff}
+.badge{display:inline-flex;align-items:center;gap:6px;padding:4px 10px 4px 8px;border-radius:999px;font-size:12px;font-weight:700;white-space:nowrap}
+.badge::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.badge.good{background:var(--good-50);color:var(--good)}.badge.mid{background:var(--mid-50);color:var(--mid)}.badge.bad{background:var(--bad-50);color:var(--bad)}
+.tag{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:999px;font-size:11.5px;font-weight:700;background:var(--gold-50);color:#9A6500}
+.tag.blue{background:var(--blue-50);color:var(--blue)}
+
+/* ================= LANDING ================= */
+.lnav{position:sticky;top:0;z-index:20;background:rgba(244,247,252,.85);backdrop-filter:blur(12px);border-bottom:1px solid transparent}
+.lnav .in{max-width:1200px;margin:auto;display:flex;align-items:center;gap:28px;padding:14px 24px}
+.brand{display:flex;align-items:center;gap:10px}
+.brand img.i{height:38px}.brand img.w{height:26px}
+.lnav .links{display:flex;gap:24px;margin-left:12px;font-weight:600;color:var(--ink2)}
+.lnav .links a{color:inherit}.lnav .links a:hover{color:var(--blue)}
+.lnav .sp{flex:1}
+.hero{max-width:1200px;margin:auto;padding:48px 24px 64px;display:grid;grid-template-columns:1.05fr 1fr;gap:56px;align-items:center}
+.hero h1{font-size:clamp(40px,5.2vw,64px);font-weight:900;color:var(--navy)}
+.hero h1 em{font-style:normal;color:var(--blue);position:relative;white-space:nowrap}
+.hero h1 em::after{content:"";position:absolute;left:0;right:0;bottom:4px;height:10px;background:var(--gold);opacity:.55;z-index:-1;border-radius:4px}
+.hero p.lead{font-size:18px;color:var(--ink2);margin:20px 0 28px;max-width:520px}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;padding:6px 12px 6px 6px;border-radius:999px;background:#fff;border:1px solid var(--line);font-size:13px;font-weight:600;color:var(--ink2);margin-bottom:22px}
+.eyebrow b{background:var(--gold);color:var(--navy);padding:2px 8px;border-radius:999px;font-size:11.5px}
+.searchbox{background:#fff;border-radius:22px;box-shadow:var(--sh2);padding:10px;display:grid;grid-template-columns:1.3fr 1fr auto;gap:6px;max-width:600px}
+.searchbox .f{padding:8px 14px;border-radius:14px;transition:.15s}
+.searchbox .f:hover{background:var(--bg)}
+.searchbox label{display:block;font-size:11.5px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.06em}
+.searchbox select,.searchbox input{border:0;outline:0;background:none;width:100%;font-weight:700;font-size:15px;padding:2px 0}
+.searchbox .btn{height:100%;min-height:56px;border-radius:16px}
+.trust{display:flex;gap:22px;margin-top:26px;color:var(--ink2);font-size:13.5px;font-weight:500;flex-wrap:wrap}
+.trust span{display:flex;align-items:center;gap:6px}
+.trust .ico{color:var(--good)}
+.hero-vis{position:relative;height:520px}
+.hero-vis .mapcard{position:absolute;inset:0 0 0 30px;border-radius:28px;overflow:hidden;box-shadow:var(--sh2);border:6px solid #fff}
+.float{position:absolute;background:#fff;border-radius:18px;box-shadow:var(--sh2);padding:12px;display:flex;gap:12px;align-items:center}
+.float .th{width:64px;height:64px;border-radius:12px;overflow:hidden;flex:none}
+.f1{left:0;bottom:46px;width:300px;animation:bob 5s ease-in-out infinite}
+.f2{right:-14px;top:36px;padding:12px 14px;animation:bob 6s ease-in-out infinite reverse}
+.f2 .big{font-family:var(--hf);font-weight:900;font-size:26px;color:var(--navy)}
+@keyframes bob{50%{transform:translateY(-8px)}}
+.lsec{max-width:1200px;margin:auto;padding:72px 24px}
+.lsec h2{font-size:clamp(30px,3.4vw,42px);color:var(--navy);font-weight:900}
+.lsec .sub{color:var(--ink2);font-size:17px;margin-top:10px;max-width:620px}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:36px}
+.step{background:#fff;border-radius:24px;padding:26px;box-shadow:var(--sh);position:relative;overflow:hidden}
+.step .n{font-family:var(--hf);font-weight:900;font-size:56px;color:var(--blue-50);position:absolute;right:18px;top:4px}
+.step .ib{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;background:var(--blue);color:#fff;margin-bottom:18px}
+.step h3{font-size:20px;margin-bottom:8px}.step p{color:var(--ink2)}
+.feat{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:36px}
+.fc{border-radius:22px;padding:22px;background:#fff;border:1px solid var(--line)}
+.fc .ib{width:44px;height:44px;border-radius:13px;display:grid;place-items:center;margin-bottom:14px}
+.fc h4{font-size:17px;margin-bottom:6px}.fc p{color:var(--ink2);font-size:14px}
+.band{background:var(--navy);color:#fff;border-radius:32px;padding:44px;display:grid;grid-template-columns:repeat(3,1fr) 1.2fr;gap:28px;align-items:center;position:relative;overflow:hidden}
+.band .k{font-family:var(--hf);font-size:44px;font-weight:900;color:var(--gold)}
+.band .l{opacity:.8;font-size:14px}
+.band .cta h3{font-size:24px;margin-bottom:8px}.band .cta p{opacity:.8;margin-bottom:16px;font-size:14px}
+.ring{position:absolute;border-radius:50%;border:1.5px solid rgba(255,176,18,.25);pointer-events:none}
+.foot{border-top:1px solid var(--line);margin-top:24px}
+.foot .in{max-width:1200px;margin:auto;padding:28px 24px;display:flex;justify-content:space-between;gap:16px;color:var(--ink3);font-size:13px;flex-wrap:wrap;align-items:center}
+
+/* ================= AUTH (split like university SSO) ================= */
+.auth{display:grid;grid-template-columns:1.25fr 1fr;min-height:100vh}
+.auth-art{background:var(--navy);position:relative;overflow:hidden;color:#fff;display:flex;flex-direction:column;justify-content:space-between;padding:40px}
+.auth-art svg.city{position:absolute;inset:auto 0 0 0;width:100%;height:auto;opacity:.9}
+.auth-art .atop{position:relative;z-index:2;display:flex;align-items:center;gap:12px}
+.auth-art .amsg{position:relative;z-index:2;max-width:460px;margin-bottom:auto;margin-top:12vh}
+.auth-art .amsg h2{font-size:clamp(32px,3.4vw,46px);font-weight:900}
+.auth-art .amsg h2 span{color:var(--gold)}
+.auth-art .amsg p{opacity:.82;margin-top:14px;font-size:16px}
+.auth-art ul{list-style:none;margin-top:22px;display:grid;gap:10px}
+.auth-art li{display:flex;gap:10px;align-items:center;font-weight:500}
+.auth-art li .ico{color:var(--gold)}
+.auth-form{background:#fff;display:flex;flex-direction:column;padding:36px clamp(24px,5vw,72px);overflow:auto}
+.auth-form .head{display:flex;justify-content:space-between;align-items:center}
+.auth-form .box{max-width:420px;width:100%;margin:auto;padding:28px 0}
+.auth-form h1{font-size:30px;color:var(--navy);font-weight:900}
+.auth-form .hint{color:var(--ink2);margin:6px 0 22px}
+.seg{display:grid;grid-template-columns:1fr 1fr;background:var(--bg);border-radius:14px;padding:4px;margin-bottom:20px}
+.seg button{height:42px;border-radius:11px;font-weight:700;color:var(--ink2);display:flex;align-items:center;justify-content:center;gap:8px}
+.seg button.on{background:#fff;color:var(--navy);box-shadow:0 2px 8px rgba(7,39,92,.1)}
+.fld{margin-bottom:14px}
+.fld label{display:block;font-size:13px;font-weight:600;color:var(--ink2);margin-bottom:6px}
+.inp{width:100%;height:46px;border:1.5px solid var(--line);border-radius:12px;padding:0 14px;background:#fff;outline:0;transition:.15s}
+textarea.inp{height:auto;padding:12px 14px;resize:vertical}
+.inp:focus{border-color:var(--blue);box-shadow:0 0 0 4px var(--blue-50)}
+.inp.err{border-color:var(--bad);box-shadow:0 0 0 4px var(--bad-50)}
+.errtxt{color:var(--bad);font-size:12px;margin-top:4px;display:none}
+.fld.e .errtxt{display:block}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.budget{border:1.5px solid var(--line);border-radius:14px;padding:14px 16px;margin-bottom:14px}
+.budget .v{font-family:var(--hf);font-weight:900;font-size:30px;color:var(--navy)}
+.budget .v small{font-family:var(--bf);font-size:14px;color:var(--ink3);font-weight:500}
+input[type=range]{width:100%;accent-color:var(--blue)}
+.rng{-webkit-appearance:none;appearance:none;height:6px;border-radius:3px;background:linear-gradient(90deg,var(--blue) var(--p,30%),var(--line) var(--p,30%));outline:0;margin:10px 0 4px}
+.rng::-webkit-slider-thumb{-webkit-appearance:none;width:24px;height:24px;border-radius:50%;background:#fff;border:4px solid var(--blue);box-shadow:0 2px 6px rgba(0,0,0,.2);cursor:grab}
+.rng::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#fff;border:4px solid var(--blue);cursor:grab}
+.minmax{display:flex;justify-content:space-between;font-size:12px;color:var(--ink3)}
+.switchrow{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:14px;background:var(--bg);margin-bottom:18px}
+.switchrow .t{flex:1}.switchrow b{display:block;font-size:14px}.switchrow small{color:var(--ink3);font-size:12.5px}
+.sw{width:46px;height:28px;border-radius:14px;background:var(--line);position:relative;flex:none;transition:.2s}
+.sw::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.2);transition:.2s}
+.sw.on{background:var(--blue)}.sw.on::after{left:21px}
+.or{display:flex;align-items:center;gap:12px;color:var(--ink3);font-size:12.5px;margin:18px 0}
+.or::before,.or::after{content:"";flex:1;height:1px;background:var(--line)}
+.demo{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.auth-form .legal{color:var(--ink3);font-size:12px;margin-top:16px;text-align:center}
+.auth-form .fl{display:flex;justify-content:center;gap:18px;font-size:12.5px;color:var(--ink3);margin-top:auto;padding-top:20px}
+
+/* ================= APP SHELL ================= */
+.top{position:sticky;top:0;z-index:30;background:#fff;border-bottom:1px solid var(--line)}
+.top .in{display:flex;align-items:center;gap:16px;padding:10px 20px;height:68px}
+.unisel{display:flex;align-items:center;gap:10px;padding:6px 12px 6px 6px;border-radius:14px;border:1.5px solid var(--line);background:#fff}
+.unisel .cap{width:34px;height:34px;border-radius:10px;background:var(--navy);color:#fff;display:grid;place-items:center}
+.unisel small{display:block;font-size:11px;color:var(--ink3);font-weight:600;line-height:1}
+.unisel select{border:0;outline:0;font-weight:800;background:none;font-size:14.5px;cursor:pointer;max-width:220px}
+.tsearch{flex:1;max-width:420px;display:flex;align-items:center;gap:10px;height:44px;padding:0 14px;border-radius:12px;background:var(--bg);color:var(--ink3)}
+.tsearch input{border:0;background:none;outline:0;flex:1;color:var(--ink)}
+.top .sp{flex:1}
+.avatar{width:42px;height:42px;border-radius:12px;background:var(--navy);color:#fff;display:grid;place-items:center;font-family:var(--hf);font-weight:800}
+.menu{position:absolute;right:20px;top:64px;background:#fff;border-radius:16px;box-shadow:var(--sh2);border:1px solid var(--line);width:300px;padding:8px;display:none;z-index:40}
+.menu.on{display:block}
+.menu .mi{display:flex;gap:10px;align-items:center;width:100%;padding:10px;border-radius:10px;text-align:left;font-weight:600}
+.menu .mi:hover{background:var(--bg)}
+.menu h5{font-size:12px;color:var(--ink3);padding:8px 10px;text-transform:uppercase;letter-spacing:.06em}
+.nt{display:flex;gap:10px;padding:10px;border-radius:12px}
+.nt:hover{background:var(--bg)}
+.nt .ib{width:36px;height:36px;border-radius:10px;background:var(--blue-50);color:var(--blue);display:grid;place-items:center;flex:none}
+.nt b{font-size:13.5px;display:block}.nt small{color:var(--ink3);font-size:12px}
+
+/* explore */
+.explore{display:grid;grid-template-columns:440px 1fr;height:calc(100vh - 69px)}
+.side{background:#fff;border-right:1px solid var(--line);display:flex;flex-direction:column;min-height:0}
+.side .hd{padding:18px 20px 12px;border-bottom:1px solid var(--line)}
+.side .hd h2{font-size:22px;color:var(--navy)}
+.side .hd p{color:var(--ink3);font-size:13px;margin-top:2px}
+.fbar{display:flex;gap:8px;overflow-x:auto;padding-top:12px;scrollbar-width:none}
+.fbar::-webkit-scrollbar{display:none}
+.fbar .chip{height:34px;flex:none}
+.legend{display:flex;flex-wrap:wrap;gap:8px 14px;font-size:12px;color:var(--ink2);font-weight:500;padding-top:12px;align-items:center}
+.legend i{width:9px;height:9px;border-radius:50%;display:inline-block;margin-right:5px}
+.legend select{margin-left:auto;border:1.5px solid var(--line);border-radius:10px;height:32px;padding:0 8px;font-size:12.5px;font-weight:600;background:#fff}
+.list{overflow:auto;padding:14px 16px 24px;display:grid;gap:12px;align-content:start;flex:1}
+.card{display:grid;grid-template-columns:116px 1fr;gap:14px;padding:10px;border-radius:18px;background:#fff;border:1.5px solid var(--line);cursor:pointer;transition:.15s;position:relative;text-align:left}
+.card:hover,.card.hl{border-color:var(--blue);box-shadow:var(--sh)}
+.card > div:nth-child(2){min-width:0}
+.side{min-width:0}
+.card .th{height:100%;min-height:116px;border-radius:12px;overflow:hidden;position:relative}
+.card .th .tag{position:absolute;left:6px;top:6px}
+.card h4{font-family:var(--bf);font-size:15px;font-weight:700;letter-spacing:0;line-height:1.3;padding-right:28px}
+.card .meta{display:flex;align-items:center;gap:5px;color:var(--ink3);font-size:12.5px;margin-top:4px}
+.card .meta2{display:flex;gap:10px;color:var(--ink2);font-size:12px;margin-top:6px;flex-wrap:wrap}
+.card .meta2 span{display:flex;align-items:center;gap:4px}
+.card .pr{display:flex;align-items:center;justify-content:space-between;margin-top:10px;gap:8px}
+.price{font-family:var(--hf);font-weight:900;font-size:22px;color:var(--navy)}
+.price small{font-family:var(--bf);font-size:12.5px;font-weight:500;color:var(--ink3)}
+.fav{position:absolute;right:10px;top:10px;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;color:var(--ink3);transition:.15s}
+.fav:hover{background:var(--bg)}
+.fav.on{color:var(--bad)}.fav.on .ico{fill:var(--bad)}
+.empty{padding:40px 20px;text-align:center;color:var(--ink2)}
+.empty .ib{width:64px;height:64px;border-radius:20px;background:var(--blue-50);color:var(--blue);display:grid;place-items:center;margin:0 auto 14px}
+
+/* map */
+.map{position:relative;overflow:hidden;background:#ECE8DF;cursor:grab;touch-action:none;user-select:none}
+.map.drag{cursor:grabbing}
+.map-inner{position:absolute;left:0;top:0;width:1000px;height:680px;transform-origin:0 0}
+.map-inner > svg{position:absolute;inset:0;width:1000px;height:680px}
+.pin{position:absolute;transform:translate(-50%,-100%) scale(var(--inv,1));transform-origin:50% 100%;display:flex;flex-direction:column;align-items:center;z-index:2;transition:filter .15s}
+.pin .p{background:var(--c);color:#fff;font-weight:800;font-size:13px;padding:5px 10px;border-radius:999px;border:2.5px solid #fff;box-shadow:0 4px 10px rgba(0,0,0,.2);white-space:nowrap;transition:.15s}
+.pin .t{width:0;height:0;border:6px solid transparent;border-top:7px solid var(--c);margin-top:-1px}
+.pin.good{--c:var(--good)}.pin.mid{--c:var(--mid)}.pin.bad{--c:var(--bad)}
+.pin:hover,.pin.hl{z-index:5}
+.pin:hover .p,.pin.hl .p{transform:scale(1.15);background:var(--navy)}
+.pin.hl .t,.pin:hover .t{border-top-color:var(--navy)}
+.pin.mine .p{outline:3px solid var(--gold)}
+.umark{position:absolute;transform:translate(-50%,-50%) scale(var(--inv,1));display:flex;flex-direction:column;align-items:center;gap:4px;z-index:3;pointer-events:auto}
+.umark .c{width:46px;height:46px;border-radius:50%;background:var(--navy);color:#fff;display:grid;place-items:center;border:3px solid #fff;box-shadow:0 6px 16px rgba(7,39,92,.35)}
+.umark .l{background:#fff;padding:2px 9px;border-radius:999px;font-weight:800;font-size:12px;box-shadow:0 2px 6px rgba(0,0,0,.12);white-space:nowrap}
+.umark.off .c{width:32px;height:32px;background:#fff;color:var(--navy);border-color:var(--navy);border-width:2px;box-shadow:none}
+.umark.off .l{opacity:.75;font-size:11px}
+.umark.off{z-index:1;cursor:pointer}
+.radius{position:absolute;border-radius:50%;background:rgba(4,105,230,.07);border:2px dashed rgba(4,105,230,.45);transform:translate(-50%,-50%);pointer-events:none}
+.mctl{position:absolute;right:16px;top:16px;display:grid;gap:8px;z-index:6}
+.mctl button{width:42px;height:42px;border-radius:12px;background:#fff;box-shadow:var(--sh);display:grid;place-items:center;font-size:20px;font-weight:700}
+.mctl button:hover{color:var(--blue)}
+.mnote{position:absolute;left:16px;bottom:14px;z-index:6;background:rgba(255,255,255,.9);padding:5px 10px;border-radius:8px;font-size:11.5px;color:var(--ink2)}
+.popup{position:absolute;z-index:8;width:280px;background:#fff;border-radius:18px;box-shadow:var(--sh2);overflow:hidden;cursor:default}
+.popup .th{height:120px}
+.popup .b{padding:12px 14px}
+.popup h4{font-family:var(--bf);font-size:15px;letter-spacing:0}
+.popup .x{position:absolute;right:8px;top:8px;width:30px;height:30px;border-radius:50%;background:#fff;display:grid;place-items:center;box-shadow:var(--sh)}
+.maptoggle{display:none}
+
+/* detail */
+.wrap{max-width:1180px;margin:auto;padding:22px 24px 80px}
+.crumb{display:flex;align-items:center;gap:8px;color:var(--ink2);font-weight:600;font-size:14px;margin-bottom:16px}
+.crumb button{display:flex;align-items:center;gap:6px;color:var(--blue);font-weight:700}
+.gal{display:grid;grid-template-columns:2fr 1fr 1fr;grid-template-rows:200px 200px;gap:10px;border-radius:24px;overflow:hidden;position:relative}
+.gal > div{overflow:hidden;cursor:zoom-in;position:relative}
+.gal > div:first-child{grid-row:span 2}
+.gal > div:hover svg{transform:scale(1.04)}
+.gal svg{transition:transform .4s;width:100%;height:100%}
+.gal .cap{position:absolute;left:10px;bottom:10px;background:rgba(7,39,92,.75);color:#fff;font-size:12px;font-weight:600;padding:3px 9px;border-radius:999px}
+.dgrid{display:grid;grid-template-columns:1fr 380px;gap:32px;margin-top:26px;align-items:start}
+.dgrid h1{font-size:34px;color:var(--navy);font-weight:900}
+.loc{display:flex;align-items:center;gap:6px;color:var(--ink2);margin-top:8px}
+.specs{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:22px 0}
+.specs div{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:6px;font-weight:700;font-size:14px}
+.specs .ico{color:var(--blue)}
+.specs small{color:var(--ink3);font-weight:500;font-size:12px}
+.blk{background:#fff;border-radius:22px;padding:22px;border:1px solid var(--line);margin-bottom:16px}
+.blk h3{font-size:20px;color:var(--navy);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.svc{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.svc div{display:flex;align-items:center;gap:10px;padding:12px;border-radius:14px;background:var(--bg);font-weight:600;font-size:14px}
+.svc div.no{opacity:.45;text-decoration:line-through}
+.svc .ico{color:var(--blue)}
+.conds{display:grid;gap:10px}
+.conds div{display:flex;gap:10px;align-items:center;color:var(--ink2)}
+.ck{width:24px;height:24px;border-radius:50%;background:var(--good-50);color:var(--good);display:grid;place-items:center;flex:none}
+.sticky{position:sticky;top:90px}
+.pcard{background:#fff;border-radius:24px;padding:22px;box-shadow:var(--sh2)}
+.pcard .price{font-size:36px}
+.cmp{margin:16px 0 6px;position:relative;height:18px}
+.cmp .bar{position:absolute;left:0;right:0;top:5px;height:8px;border-radius:4px;background:linear-gradient(90deg,var(--good),#F2C230 55%,var(--bad))}
+.cmp .mk{position:absolute;top:0;width:18px;height:18px;border-radius:50%;background:#fff;border:4px solid var(--navy);transform:translateX(-50%);box-shadow:0 2px 6px rgba(0,0,0,.2)}
+.cmp .avg{position:absolute;top:-4px;width:2px;height:26px;background:var(--navy);opacity:.35;transform:translateX(-50%)}
+.cmpl{display:flex;justify-content:space-between;font-size:11.5px;color:var(--ink3)}
+.agent{display:flex;gap:12px;align-items:center;padding:14px;border-radius:16px;border:1.5px solid var(--line);margin-top:16px}
+.agent .av{width:46px;height:46px;border-radius:14px;color:#fff;display:grid;place-items:center;font-family:var(--hf);font-weight:800;flex:none}
+.agent b{display:flex;align-items:center;gap:5px}
+.agent small{color:var(--ink3);font-size:12.5px;display:flex;align-items:center;gap:4px}
+.routebox{display:grid;grid-template-columns:1.2fr 1fr;gap:16px}
+.routebox .map{height:330px;border-radius:16px}
+.rseg{display:inline-grid;grid-template-columns:1fr 1fr;background:var(--bg);border-radius:12px;padding:4px;font-size:13.5px}
+.rseg button{height:34px;padding:0 14px;border-radius:9px;font-weight:700;color:var(--ink2)}
+.rseg button.on{background:var(--navy);color:#fff}
+.rsum{display:flex;align-items:baseline;gap:8px;margin-bottom:12px}
+.rsum .big{font-family:var(--hf);font-weight:900;font-size:34px;color:var(--navy)}
+.rstep{display:grid;grid-template-columns:36px 1fr auto;gap:12px;position:relative;padding-bottom:16px}
+.rstep:not(:last-child)::before{content:"";position:absolute;left:17px;top:38px;bottom:2px;width:2px;background:var(--line)}
+.rstep .ic{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:var(--bg)}
+.rstep .ic.bus{background:var(--blue);color:#fff}
+.rstep b{font-size:14.5px;display:block}.rstep small{color:var(--ink3);font-size:12.5px}
+.rstep .d{font-weight:700;color:var(--ink2);font-size:13px}
+.safe{display:flex;gap:10px;padding:12px 14px;border-radius:14px;background:var(--gold-50);color:#7A5200;font-size:13.5px;margin-top:4px}
+.safe .ico{color:var(--mid);margin-top:1px}
+
+/* agent */
+.agentlay{display:grid;grid-template-columns:240px 1fr;min-height:calc(100vh - 69px)}
+.anav{background:#fff;border-right:1px solid var(--line);padding:18px 12px;display:flex;flex-direction:column;gap:4px}
+.anav button{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:12px;font-weight:600;color:var(--ink2);text-align:left}
+.anav button:hover{background:var(--bg)}
+.anav button.on{background:var(--blue-50);color:var(--blue)}
+.anav .count{margin-left:auto;background:var(--gold);color:var(--navy);font-size:11px;font-weight:800;padding:1px 7px;border-radius:999px}
+.anav .plan{margin-top:auto;background:var(--navy);color:#fff;border-radius:18px;padding:16px;position:relative;overflow:hidden}
+.anav .plan .k{font-family:var(--hf);font-weight:900;font-size:26px}
+.amain{padding:26px 30px 60px;max-width:1180px}
+.ahead{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin-bottom:22px;flex-wrap:wrap}
+.ahead h1{font-size:30px;color:var(--navy);font-weight:900}
+.ahead p{color:var(--ink2)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.stat{background:#fff;border-radius:20px;padding:18px;border:1px solid var(--line)}
+.stat .top2{display:flex;justify-content:space-between;align-items:center;color:var(--ink3);font-size:13px;font-weight:600}
+.stat .k{font-family:var(--hf);font-weight:900;font-size:32px;color:var(--navy);margin-top:6px}
+.stat .tr{color:var(--good);font-weight:700;font-size:12.5px}
+.two{display:grid;grid-template-columns:1.4fr 1fr;gap:16px;margin-top:16px}
+.tbl{width:100%;border-collapse:collapse}
+.tbl th{text-align:left;font-size:12px;color:var(--ink3);font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:0 10px 10px}
+.tbl td{padding:10px;border-top:1px solid var(--line);vertical-align:middle;font-size:14px}
+.tbl .tt{display:flex;gap:12px;align-items:center}
+.tbl .tt .th{width:56px;height:56px;border-radius:12px;overflow:hidden;flex:none}
+.tbl .tt b{display:block;font-size:14px}.tbl .tt small{color:var(--ink3)}
+.st{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;font-weight:700}
+.msg{display:flex;gap:12px;padding:12px;border-radius:14px;cursor:pointer}
+.msg:hover{background:var(--bg)}
+.msg .av{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;font-weight:800;color:#fff;flex:none;font-family:var(--hf)}
+.msg b{font-size:14px}.msg p{color:var(--ink2);font-size:13px;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
+.msg small{color:var(--ink3);font-size:12px}
+.msg.unread b::after{content:"";display:inline-block;width:8px;height:8px;background:var(--blue);border-radius:50%;margin-left:6px}
+
+/* publish */
+.pubgrid{display:grid;grid-template-columns:1fr 360px;gap:24px;align-items:start}
+.pubgrid .map{height:240px;border-radius:14px;cursor:crosshair}
+.photos{display:flex;gap:10px;flex-wrap:wrap}
+.photos .ph{width:96px;height:96px;border-radius:14px;overflow:hidden;position:relative}
+.photos .ph img{width:100%;height:100%;object-fit:cover}
+.photos .add{width:96px;height:96px;border-radius:14px;border:2px dashed var(--blue);background:var(--blue-50);color:var(--blue);display:grid;place-items:center;align-content:center;gap:4px;font-weight:700;font-size:12px;cursor:pointer}
+.hintbox{display:flex;gap:8px;align-items:center;padding:10px 12px;border-radius:12px;font-size:13px;font-weight:600;margin-top:8px}
+.hintbox.good{background:var(--good-50);color:var(--good)}.hintbox.mid{background:var(--mid-50);color:var(--mid)}.hintbox.bad{background:var(--bad-50);color:var(--bad)}
+.preview{position:sticky;top:90px}
+.preview .card{cursor:default}
+.locinfo{display:flex;gap:10px;align-items:center;padding:12px;border:1.5px solid var(--line);border-top:0;border-radius:0 0 14px 14px;margin-top:-8px;padding-top:18px;font-size:13.5px}
+
+/* modal & toast */
+.ov{position:fixed;inset:0;background:rgba(7,27,63,.45);backdrop-filter:blur(3px);z-index:80;display:none;align-items:center;justify-content:center;padding:20px}
+.ov.on{display:flex}
+.modal{background:#fff;border-radius:24px;width:100%;max-width:520px;max-height:90vh;overflow:auto;box-shadow:var(--sh2);animation:pop .2s ease}
+.modal .mh{display:flex;justify-content:space-between;align-items:center;padding:20px 22px;border-bottom:1px solid var(--line);position:sticky;top:0;background:#fff;z-index:1}
+.modal .mh h3{font-size:20px;color:var(--navy)}
+.modal .mb{padding:20px 22px}
+.modal .mf{padding:14px 22px 20px;display:flex;gap:10px;justify-content:flex-end}
+.modal.wide{max-width:920px}
+@keyframes pop{from{transform:scale(.96);opacity:0}}
+.toast{position:fixed;left:50%;bottom:92px;transform:translateX(-50%) translateY(20px);background:var(--navy);color:#fff;padding:12px 18px;border-radius:14px;font-weight:600;display:flex;gap:10px;align-items:center;box-shadow:var(--sh2);z-index:90;opacity:0;transition:.25s;pointer-events:none}
+.toast.on{opacity:1;transform:translateX(-50%)}
+.toast .ico{color:var(--gold)}
+.slab{font-size:13px;font-weight:700;color:var(--ink2);margin:18px 0 10px;display:flex;justify-content:space-between}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.dual{position:relative;height:30px}
+.dual .tr{position:absolute;left:0;right:0;top:12px;height:6px;border-radius:3px;background:var(--line)}
+.dual .fl{position:absolute;top:12px;height:6px;border-radius:3px;background:var(--blue)}
+.dual input{position:absolute;inset:0;width:100%;-webkit-appearance:none;appearance:none;background:none;pointer-events:none;height:30px}
+.dual input::-webkit-slider-thumb{-webkit-appearance:none;pointer-events:auto;width:24px;height:24px;border-radius:50%;background:#fff;border:4px solid var(--blue);box-shadow:0 2px 6px rgba(0,0,0,.2);cursor:grab}
+.dual input::-moz-range-thumb{pointer-events:auto;width:18px;height:18px;border-radius:50%;background:#fff;border:4px solid var(--blue);cursor:grab}
+.hist{display:flex;align-items:flex-end;gap:3px;height:56px;margin-bottom:-4px}
+.hist i{flex:1;background:var(--line);border-radius:3px 3px 0 0}
+.hist i.in{background:var(--blue);opacity:.75}
+.typegrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.typegrid button{border:1.5px solid var(--line);border-radius:14px;padding:12px 6px;display:grid;justify-items:center;gap:6px;font-weight:600;font-size:12.5px;color:var(--ink2)}
+.typegrid button.on{border-color:var(--blue);background:var(--blue-50);color:var(--blue)}
+
+
+:focus-visible{outline:3px solid var(--blue-100);outline-offset:2px}
+.sbadge{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:700}
+.sbadge.good{color:var(--good)}.sbadge.mid{color:var(--mid)}.sbadge.bad{color:var(--bad)}
+.card .sub2{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:11.5px;color:var(--ink3);margin-top:6px;flex-wrap:wrap}
+.cmpb{position:absolute;right:10px;top:46px;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;color:var(--ink3)}
+.cmpb:hover{background:var(--bg)}.cmpb.on{color:#fff;background:var(--blue)}
+.cmpbar{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:29;display:flex;gap:10px;align-items:center;background:var(--navy);color:#fff;padding:8px 8px 8px 16px;border-radius:16px;box-shadow:var(--sh2);font-weight:600;white-space:nowrap}
+.ctbl{width:100%;border-collapse:collapse;font-size:13.5px;min-width:560px}
+.ctbl th,.ctbl td{padding:10px;border-top:1px solid var(--line);text-align:left;vertical-align:top}
+.ctbl th{color:var(--ink3);font-weight:600;width:130px;font-size:12.5px}
+.ctbl td.best{background:var(--good-50);font-weight:700}
+.ctbl .th{height:96px;border-radius:12px;overflow:hidden;margin-bottom:8px}
+.pfx{display:grid;gap:10px;margin-top:16px}
+.pfx .r{border-radius:14px;padding:12px 14px;background:var(--bg)}
+.pfx .r .h{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:12.5px;font-weight:700;color:var(--ink2);text-transform:uppercase;letter-spacing:.04em}
+.pfx .r p{font-size:12.5px;color:var(--ink2);margin-top:2px}
+.cost{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.cost .ln{display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px dashed var(--line);font-size:14px;color:var(--ink2)}
+.cost .ln b{color:var(--ink)}
+.cost .tt{display:flex;justify-content:space-between;padding-top:12px;font-weight:800;font-size:17px;color:var(--navy)}
+.vs{border-radius:16px;padding:16px;background:var(--blue-50)}
+.vs .k{font-family:var(--hf);font-weight:900;font-size:30px;color:var(--navy);margin-top:10px}
+.vs select{border:1.5px solid var(--blue-100);border-radius:10px;height:34px;padding:0 8px;font-weight:700;background:#fff;max-width:150px}
+.vs p{color:var(--ink2);font-size:13.5px;margin-top:6px}
+.meter{display:flex;gap:4px;margin:8px 0 4px}
+.meter i{flex:1;height:8px;border-radius:4px;background:var(--line)}
+.sfx{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+.sfx div{background:var(--bg);border-radius:14px;padding:12px;font-size:12.5px;color:var(--ink3);display:grid;gap:4px}
+.sfx .ico{color:var(--blue)}
+.sfx b{color:var(--ink);font-size:13.5px}
+.scam{display:flex;gap:12px;padding:14px;border-radius:14px;background:var(--bad-50);color:#8A2A22;font-size:13.5px;margin-top:14px}
+.scam .ico{color:var(--bad);flex:none;margin-top:1px}
+.rv{padding:14px 0;border-top:1px solid var(--line)}
+.rv .h{display:flex;gap:10px;align-items:center}
+.rv .av{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:800;font-size:13px;flex:none}
+.rv .h small{color:var(--ink3);font-size:12px;display:block}
+.rv p{color:var(--ink2);margin-top:8px;font-size:14px}
+.stars{display:inline-flex;gap:1px;vertical-align:middle}
+.stars .ico{fill:var(--gold);stroke:var(--gold)}
+.stars .ico.off{fill:var(--line);stroke:var(--line)}
+.rsum2{display:flex;gap:24px;align-items:center;margin-bottom:6px;flex-wrap:wrap}
+.asp{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 22px;flex:1;min-width:240px}
+.asp div{display:grid;grid-template-columns:72px 1fr 26px;gap:8px;align-items:center;font-size:13px;color:var(--ink2)}
+.asp i{height:6px;border-radius:3px;background:var(--line);position:relative;overflow:hidden}
+.asp i::after{content:"";position:absolute;left:0;top:0;bottom:0;width:var(--w);background:var(--gold);border-radius:3px}
+.starpick{display:flex;gap:4px}
+.starpick .ico{width:32px;height:32px}
+.verif{display:flex;gap:14px;align-items:center;padding:16px 18px;border-radius:18px;margin-bottom:18px}
+.verif.rev{background:var(--gold-50);color:#7A5200}.verif.ok{background:var(--good-50);color:#0B6B47}
+.upl{display:flex;align-items:center;gap:10px;padding:12px 14px;border:1.5px dashed var(--line);border-radius:12px;cursor:pointer;font-size:13.5px;color:var(--ink2);margin-bottom:10px}
+.upl:hover{border-color:var(--blue)}.upl.done{border-style:solid;border-color:var(--good);color:var(--good);background:var(--good-50)}
+.upl.bad{border-color:var(--bad)}
+.upl input{display:none}
+.bcount{font-size:12.5px;color:var(--blue);font-weight:600;margin-top:8px;display:flex;gap:6px;align-items:center}
+.spin{width:22px;height:22px;border-radius:50%;border:3px solid currentColor;border-right-color:transparent;animation:sp 1s linear infinite;flex:none}
+@keyframes sp{to{transform:rotate(360deg)}}
+.tagrow{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+.tag.green{background:var(--good-50);color:var(--good)}
+.mbar{display:none}
+.busrow{display:flex;gap:10px;align-items:flex-start;margin-top:14px;padding:12px 14px;border-radius:14px;background:var(--blue-50);font-size:13px;color:var(--ink2)}
+.busrow .ico{color:var(--blue);flex:none;margin-top:1px}
+.unipick{display:grid;gap:10px;margin:4px 0 2px}
+.unibtn{display:flex;align-items:center;gap:12px;padding:14px;border:1.5px solid var(--line);border-radius:16px;background:#fff;text-align:left;transition:.15s;width:100%}
+.unibtn:hover{border-color:var(--blue);box-shadow:var(--sh);transform:translateY(-1px)}
+.ub-logo{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;color:#fff;flex:none}
+.ub-logo.big{width:54px;height:54px;border-radius:15px}
+.ub-t{flex:1;min-width:0}.ub-t b{display:block;font-size:16px}.ub-t small{color:var(--ink3);font-size:12.5px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.unibtn > .ico{color:var(--ink3)}
+.ssobadge{display:inline-flex;align-items:center;gap:7px;padding:6px 12px;border-radius:999px;background:var(--good-50);color:var(--good);font-weight:700;font-size:12.5px;margin-bottom:16px}
+.ssocard{border:1.5px solid var(--line);border-radius:18px;padding:18px;margin:4px 0 18px}
+.ssouni{display:flex;align-items:center;gap:12px;padding-bottom:16px;border-bottom:1px solid var(--line);margin-bottom:14px}
+.ssouni b{display:block;font-size:16px}.ssouni small{color:var(--ink3);font-size:12.5px}
+.ssoperm{display:grid;gap:9px}
+.ssoperm div{display:flex;gap:9px;align-items:center;font-size:13.5px;color:var(--ink2)}
+.ssoperm .ico{color:var(--good);flex:none}
+.ssoperm .no .ico{color:var(--ink3)}.ssoperm .no{color:var(--ink3)}
+.idcard{display:flex;align-items:center;gap:12px;padding:14px;border-radius:16px;background:var(--bg);margin-bottom:16px}
+.idcard .av{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;color:#fff;font-family:var(--hf);font-weight:800;flex:none}
+.idcard b{display:flex;align-items:center;gap:6px}
+.idcard small{color:var(--ink3);font-size:12.5px}
+@media (max-width:1000px){
+  .hero{grid-template-columns:1fr}.hero-vis{height:400px}
+  .steps,.feat{grid-template-columns:1fr 1fr}
+  .band{grid-template-columns:1fr 1fr}
+  .auth{grid-template-columns:1fr}.auth-art{display:none}
+  .explore{display:flex;flex-direction:column;height:auto}
+  .explore .map{order:-1;height:44vh;flex:none}
+  .explore.showmap .map{height:calc(100vh - 69px)}
+  .cost,.sfx{grid-template-columns:1fr}
+  .mbar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:27;background:#fff;border-top:1px solid var(--line);padding:10px 16px calc(10px + env(safe-area-inset-bottom));align-items:center;gap:12px;box-shadow:0 -6px 20px rgba(7,39,92,.08)}
+  .mbar .btn{flex:1}
+  [data-view=arriendo] .wrap{padding-bottom:110px}
+  .asp{grid-template-columns:1fr}
+  .maptoggle{display:flex;position:fixed;left:50%;transform:translateX(-50%);bottom:22px;z-index:28}
+  .dgrid,.routebox,.pubgrid,.two{grid-template-columns:1fr}
+  .sticky,.preview{position:static}
+  .agentlay{grid-template-columns:1fr}.anav{display:none}
+  .stats{grid-template-columns:1fr 1fr}
+  .lnav .links,.tsearch{display:none}
+  .gal{grid-template-columns:1fr 1fr;grid-template-rows:220px 120px 120px}
+  .gal > div:first-child{grid-column:span 2;grid-row:auto}
+}
+@media (max-width:600px){
+  .steps,.feat,.band,.specs{grid-template-columns:1fr 1fr}
+  .searchbox{grid-template-columns:1fr}
+  .unisel small{display:none}.unisel select{max-width:120px}
+  .card{grid-template-columns:96px 1fr}.card .th{height:96px}
+  .tbl .hide{display:none}
+  .amain{padding:18px}
+  .top .in{gap:8px;padding:10px 12px}
+  .brand img.w{display:none}
+  .gbtn{display:none}
+  .legend select{margin-left:0;width:100%}
+  .explore{height:auto;min-height:calc(100vh - 69px)}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ LANDING ============ -->
+<section class="view" data-view="inicio">
+  <nav class="lnav"><div class="in">
+    <a class="brand" href="#inicio"><img class="i" src="icon.png" alt=""><img class="w" src="word.png" alt="NidU"></a>
+    <div class="links"><a href="#como">Cómo funciona</a><a href="#beneficios">Beneficios</a><a href="#agentes">Para agentes</a></div>
+    <div class="sp"></div>
+    <button class="btn ghost gbtn" data-act="go" data-v="ingresar">Iniciar sesión</button>
+    <button class="btn pri sm" data-act="go" data-v="registro">Entrar</button>
+  </div></nav>
+  <header class="hero">
+    <div>
+      <div class="eyebrow"><b>Nuevo</b> Arriendos cerca de ESPOL, UG, UCSG y UEES</div>
+      <h1>Tu nido <em>cerca de la U</em>, sin perder tiempo ni plata.</h1>
+      <p class="lead">NidU junta en un solo lugar los arriendos cerca de tu universidad, te dice si el precio es justo para tu presupuesto y te muestra cómo llegar en bus.</p>
+      <form class="searchbox" data-form="hero">
+        <div class="f"><label>Universidad</label><select id="heroUni"></select></div>
+        <div class="f"><label>Presupuesto mensual</label><input id="heroBudget" type="number" min="60" max="600" value="180"></div>
+        <button class="btn pri" type="submit"><svg class="ico"><use href="#i-search"/></svg>Buscar</button>
+      </form>
+      <div class="trust"><span><svg class="ico sm"><use href="#i-shield"/></svg>Zonas seguras y agentes verificados</span><span><svg class="ico sm"><use href="#i-bus"/></svg>Rutas de bus</span><span><svg class="ico sm"><use href="#i-bell"/></svg>Alertas de nuevos arriendos</span></div>
+    </div>
+    <div class="hero-vis">
+      <div class="mapcard" id="heroMap"></div>
+      <div class="float f1" id="heroCard"></div>
+      <div class="float f2"><div><small style="color:var(--ink3);font-weight:600">Arriendos cerca de ESPOL</small><div class="big" id="heroCount">0</div><span class="badge good">Dentro de tu presupuesto</span></div></div>
+    </div>
+  </header>
+  <section class="lsec" id="como">
+    <h2>Así de fácil funciona</h2>
+    <p class="sub">Pensado para estudiantes que llegan a Guayaquil desde otras ciudades y cantones.</p>
+    <div class="steps">
+      <div class="step"><span class="n">1</span><div class="ib"><svg class="ico lg"><use href="#i-cap"/></svg></div><h3>Elige tu universidad</h3><p>Dinos dónde estudias y cuánto puedes pagar al mes por tu arriendo.</p></div>
+      <div class="step"><span class="n">2</span><div class="ib" style="background:var(--gold);color:var(--navy)"><svg class="ico lg"><use href="#i-map"/></svg></div><h3>Compara en el mapa</h3><p>Ves los arriendos más cercanos, con colores según si el precio es justo para ti.</p></div>
+      <div class="step"><span class="n">3</span><div class="ib" style="background:var(--navy)"><svg class="ico lg"><use href="#i-bus"/></svg></div><h3>Mira cómo llegar</h3><p>Rutas de ida y regreso en bus, con tiempo, pasaje y aviso del último bus.</p></div>
+    </div>
+  </section>
+  <section class="lsec" id="beneficios" style="padding-top:0">
+    <h2>Todo lo que necesitas, en un solo lugar</h2>
+    <div class="feat">
+      <div class="fc"><div class="ib" style="background:var(--good-50);color:var(--good)"><svg class="ico"><use href="#i-tag"/></svg></div><h4>¿Caro o no?</h4><p>Dos respuestas claras: si es caro para tu bolsillo y si es caro para su zona.</p></div>
+      <div class="fc"><div class="ib" style="background:var(--blue-50);color:var(--blue)"><svg class="ico"><use href="#i-pin"/></svg></div><h4>Cerca de tu U</h4><p>Distancia real y tiempo en bus desde cada arriendo hasta tu campus.</p></div>
+      <div class="fc"><div class="ib" style="background:var(--gold-50);color:#B07400"><svg class="ico"><use href="#i-shield"/></svg></div><h4>Seguridad primero</h4><p>Índice de seguridad por zona, fotos verificadas y agentes con identidad comprobada.</p></div>
+      <div class="fc"><div class="ib" style="background:#EEE9FB;color:#6B4FC6"><svg class="ico"><use href="#i-list"/></svg></div><h4>Costo real del mes</h4><p>Arriendo, servicios y pasajes sumados, comparados con viajar a diario desde tu ciudad.</p></div>
+    </div>
+  </section>
+  <section class="lsec" id="agentes" style="padding-top:0">
+    <div class="band">
+      <div class="ring" style="width:420px;height:420px;right:-120px;top:-160px"></div><div class="ring" style="width:620px;height:620px;right:-220px;top:-260px"></div>
+      <div><div class="k">19.350</div><div class="l">estudiantes foráneos estimados en universidades de Guayaquil</div></div>
+      <div><div class="k">15%</div><div class="l">de los universitarios de la ciudad vienen de otras ciudades o cantones</div></div>
+      <div><div class="k">$5</div><div class="l">al mes para que un agente publique sus arriendos</div></div>
+      <div class="cta"><h3>¿Eres agente inmobiliario?</h3><p>Llega directo a estudiantes foráneos que buscan arriendo cerca de su universidad.</p><button class="btn gold" data-act="agentSignup">Publicar mis arriendos</button></div>
+    </div>
+  </section>
+  <footer class="foot"><div class="in"><a class="brand" href="#inicio"><img class="i" src="icon.png" alt="" style="height:28px"><img class="w" src="word.png" alt="NidU" style="height:20px"></a><span>Prototipo académico · Emprendimiento e Innovación 2026-PAO2 · Grupo Los desubicados</span><span>Datos y arriendos de ejemplo</span></div></footer>
+</section>
+
+<!-- ============ AUTH ============ -->
+<section class="view" data-view="registro"><div class="auth" id="authReg"></div></section>
+<section class="view" data-view="ingresar"><div class="auth" id="authLogin"></div></section>
+
+<!-- ============ APP ============ -->
+<div id="appTop"></div>
+<section class="view" data-view="explorar"><div class="explore" id="explore"></div></section>
+<section class="view" data-view="arriendo"><div class="wrap" id="detail"></div></section>
+<section class="view" data-view="agente"><div class="agentlay" id="agent"></div></section>
+<section class="view" data-view="publicar"><div class="wrap" id="publish"></div></section>
+
+<div class="ov" id="ov"><div class="modal" id="modal"></div></div>
+<div class="toast" id="toast"><svg class="ico"><use href="#i-check"/></svg><span></span></div>
+
+<!-- icon sprite -->
+<svg width="0" height="0" style="position:absolute">
+<defs>
+<symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.6-3.6"/></symbol>
+<symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></symbol>
+<symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s-7-6.1-7-11.4a7 7 0 0 1 14 0C19 14.9 12 21 12 21z"/><circle cx="12" cy="9.6" r="2.6"/></symbol>
+<symbol id="i-home" viewBox="0 0 24 24"><path d="M4 10.5 12 4l8 6.5V19a1 1 0 0 1-1 1h-4.5v-5.5h-5V20H5a1 1 0 0 1-1-1z"/></symbol>
+<symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20s-7.5-4.6-7.5-10.3A4.2 4.2 0 0 1 12 7.2a4.2 4.2 0 0 1 7.5 2.5C19.5 15.4 12 20 12 20z"/></symbol>
+<symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 16.5V11a6 6 0 1 1 12 0v5.5l1.5 1.5h-15z"/><path d="M10 20.5a2.2 2.2 0 0 0 4 0"/></symbol>
+<symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4.5 20.5a7.5 7.5 0 0 1 15 0"/></symbol>
+<symbol id="i-cap" viewBox="0 0 24 24"><path d="M2.5 9.5 12 5l9.5 4.5L12 14z"/><path d="M6.5 11.5v4.5c3 2.2 8 2.2 11 0v-4.5M21.5 9.5v5"/></symbol>
+<symbol id="i-bus" viewBox="0 0 24 24"><rect x="5" y="3.5" width="14" height="14" rx="3"/><path d="M5 11h14M8.5 21v-3.5M15.5 21v-3.5"/></symbol>
+<symbol id="i-walk" viewBox="0 0 24 24"><circle cx="13" cy="4.5" r="1.8"/><path d="m9 21 2.5-6 2.5 2.5V21M8 11.5l2.5-3.5 3.5 1 2 3.5M11.5 15l1-6"/></symbol>
+<symbol id="i-back" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></symbol>
+<symbol id="i-chev" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
+<symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+<symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3.5 19 6v5.5c0 4.4-3 7.6-7 9-4-1.4-7-4.6-7-9V6z"/><path d="m9 12 2 2 4-4"/></symbol>
+<symbol id="i-wifi" viewBox="0 0 24 24"><path d="M4.5 9.5a11 11 0 0 1 15 0M7.5 13a6.5 6.5 0 0 1 9 0"/><circle cx="12" cy="17" r="1.2"/></symbol>
+<symbol id="i-zap" viewBox="0 0 24 24"><path d="M13 3 5 13.5h6L10 21l8-10.5h-6z"/></symbol>
+<symbol id="i-drop" viewBox="0 0 24 24"><path d="M12 3.5s6 6.4 6 10.8a6 6 0 0 1-12 0C6 9.9 12 3.5 12 3.5z"/></symbol>
+<symbol id="i-sofa" viewBox="0 0 24 24"><path d="M5 11V8a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v3"/><path d="M3 13a2 2 0 0 1 4 0v1h10v-1a2 2 0 0 1 4 0v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1zM6 18v2M18 18v2"/></symbol>
+<symbol id="i-bed" viewBox="0 0 24 24"><path d="M3 19V6M3 15h18v4M21 15v-3a3 3 0 0 0-3-3h-7v6"/><circle cx="7" cy="11.5" r="2"/></symbol>
+<symbol id="i-bath" viewBox="0 0 24 24"><path d="M4 12h16v3a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4zM6 12V6a2 2 0 0 1 4 0M7 19l-1 2M17 19l1 2"/></symbol>
+<symbol id="i-ruler" viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="8" rx="1.5"/><path d="M7 8v3M11 8v4M15 8v3M19 8v2"/></symbol>
+<symbol id="i-wash" viewBox="0 0 24 24"><rect x="5" y="3.5" width="14" height="17" rx="2"/><circle cx="12" cy="13" r="4"/><path d="M8 6.5h2"/></symbol>
+<symbol id="i-car" viewBox="0 0 24 24"><path d="M5 16V12l2-5h10l2 5v4M5 16h14M5 16v2.5M19 16v2.5"/><circle cx="8" cy="13" r=".7"/><circle cx="16" cy="13" r=".7"/></symbol>
+<symbol id="i-snow" viewBox="0 0 24 24"><path d="M12 3v18M4.2 7.5l15.6 9M4.2 16.5l15.6-9"/></symbol>
+<symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+<symbol id="i-grid" viewBox="0 0 24 24"><rect x="4" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.5"/></symbol>
+<symbol id="i-msg" viewBox="0 0 24 24"><path d="M5 5h14a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H9l-4 3.5V6a1 1 0 0 1 1-1z"/></symbol>
+<symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+<symbol id="i-camera" viewBox="0 0 24 24"><path d="M4 8a2 2 0 0 1 2-2h2l1.5-2h5L16 6h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><circle cx="12" cy="12.5" r="3.5"/></symbol>
+<symbol id="i-star" viewBox="0 0 24 24"><path d="m12 4 2.4 5 5.4.6-4 3.7 1.1 5.4L12 16l-4.9 2.7 1.1-5.4-4-3.7 5.4-.6z"/></symbol>
+<symbol id="i-phone" viewBox="0 0 24 24"><path d="M5 4h3.5l1.5 4-2 1.5a11 11 0 0 0 6.5 6.5L16 14l4 1.5V19a1 1 0 0 1-1 1A16 16 0 0 1 4 5a1 1 0 0 1 1-1z"/></symbol>
+<symbol id="i-map" viewBox="0 0 24 24"><path d="M9 4 3.5 6v14L9 18l6 2 5.5-2V4L15 6z"/><path d="M9 4v14M15 6v14"/></symbol>
+<symbol id="i-tag" viewBox="0 0 24 24"><path d="M3.5 12.5V4.5h8l9 9-8 8z"/><circle cx="8" cy="9" r="1.5"/></symbol>
+<symbol id="i-list" viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1"/><circle cx="4.5" cy="12" r="1"/><circle cx="4.5" cy="18" r="1"/></symbol>
+<symbol id="i-logout" viewBox="0 0 24 24"><path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3M10 16l-4-4 4-4M6 12h10"/></symbol>
+<symbol id="i-swap" viewBox="0 0 24 24"><path d="M7 4 3 8l4 4M3 8h14M17 20l4-4-4-4M21 16H7"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></symbol>
+<symbol id="i-trend" viewBox="0 0 24 24"><path d="M4 16 10 10l4 4 6-7M15 7h5v5"/></symbol>
+<symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></symbol>
+<symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4.8a3.5 3.5 0 0 1 0 6.4M18 14a6.5 6.5 0 0 1 3.5 6"/></symbol>
+<symbol id="i-building" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="1.5"/><path d="M9 7h1M14 7h1M9 11h1M14 11h1M9 15h1M14 15h1M11 21v-3h2v3"/></symbol>
+<symbol id="i-edit" viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/></symbol>
+<symbol id="i-trash" viewBox="0 0 24 24"><path d="M5 7h14M10 7V5h4v2M7 7l1 13h8l1-13"/></symbol>
+<symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"/></symbol>
+<symbol id="i-mail" viewBox="0 0 24 24"><rect x="3.5" y="5.5" width="17" height="13" rx="2"/><path d="m4 7 8 6 8-6"/></symbol>
+</defs>
+</svg>
+
+<script>
+/* ===================== DATA ===================== */
+const UNIS={
+  espol:{n:'ESPOL',full:'ESPOL · Campus Gustavo Galindo',x:300,y:236},
+  ug:{n:'U. de Guayaquil',full:'Universidad de Guayaquil · Cdla. Universitaria',x:640,y:352},
+  ucsg:{n:'UCSG',full:'Universidad Católica de Santiago de Guayaquil',x:552,y:468},
+  uees:{n:'UEES',full:'UEES · Samborondón',x:948,y:226}
+};
+const ZAVG={Prosperina:172,Ceibos:235,Mapasingue:132,Urdesa:238,Kennedy:220,Centenario:188,Centro:205,Alborada:168,Sauces:150,'Samborondón':330,'Vía a la Costa':260};
+
+const ZSAFE={Prosperina:{s:3.6,l:'Media en calles internas',upc:'UPC a 400 m',r:'Pocos reportes'},Ceibos:{s:4.5,l:'Buena',upc:'UPC a 600 m',r:'Muy pocos reportes'},Mapasingue:{s:2.7,l:'Baja en calles internas',upc:'UPC a 900 m',r:'Robos reportados de noche'},Urdesa:{s:4.2,l:'Buena',upc:'UPC a 300 m',r:'Pocos reportes'},Kennedy:{s:4.1,l:'Buena',upc:'UPC a 500 m',r:'Pocos reportes'},Centenario:{s:4.0,l:'Buena',upc:'UPC a 700 m',r:'Pocos reportes'},Centro:{s:3.1,l:'Buena en avenidas',upc:'UPC a 200 m',r:'Reportes en la noche'},Alborada:{s:3.8,l:'Media',upc:'UPC a 450 m',r:'Algunos reportes'},Sauces:{s:3.4,l:'Media',upc:'UPC a 800 m',r:'Algunos reportes'},'Samborondón':{s:4.8,l:'Muy buena',upc:'Guardia privada',r:'Muy pocos reportes'},'Vía a la Costa':{s:4.4,l:'Buena',upc:'Guardia privada',r:'Pocos reportes'}};
+const ORIG={milagro:{n:'Milagro',c:1.50,t:75},daule:{n:'Daule',c:1.00,t:50},duran:{n:'Durán',c:0.60,t:45},babahoyo:{n:'Babahoyo',c:2.25,t:100},salinas:{n:'Salinas',c:4.00,t:150},quevedo:{n:'Quevedo',c:6.50,t:180},machala:{n:'Machala',c:7.00,t:210},manta:{n:'Manta',c:8.00,t:240},otra:{n:'Otra ciudad',c:5.00,t:180}};
+const EXTRA={wifi:25,luz:18,agua:8};
+const AGENTS={
+  carlos:{n:'Carlos Ríos',ini:'CR',col:'#07275C',v:true,r:4.8,rv:32,ph:'099 412 3388'},
+  puerto:{n:'Inmobiliaria Puerto Sol',ini:'PS',col:'#0469E6',v:true,r:4.6,rv:58,ph:'04 268 1190'},
+  andrea:{n:'Andrea Mora',ini:'AM',col:'#7C5CC4',v:true,r:4.9,rv:21,ph:'098 776 1203'},
+  luis:{n:'Luis Vera',ini:'LV',col:'#2F8F6B',v:false,r:4.2,rv:9,ph:'096 330 5521'}
+};
+const SVC={wifi:['Wifi','i-wifi'],agua:['Agua','i-drop'],luz:['Luz eléctrica','i-zap'],amoblado:['Amoblado','i-sofa'],lavanderia:['Lavandería','i-wash'],parqueo:['Parqueo','i-car'],aire:['Aire acondicionado','i-snow']};
+const TYPES={'Habitación':'i-bed','Mini depa':'i-home','Compartido':'i-users','Suite':'i-building'};
+let NID=100;
+const L=[
+ {id:1,t:'Habitación amoblada en Prosperina',type:'Habitación',zone:'Prosperina',x:356,y:300,price:170,m2:14,bath:'Privado',sv:['wifi','agua','luz','amoblado'],cond:['Garantía de 1 mes','Contrato mínimo de 6 meses','Solo estudiantes · máx. 1 persona','Edificio con guardia 24/7'],ag:'carlos',pal:0,isNew:true,views:124,contacts:7,st:true,desc:'Habitación luminosa con escritorio, closet y ventana a la calle. A dos cuadras de la parada de buses hacia la Vía Perimetral.'},
+ {id:2,t:'Mini depa en Ceibos Norte',type:'Mini depa',zone:'Ceibos',x:196,y:330,price:240,m2:32,bath:'Privado',sv:['wifi','agua','luz','amoblado','parqueo'],cond:['Garantía de 1 mes','Contrato de 12 meses','Cocina equipada','Conjunto cerrado'],ag:'carlos',pal:1,views:98,contacts:6,st:true,desc:'Mini departamento independiente con cocina, sala pequeña y baño propio. Ideal si buscas privacidad.'},
+ {id:3,t:'Cuarto con baño privado',type:'Habitación',zone:'Prosperina',x:388,y:252,price:150,m2:12,bath:'Privado',sv:['agua','luz','wifi'],cond:['Garantía de 1 mes','Contrato mínimo de 5 meses','No se permiten mascotas'],ag:'andrea',pal:2,views:61,contacts:3,st:true,desc:'Cuarto en casa de dos pisos, entrada independiente. Muy cerca del ingreso a ESPOL.'},
+ {id:4,t:'Habitación en casa familiar',type:'Habitación',zone:'Mapasingue',x:434,y:330,price:125,m2:11,bath:'Compartido',sv:['agua','luz','lavanderia'],cond:['Sin garantía','Contrato mes a mes','Incluye uso de cocina'],ag:'luis',pal:3,views:40,contacts:1,st:true,desc:'Habitación sencilla en casa de familia. Ambiente tranquilo para estudiar.'},
+ {id:5,t:'Departamento compartido (2 hab.)',type:'Compartido',zone:'Ceibos',x:236,y:392,price:205,m2:22,bath:'Compartido',sv:['wifi','agua','luz','amoblado','lavanderia'],cond:['Garantía de 1 mes','Contrato de 6 meses','Compartes con 1 estudiante de ESPOL'],ag:'puerto',pal:4,views:77,contacts:5,st:true,desc:'Departamento de 2 habitaciones; se arrienda una. Tu compañera de depa estudia en ESPOL.'},
+ {id:6,t:'Suite estudiantil en Urdesa',type:'Suite',zone:'Urdesa',x:486,y:418,price:285,m2:28,bath:'Privado',sv:['wifi','agua','luz','amoblado','aire','lavanderia'],cond:['Garantía de 2 meses','Contrato de 12 meses','Edificio con guardia y cámaras'],ag:'puerto',pal:1,views:150,contacts:9,st:true,desc:'Suite con aire acondicionado, en zona con mucho comercio y buena conexión de buses.'},
+ {id:7,t:'Habitación económica cerca de la Perimetral',type:'Habitación',zone:'Mapasingue',x:410,y:286,price:115,m2:10,bath:'Compartido',sv:['agua','luz'],cond:['Sin garantía','Contrato mes a mes'],ag:'luis',pal:2,views:33,contacts:2,st:true,desc:'Opción económica, a 10 minutos en bus de ESPOL.'},
+ {id:8,t:'Habitación junto a la Cdla. Universitaria',type:'Habitación',zone:'Kennedy',x:612,y:322,price:165,m2:13,bath:'Privado',sv:['wifi','agua','luz','amoblado'],cond:['Garantía de 1 mes','Contrato de 6 meses','Solo estudiantes'],ag:'andrea',pal:0,isNew:true,views:58,contacts:4,st:true,desc:'A pocos pasos de la Universidad de Guayaquil. Zona con farmacias, comida y transporte.'},
+ {id:9,t:'Mini depa en Kennedy Norte',type:'Mini depa',zone:'Kennedy',x:702,y:308,price:265,m2:30,bath:'Privado',sv:['wifi','agua','luz','amoblado','aire','parqueo'],cond:['Garantía de 2 meses','Contrato de 12 meses'],ag:'puerto',pal:4,views:88,contacts:4,st:true,desc:'Mini depa moderno con aire acondicionado y parqueo.'},
+ {id:10,t:'Cuarto en Urdesa Central',type:'Habitación',zone:'Urdesa',x:530,y:392,price:195,m2:13,bath:'Compartido',sv:['wifi','agua','luz','amoblado'],cond:['Garantía de 1 mes','Contrato de 6 meses'],ag:'carlos',pal:3,views:71,contacts:3,st:false,desc:'Habitación cómoda en casa compartida con otros dos estudiantes.'},
+ {id:11,t:'Habitación en Barrio Centenario',type:'Habitación',zone:'Centenario',x:604,y:530,price:175,m2:15,bath:'Privado',sv:['wifi','agua','luz'],cond:['Garantía de 1 mes','Contrato de 6 meses'],ag:'andrea',pal:2,views:44,contacts:2,st:true,desc:'Barrio residencial tranquilo, cerca de la UCSG.'},
+ {id:12,t:'Mini depa en el Centro',type:'Mini depa',zone:'Centro',x:730,y:500,price:220,m2:26,bath:'Privado',sv:['wifi','agua','luz','amoblado'],cond:['Garantía de 1 mes','Contrato de 12 meses'],ag:'puerto',pal:0,views:66,contacts:3,st:true,desc:'Cerca de la Metrovía y del malecón.'},
+ {id:13,t:'Habitación en la Alborada',type:'Habitación',zone:'Alborada',x:716,y:198,price:155,m2:12,bath:'Compartido',sv:['wifi','agua','luz','lavanderia'],cond:['Garantía de 1 mes','Contrato de 6 meses'],ag:'luis',pal:4,views:39,contacts:1,st:true,desc:'Habitación en ciudadela con buena oferta de transporte.'},
+ {id:14,t:'Depa compartido en Sauces',type:'Compartido',zone:'Sauces',x:782,y:148,price:140,m2:18,bath:'Compartido',sv:['agua','luz','wifi'],cond:['Sin garantía','Contrato de 6 meses'],ag:'andrea',pal:3,views:29,contacts:1,st:true,desc:'Compartes con dos estudiantes de otras provincias.'},
+ {id:15,t:'Suite en Samborondón',type:'Suite',zone:'Samborondón',x:966,y:292,price:330,m2:34,bath:'Privado',sv:['wifi','agua','luz','amoblado','aire','parqueo','lavanderia'],cond:['Garantía de 2 meses','Contrato de 12 meses','Urbanización privada'],ag:'puerto',pal:1,views:102,contacts:5,st:true,desc:'Suite amplia a minutos de la UEES.'},
+ {id:16,t:'Habitación en Vía a la Costa',type:'Habitación',zone:'Vía a la Costa',x:110,y:420,price:210,m2:16,bath:'Privado',sv:['wifi','agua','luz','amoblado','parqueo'],cond:['Garantía de 1 mes','Contrato de 6 meses','Urbanización cerrada'],ag:'carlos',pal:2,views:47,contacts:2,st:true,desc:'Urbanización cerrada, ideal si tienes carro o vas en expreso.'}
+];
+
+[1,2,5,6,8,9,12,15,16].forEach(i=>L.find(l=>l.id===i).vph=true);
+const RPOOL=[
+ {n:'Daniela P.',from:'Milagro',u:'ESPOL',r:5,a:[5,4,5,5],t:'El cuarto es tal cual las fotos. El dueño responde rápido y la parada de bus está a una cuadra.'},
+ {n:'Kevin M.',from:'Quevedo',u:'ESPOL',r:4,a:[4,3,5,4],t:'Buen internet para clases virtuales. A veces hay ruido el fin de semana.'},
+ {n:'Ana Lucía R.',from:'Machala',u:'UG',r:4,a:[4,4,4,5],t:'La dueña es muy atenta y el contrato fue claro desde el inicio.'},
+ {n:'Bryan S.',from:'Babahoyo',u:'UCSG',r:3,a:[3,3,4,3],t:'El precio está bien, pero el agua caliente falla seguido.'},
+ {n:'Fernanda T.',from:'Salinas',u:'ESPOL',r:5,a:[5,5,4,5],t:'Lo mejor fue dejar de viajar casi 5 horas diarias. Muy tranquilo para estudiar.'},
+ {n:'Jorge V.',from:'Daule',u:'UG',r:4,a:[4,4,3,4],t:'Zona con comida y farmacias cerca. El wifi podría ser mejor.'}];
+const RCOL=['#0469E6','#2F8F6B','#7C5CC4','#E2725B','#07275C','#B07400'];
+const REV={};
+L.forEach(l=>{const k=(l.id*7)%RPOOL.length;const n=(l.id===7||l.id===14)?1:(l.id%3)+2;const low=(ZSAFE[l.zone]||{s:4}).s<3.2;REV[l.id]=Array.from({length:n},(_,i)=>{const b=RPOOL[(k+i*2)%RPOOL.length];return {...b,a:[low?Math.min(b.a[0],3):b.a[0],...b.a.slice(1)],h:['hace 2 semanas','hace 1 mes','hace 3 meses','hace 5 meses'][i%4],col:RCOL[(k+i)%RCOL.length]};});});
+const S={user:null,uni:'espol',budget:180,notify:true,fav:new Set([3]),sel:null,dir:'ida',orig:'milagro',verif:null,prof:false,authMail:null,cmp:new Set(),rvStar:5,upl:{},
+  f:{min:80,max:350,zones:new Set(),types:new Set(),sv:new Set(),dist:8,sort:'cerca',q:'',safe:0,vph:false},
+  notifs:[{t:'Nuevo arriendo en Prosperina',s:'Habitación amoblada · $170/mes · a 1.4 km',id:1,h:'hace 2 h'},{t:'Bajó de precio',s:'Cuarto con baño privado · ahora $150',id:3,h:'ayer'}],
+  msgs:[{n:'Juan Pablo Arenas',ini:'JP',col:'#0469E6',lid:1,m:'Hola, ¿la habitación sigue disponible? Soy estudiante foráneo y entro a ESPOL este semestre.',h:'10:24',u:true},{n:'José Andrade',ini:'JA',col:'#2F8F6B',lid:2,m:'¿Se puede visitar el sábado en la mañana?',h:'ayer',u:true},{n:'Valentina Cruz',ini:'VC',col:'#7C5CC4',lid:10,m:'¿El precio incluye el internet?',h:'lun',u:false}],
+  pub:null, aTab:'panel'};
+
+/* ===================== HELPERS ===================== */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const ic=(n,c='')=>`<svg class="ico ${c}"><use href="#${n}"/></svg>`;
+const km=(l,u=S.uni)=>{const U=UNIS[u];return Math.round(Math.hypot(l.x-U.x,l.y-U.y)/62*10)/10;};
+const busMin=d=>d<0.9?Math.round(d*13):Math.round(d*5+6);
+const how=d=>d<0.9?`${busMin(d)} min caminando`:`${busMin(d)} min en bus`;
+function fair(p,b=S.budget){ if(p<=b) return {k:'good',l:'Dentro de tu presupuesto',s:'Justo para ti'}; if(p<=b*1.15) return {k:'mid',l:'Un poco sobre tu presupuesto',s:'Algo alto para ti'}; return {k:'bad',l:'Caro para tu presupuesto',s:'Caro para ti'}; }
+function zfair(p,z){const a=ZAVG[z]||190; if(p<=a*0.97) return {k:'good',s:'Bajo el promedio de la zona',l:`Precio justo: el promedio en ${z} es $${a}`}; if(p<=a*1.1) return {k:'mid',s:'En el promedio de la zona',l:`Cerca del promedio de ${z} ($${a})`}; return {k:'bad',s:'Sobre el promedio de la zona',l:`Sobre el promedio de ${z} ($${a}); a los estudiantes les aparecerá como caro para la zona`}; }
+function safety(z){const s=ZSAFE[z]||{s:3.5,l:'Media',upc:'UPC cercana',r:'Pocos reportes'};const k=s.s>=4?'good':s.s>=3.2?'mid':'bad';return {...s,k,lab:k==='good'?'Zona segura':k==='mid'?'Precaución moderada':'Precaución de noche'};}
+function cost(l){const d=km(l);const bus=d<0.9?0:0.30*2*22;const items=[['Arriendo',l.price]];Object.entries(EXTRA).forEach(([k,v])=>{if(!l.sv.includes(k))items.push([SVC[k][0]+' (no incluido, estimado)',v]);});if(bus)items.push(['Pasajes de bus (22 días de clase)',bus]);return {items,tot:Math.round(items.reduce((a,[,v])=>a+v,0)),bus};}
+const money=v=>'$'+(v%1?v.toFixed(2):v);
+function rating(l){const r=REV[l.id];if(!r||!r.length)return null;const n=r.length;return {n,avg:Math.round(r.reduce((a,x)=>a+x.r,0)/n*10)/10,a:[0,1,2,3].map(i=>r.reduce((s2,x)=>s2+x.a[i],0)/n)};}
+const stars=(v,c='xs')=>`<span class="stars">${[1,2,3,4,5].map(i=>`<svg class="ico ${c} ${i<=Math.round(v)?'':'off'}"><use href="#i-star"/></svg>`).join('')}</span>`;
+function agentOf(l){if(l.ag==='me'){const n=S.user?.name||'Tú';return {n,ini:n.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase(),col:'#0469E6',v:S.verif==='ok',r:0,rv:0,ph:'—'};}return AGENTS[l.ag];}
+const thumb=l=>l.img?`<img src="${l.img}" style="width:100%;height:100%;object-fit:cover" alt="">`:room('cuarto',l.pal);
+const countFor=(u,b)=>visible().filter(l=>l.price<=b&&km(l,u)<=4).length;
+const visible=()=>L.filter(l=>l.st);
+function toast(m){const t=$('#toast');t.querySelector('span').textContent=m;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('on'),2600);}
+function modal(html,wide){$('#modal').className='modal'+(wide?' wide':'');$('#modal').innerHTML=html;$('#ov').classList.add('on');}
+function closeModal(){$('#ov').classList.remove('on');}
+$('#ov').addEventListener('click',e=>{if(e.target.id==='ov')closeModal();});
+function store(){try{localStorage.setItem('nidu',JSON.stringify({user:S.user,uni:S.uni,budget:S.budget,fav:[...S.fav],orig:S.orig,verif:S.verif,prof:S.prof}));}catch(e){}}
+try{const d=JSON.parse(localStorage.getItem('nidu')||'null');if(d){S.user=d.user;S.uni=d.uni||'espol';S.budget=d.budget||180;S.fav=new Set(d.fav||[]);S.orig=d.orig||'milagro';S.verif=d.verif||null;if(S.verif==='rev')S.verif='ok';S.prof=!!d.prof;}}catch(e){}
+
+/* room illustrations */
+const PAL=[{w1:'#EAF2FE',w2:'#D3E3FA',fl:'#C9A27E',bl:'#0469E6',ac:'#FFB012'},{w1:'#FBEFE3',w2:'#F2DCC6',fl:'#B98B66',bl:'#E2725B',ac:'#2F8F6B'},{w1:'#EAF5EE',w2:'#D2EADA',fl:'#A9876A',bl:'#07275C',ac:'#FFB012'},{w1:'#F3EEFA',w2:'#E2D8F2',fl:'#B08F74',bl:'#7C5CC4',ac:'#FFB012'},{w1:'#FFF6DE',w2:'#F7E5B3',fl:'#9C7A5E',bl:'#0469E6',ac:'#E2725B'}];
+let GID=0;
+function room(kind='cuarto',pi=0){const p=PAL[pi%PAL.length];const g='g'+(GID++);
+  const head=`<svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice" width="100%" height="100%"><defs><linearGradient id="${g}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${p.w1}"/><stop offset="1" stop-color="${p.w2}"/></linearGradient><linearGradient id="${g}s" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8CC8F0"/><stop offset="1" stop-color="#E4F3FB"/></linearGradient></defs>`;
+  if(kind==='cuarto') return head+`<rect width="400" height="300" fill="url(#${g})"/><rect x="226" y="44" width="128" height="122" rx="8" fill="url(#${g}s)"/><path d="M226 140 Q260 120 290 136 T354 128 V166 H226Z" fill="#9BCB8E" opacity=".7"/><rect x="287" y="44" width="6" height="122" fill="#fff"/><rect x="226" y="102" width="128" height="6" fill="#fff"/><rect x="218" y="38" width="144" height="8" rx="4" fill="${p.fl}"/><rect x="0" y="232" width="400" height="68" fill="${p.fl}"/><rect x="0" y="232" width="400" height="5" fill="#000" opacity=".06"/><rect x="24" y="140" width="16" height="104" rx="7" fill="#6E4A3A"/><rect x="30" y="182" width="176" height="56" rx="14" fill="#fff"/><rect x="96" y="182" width="110" height="56" rx="14" fill="${p.bl}"/><rect x="44" y="164" width="58" height="26" rx="12" fill="#FFFDF8"/><rect x="250" y="178" width="96" height="62" rx="8" fill="#B07A58"/><rect x="262" y="158" width="44" height="22" rx="4" fill="#0B1B3F"/><rect x="310" y="150" width="6" height="30" fill="#0B1B3F"/><path d="M300 150h26l-6-14h-14z" fill="${p.ac}"/><rect x="356" y="194" width="24" height="46" rx="6" fill="#C26A43"/><ellipse cx="368" cy="174" rx="22" ry="30" fill="#4E9A62"/><circle cx="120" cy="70" r="18" fill="${p.ac}" opacity=".35"/><rect x="60" y="60" width="90" height="62" rx="6" fill="#fff" opacity=".7"/><rect x="68" y="68" width="74" height="46" rx="3" fill="${p.bl}" opacity=".25"/></svg>`;
+  if(kind==='bano') return head+`<rect width="400" height="300" fill="#F2F6FA"/><g opacity=".5" stroke="#D5DEE8" stroke-width="2">${Array.from({length:10},(_,i)=>`<path d="M${i*44} 0V300"/>`).join('')}${Array.from({length:7},(_,i)=>`<path d="M0 ${i*44}H400"/>`).join('')}</g><rect x="0" y="236" width="400" height="64" fill="#C7D3DF"/><rect x="60" y="50" width="96" height="110" rx="48" fill="#fff" stroke="#AFC1D3" stroke-width="5"/><rect x="72" y="62" width="72" height="86" rx="36" fill="url(#${g}s)" opacity=".6"/><rect x="50" y="170" width="116" height="20" rx="8" fill="#fff"/><rect x="66" y="190" width="84" height="50" rx="6" fill="${p.bl}" opacity=".85"/><rect x="236" y="40" width="130" height="200" rx="6" fill="#fff" opacity=".55" stroke="#C8D7E6" stroke-width="4"/><circle cx="300" cy="70" r="14" fill="#AFC1D3"/><path d="M300 84v40" stroke="#AFC1D3" stroke-width="5"/><rect x="190" y="120" width="34" height="8" rx="4" fill="${p.ac}"/></svg>`;
+  if(kind==='cocina') return head+`<rect width="400" height="300" fill="url(#${g})"/><rect x="20" y="40" width="250" height="70" rx="6" fill="#fff"/><path d="M103 40v70M186 40v70" stroke="${p.w2}" stroke-width="3"/><rect x="0" y="236" width="400" height="64" fill="${p.fl}"/><rect x="20" y="150" width="250" height="90" rx="6" fill="${p.bl}"/><rect x="14" y="140" width="262" height="14" rx="4" fill="#F4EDE4"/><path d="M103 160v74M186 160v74" stroke="#000" stroke-opacity=".15" stroke-width="3"/><rect x="200" y="128" width="50" height="12" rx="3" fill="#333"/><rect x="292" y="40" width="88" height="200" rx="10" fill="#E9EEF3" stroke="#C9D3DD" stroke-width="3"/><path d="M292 110h88" stroke="#C9D3DD" stroke-width="3"/><rect x="366" y="66" width="6" height="26" rx="3" fill="#9AA7B5"/><circle cx="60" cy="126" r="12" fill="${p.ac}"/><rect x="120" y="112" width="20" height="28" rx="4" fill="#4E9A62"/></svg>`;
+  return head+`<rect width="400" height="300" fill="url(#${g}s)"/><circle cx="330" cy="60" r="26" fill="#FFE08A"/><rect x="70" y="60" width="200" height="190" rx="6" fill="${p.w2}"/><rect x="70" y="52" width="200" height="14" rx="4" fill="${p.bl}"/>${[0,1,2].map(r=>[0,1,2,3].map(c=>`<rect x="${88+c*44}" y="${80+r*48}" width="30" height="32" rx="3" fill="#fff" opacity=".85"/>`).join('')).join('')}<rect x="150" y="214" width="40" height="36" rx="3" fill="#6E4A3A"/><rect x="0" y="248" width="400" height="52" fill="#CFC8BB"/><path d="M0 260H400" stroke="#fff" stroke-width="4" stroke-dasharray="20 14"/><path d="M330 250V150" stroke="#8A6A4E" stroke-width="8"/><path d="M330 150c-30-10-48 0-60 14M330 150c30-12 50-2 60 12M330 150c-14-24-34-30-50-28M330 150c16-24 36-28 50-24" stroke="#3E8A55" stroke-width="10" fill="none" stroke-linecap="round"/></svg>`;
+}
+
+/* ===================== MAP ===================== */
+let MID=0;function mapSVG(){const q='m'+(MID++);
+  const road=(d,w,c='#fff',o='#D9D1C2')=>`<path d="${d}" stroke="${o}" stroke-width="${w+3}" fill="none" stroke-linecap="round"/><path d="${d}" stroke="${c}" stroke-width="${w}" fill="none" stroke-linecap="round"/>`;
+  const lab=(t,x,y,s=11)=>`<text x="${x}" y="${y}" font-family="DM Sans,sans-serif" font-size="${s}" font-weight="700" fill="#8A93A6" letter-spacing="1.5" text-anchor="middle">${t}</text>`;
+  return `<svg viewBox="0 0 1000 680" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="${q}a" width="34" height="34" patternUnits="userSpaceOnUse" patternTransform="rotate(8)"><rect width="34" height="34" fill="#ECE8DF"/><rect x="3" y="3" width="28" height="28" rx="4" fill="#E4DFD3"/></pattern><pattern id="${q}b" width="30" height="30" patternUnits="userSpaceOnUse" patternTransform="rotate(-12)"><rect width="30" height="30" fill="#ECE8DF"/><rect x="3" y="3" width="24" height="24" rx="4" fill="#E4DFD3"/></pattern></defs>
+  <rect width="1000" height="680" fill="url(#${q}a)"/><path d="M560 0H1000V680H560Z" fill="url(#${q}b)"/>
+  <path d="M0 470C60 450 120 480 170 520 220 560 210 640 250 680H0Z" fill="#CFE3BE"/><path d="M200 150C250 120 340 130 370 190 390 240 360 300 300 304 240 306 196 270 190 220 186 190 186 165 200 150Z" fill="#CFE3BE"/><path d="M0 0H190C200 60 150 110 80 120 40 126 10 110 0 100Z" fill="#CFE3BE"/><ellipse cx="760" cy="70" rx="70" ry="40" fill="#CFE3BE"/><ellipse cx="520" cy="560" rx="40" ry="24" fill="#CFE3BE"/>
+  <path d="M120 690C180 620 260 590 360 560S500 500 540 450 560 380 610 300" stroke="#AED4EA" stroke-width="26" fill="none" stroke-linecap="round"/><path d="M360 560C400 610 470 640 560 690" stroke="#AED4EA" stroke-width="18" fill="none"/><path d="M540 450C500 420 470 390 440 380" stroke="#AED4EA" stroke-width="12" fill="none" stroke-linecap="round"/>
+  <path d="M860 -10C840 120 880 240 890 360S940 560 1010 640" stroke="#AED4EA" stroke-width="46" fill="none"/><path d="M890 380C920 470 960 540 1010 560L1010 690H930C900 600 880 500 890 380Z" fill="#AED4EA"/>
+  ${road('M250 -10C262 110 262 210 290 320S380 540 470 690',14,'#FFE6A3','#E9C870')}
+  ${road('M-10 440C90 410 180 380 280 330',11,'#FFE6A3','#E9C870')}
+  ${road('M290 320C380 350 460 370 560 410S690 470 760 480',9)}
+  ${road('M330 200C430 196 540 196 660 186S800 170 850 160',9)}
+  ${road('M650 110C654 230 660 360 668 520',9)}
+  ${road('M560 230C660 238 760 244 850 236',7)}
+  ${road('M560 480C650 492 760 506 880 520',8)}
+  ${road('M700 90C720 200 730 320 740 460',6)}
+  ${road('M380 260C420 300 450 330 470 400',6)}
+  ${road('M160 330C200 360 220 400 240 460',6)}
+  ${road('M850 160C900 180 940 200 1000 200',8,'#FFE6A3','#E9C870')}
+  ${road('M540 300C560 340 580 380 600 440',5)}
+  ${lab('PROSPERINA',398,346)}${lab('LOS CEIBOS',170,300)}${lab('MAPASINGUE',470,300)}${lab('URDESA',488,456)}${lab('KENNEDY',700,340)}${lab('ALBORADA',740,232)}${lab('SAUCES',790,122)}${lab('CENTRO',770,540)}${lab('CENTENARIO',620,575)}${lab('SAMBORONDÓN',960,330,10)}${lab('VÍA A LA COSTA',90,470)}${lab('ESTERO SALADO',420,600,10)}${lab('RÍO DAULE',872,60,10)}${lab('BOSQUE PROTECTOR',90,560,10)}
+  <text x="268" y="170" font-family="DM Sans" font-size="10" font-weight="700" fill="#B4952F" transform="rotate(80 268 170)">VÍA PERIMETRAL</text></svg>`;
+}
+const MAPS={};
+function initMap(el,opt={}){
+  el.innerHTML=`<div class="map-inner">${mapSVG()}<svg class="route" viewBox="0 0 1000 680" style="position:absolute;inset:0;width:1000px;height:680px;pointer-events:none"></svg><div class="layer"></div></div>${opt.ctl!==false?`<div class="mctl"><button data-z="1" aria-label="Acercar">+</button><button data-z="-1" aria-label="Alejar">−</button><button data-z="0" aria-label="Centrar">${ic('i-target','sm')}</button></div>`:''}<div class="mnote">Mapa ilustrativo · Guayaquil</div>`;
+  const m={el,inner:el.querySelector('.map-inner'),layer:el.querySelector('.layer'),route:el.querySelector('.route'),s:1,tx:0,ty:0,opt};
+  MAPS[el.id]=m;
+  const apply=()=>{const r=el.getBoundingClientRect();if(r.width){const mn=Math.max(r.width/1000,r.height/680);if(m.s<mn)m.s=mn;m.tx=Math.min(0,Math.max(r.width-1000*m.s,m.tx));m.ty=Math.min(0,Math.max(r.height-680*m.s,m.ty));}m.inner.style.transform=`translate(${m.tx}px,${m.ty}px) scale(${m.s})`;m.inner.style.setProperty('--inv',(1/m.s).toFixed(3));};
+  m.apply=apply;
+  m.center=(x,y,s)=>{const r=el.getBoundingClientRect();if(s)m.s=s;m.tx=r.width/2-x*m.s;m.ty=r.height/2-y*m.s;apply();};
+  m.fit=(pts,pad=80)=>{const r=el.getBoundingClientRect();if(!r.width)return;const xs=pts.map(p=>p[0]),ys=pts.map(p=>p[1]);const w=Math.max(80,Math.max(...xs)-Math.min(...xs)),h=Math.max(80,Math.max(...ys)-Math.min(...ys));m.s=Math.min(2.2,Math.max(.5,Math.min((r.width-pad*2)/w,(r.height-pad*2)/h)));m.center((Math.max(...xs)+Math.min(...xs))/2,(Math.max(...ys)+Math.min(...ys))/2);};
+  m.zoom=(f,cx,cy)=>{const r=el.getBoundingClientRect();cx=cx??r.width/2;cy=cy??r.height/2;const ns=Math.min(3,Math.max(.45,m.s*f));const mx=(cx-m.tx)/m.s,my=(cy-m.ty)/m.s;m.s=ns;m.tx=cx-mx*ns;m.ty=cy-my*ns;apply();};
+  m.toMap=(cx,cy)=>{const r=el.getBoundingClientRect();return [(cx-r.left-m.tx)/m.s,(cy-r.top-m.ty)/m.s];};
+  el.querySelectorAll('.mctl button').forEach(b=>b.onclick=e=>{e.stopPropagation();const z=+b.dataset.z;if(z===0)(opt.onCenter||(()=>m.center(UNIS[S.uni].x,UNIS[S.uni].y,1.3)))();else m.zoom(z>0?1.3:1/1.3);});
+  el.addEventListener('wheel',e=>{e.preventDefault();const r=el.getBoundingClientRect();m.zoom(e.deltaY<0?1.12:1/1.12,e.clientX-r.left,e.clientY-r.top);},{passive:false});
+  let d=null;
+  el.addEventListener('pointerdown',e=>{if(e.target.closest('.mctl,.popup,.pin,.umark'))return;d={x:e.clientX,y:e.clientY,tx:m.tx,ty:m.ty,moved:false};el.setPointerCapture(e.pointerId);el.classList.add('drag');});
+  el.addEventListener('pointermove',e=>{if(!d)return;const dx=e.clientX-d.x,dy=e.clientY-d.y;if(Math.abs(dx)+Math.abs(dy)>4)d.moved=true;m.tx=d.tx+dx;m.ty=d.ty+dy;apply();});
+  el.addEventListener('pointerup',e=>{if(d&&!d.moved&&opt.onClick)opt.onClick(...m.toMap(e.clientX,e.clientY));d=null;el.classList.remove('drag');});
+  apply();return m;
+}
+function uniMarkers(active){return Object.entries(UNIS).map(([k,u])=>`<div class="umark ${k===active?'':'off'}" style="left:${u.x}px;top:${u.y}px" data-act="setUni" data-u="${k}" title="${esc(u.full)}"><div class="c">${ic('i-cap',k===active?'':'sm')}</div><div class="l">${u.n}</div></div>`).join('');}
+function routePath(l,u){const U=UNIS[u];const sx=l.x+(U.x-l.x)*.12,sy=l.y+(U.y-l.y)*.12+10,ex=U.x-(U.x-l.x)*.1,ey=U.y-(U.y-l.y)*.1+12;const cx=(sx+ex)/2+(ey-sy)*.25,cy=(sy+ey)/2-(ex-sx)*.25;return {sx,sy,ex,ey,cx,cy,d:`M${sx} ${sy} Q${cx} ${cy} ${ex} ${ey}`};}
+function drawRoute(m,l,u){const r=routePath(l,u);const U=UNIS[u];const near=km(l,u)<0.9;
+  m.route.innerHTML=near?`<path d="M${l.x} ${l.y} L${U.x} ${U.y}" stroke="#0469E6" stroke-width="5" stroke-dasharray="2 10" stroke-linecap="round" fill="none"/>`:
+  `<path d="M${l.x} ${l.y-4} L${r.sx} ${r.sy}" stroke="#4A5878" stroke-width="4" stroke-dasharray="1 9" stroke-linecap="round" fill="none"/><path d="${r.d}" stroke="#fff" stroke-width="12" fill="none" stroke-linecap="round"/><path d="${r.d}" stroke="#0469E6" stroke-width="6" fill="none" stroke-linecap="round"/><path d="M${r.ex} ${r.ey} L${U.x} ${U.y}" stroke="#4A5878" stroke-width="4" stroke-dasharray="1 9" stroke-linecap="round" fill="none"/><circle cx="${r.sx}" cy="${r.sy}" r="7" fill="#fff" stroke="#07275C" stroke-width="3"/><circle cx="${r.ex}" cy="${r.ey}" r="7" fill="#fff" stroke="#07275C" stroke-width="3"/>`;}
+const UBUS={
+  espol:{lines:['52','75','75B','121','118','145'],metro:'Alimentador de la Metrovía en el paradero de Ceibos Norte',note:'Las rutas urbanas 52, 75, 75B y 121 llegan a la entrada principal del campus; la 145 conecta con la Vía a la Costa. La ESPOL también opera buses institucionales TransEspol desde Ceibos Norte, Albán Borja y Durán.'},
+  ug:{lines:['10','98','85','171','124','92'],metro:'Metrovía por la av. de las Américas',note:'Las líneas 10, 98, 85 y 171 circulan por la av. Delta, junto a la Ciudadela Universitaria; de noche escasean, así que planifica el regreso temprano.'},
+  ucsg:{lines:['6','42','52'],metro:'Metrovía Troncal 1, estación Universidad Católica (av. Carlos Julio Arosemena)',note:'La estación Universidad Católica de la Metrovía queda frente al campus por un paso peatonal; las líneas 6, 42 y 52 recorren la av. Carlos Julio Arosemena.'},
+  uees:{lines:['BUEES'],metro:'',note:'La UEES ofrece su propio servicio de buses BUEES con horarios y paraderos por la Vía Samborondón, La Puntilla y Guayacanes. El transporte urbano público hacia Samborondón es limitado, así que conviene revisar los horarios del BUEES.'}
+};
+function busLineName(u){const B=UBUS[u]||UBUS.espol;if(B.lines[0]==='BUEES')return 'bus BUEES';return 'Línea '+B.lines[(S.sel?S.sel.id:0)%B.lines.length];}
+function lineOf(l){const B=UBUS[S.uni]||UBUS.espol;if(B.lines[0]==='BUEES')return 'bus BUEES';return 'Línea '+B.lines[l.id%B.lines.length];}
+function busRow(u){const B=UBUS[u]||UBUS.espol;const lines=B.lines[0]==='BUEES'?'servicio institucional BUEES':'líneas '+B.lines.join(', ');return `<div class="busrow">${ic('i-bus','sm')}<div><b>Buses que pasan cerca de ${UNIS[u].n}:</b> ${lines}.${B.metro?' '+esc(B.metro)+'.':''}<div style="color:var(--ink3);margin-top:3px">${esc(B.note)} <span style="font-style:italic">Datos de fuentes públicas; pueden cambiar por obras o decisiones de la ATM.</span></div></div></div>`;}
+
+/* ===================== ROUTER ===================== */
+const VIEWS=['inicio','registro','ingresar','explorar','arriendo','agente','publicar'];
+function go(v){if(location.hash==='#'+v)render();else location.hash=v;}
+window.addEventListener('hashchange',render);
+let prevView=null;
+function render(){
+  let v=location.hash.slice(1)||'inicio';
+  if(['como','beneficios','agentes'].includes(v)){showView('inicio');renderLanding();document.getElementById(v)?.scrollIntoView({behavior:'smooth'});return;}
+  if(!VIEWS.includes(v))v='inicio';
+  if(v==='arriendo'&&!S.sel)v='explorar';
+  if((v==='agente'||v==='publicar')&&S.user?.role!=='agente'){v='ingresar';}
+  showView(v);window.scrollTo(0,0);
+  if((v==='registro'||v==='ingresar')&&prevView!==v){sstep='pick';authUni=null;}
+  ({inicio:renderLanding,registro:()=>renderAuth('reg'),ingresar:()=>renderAuth('login'),explorar:renderExplore,arriendo:renderDetail,agente:renderAgent,publicar:renderPublish})[v]();
+  prevView=v;
+}
+function showView(v){document.querySelectorAll('.view').forEach(s=>s.classList.toggle('on',s.dataset.view===v));
+  const app=['explorar','arriendo','agente','publicar'].includes(v);$('#appTop').innerHTML=app?topbar(v):'';}
+
+/* ===================== LANDING ===================== */
+function renderLanding(){
+  const sel=$('#heroUni');sel.innerHTML=Object.entries(UNIS).map(([k,u])=>`<option value="${k}" ${k===S.uni?'selected':''}>${u.full}</option>`).join('');
+  $('#heroBudget').value=S.budget;
+  const hm=$('#heroMap');hm.id='heroMap';const m=initMap(hm,{ctl:false});
+  const near=visible().filter(l=>km(l,'espol')<4);
+  m.layer.innerHTML=uniMarkers('espol')+near.map(l=>{const f=fair(l.price,180);return `<div class="pin ${f.k}" style="left:${l.x}px;top:${l.y}px"><div class="p">$${l.price}</div><div class="t"></div></div>`}).join('');
+  requestAnimationFrame(()=>m.center(320,300,1.55));
+  $('#heroCount').textContent=near.length+' disponibles';
+  const l=L[0];$('#heroCard').innerHTML=`<div class="th">${room('cuarto',0)}</div><div><b style="font-size:14px">${l.t}</b><div style="color:var(--ink3);font-size:12px;margin:2px 0 6px">${km(l,'espol')} km · ${how(km(l,'espol'))}</div><span class="price" style="font-size:18px">$${l.price}<small>/mes</small></span></div>`;
+}
+document.addEventListener('submit',e=>{const f=e.target.dataset.form;if(!f)return;e.preventDefault();
+  if(f==='hero'){S.uni=$('#heroUni').value;S.budget=Math.max(60,+$('#heroBudget').value||180);store();go('explorar');}
+  if(f==='reg')submitReg();if(f==='login')submitLogin();if(f==='contact')sendContact();if(f==='pub')submitPub();if(f==='review')sendReview();if(f==='sso'){e.preventDefault();submitSso();}if(f==='setup'){e.preventDefault();studentSetup();}});
+
+/* ===================== AUTH ===================== */
+let regRole='estudiante';
+function authArt(){return `<div class="auth-art"><div class="atop"><img src="icon-w.png" alt="" style="height:46px"><img src="word-w.png" alt="NidU" style="height:30px"></div>
+<div class="amsg"><h2>Encuentra tu <span>nido</span> cerca de la U.</h2><p>Arriendos seguros, cerca de tu universidad y a un precio que puedes pagar.</p><ul><li>${ic('i-check')}Compara precios con tu presupuesto</li><li>${ic('i-check')}Rutas de bus de ida y regreso</li><li>${ic('i-check')}Agentes verificados</li></ul></div>${cityArt()}</div>`;}
+function cityArt(){const w='rgba(255,255,255,.55)',g='rgba(255,176,18,.9)';
+ const win=(x,y,c,r)=>{let s='';for(let i=0;i<r;i++)for(let j=0;j<c;j++)s+=`<rect x="${x+j*22}" y="${y+i*24}" width="12" height="14" rx="1.5"/>`;return s;};
+ return `<svg class="city" viewBox="0 0 800 380" fill="none" stroke="${w}" stroke-width="1.6" stroke-linejoin="round">
+ <path d="M0 330C120 320 220 340 330 330S560 316 800 328" stroke="rgba(255,255,255,.35)"/><path d="M0 352C140 344 260 360 400 350S640 340 800 350" stroke="rgba(255,255,255,.25)"/>
+ <path d="M40 300V180h120v120M30 180h140l-70-46z"/><g>${win(58,200,5,4)}</g>
+ <path d="M190 300V120h170v180"/><path d="M182 120h186"/><g>${win(206,138,7,6)}</g><path d="M260 120V80h30v40M275 80V50"/><path d="M275 50l20 6-20 6" stroke="${g}"/>
+ <path d="M380 300V210c0-30 60-30 60 0v90"/><path d="M370 300h160"/><path d="M400 300v-40M420 300v-40"/>
+ <path d="M470 300V200l60-40 60 40v100" stroke="#fff" stroke-width="2.2"/><path d="M450 210l80-58 80 58" stroke="#fff" stroke-width="2.2"/><path d="M520 190h20v20h-20zM520 220h20v20h-20zM495 230h18v18h-18zM547 230h18v18h-18z"/><path d="M452 150l78-40 80 40-80 34z" stroke="${g}" stroke-width="2"/><path d="M596 158v24" stroke="${g}" stroke-width="2"/><circle cx="596" cy="186" r="4" stroke="${g}"/>
+ <path d="M640 300V150h110v150"/><g>${win(656,166,4,5)}</g>
+ <path d="M730 300v-80"/><path d="M730 220c-20-6-34 2-40 12M730 220c20-8 34 0 40 10M730 220c-8-18-24-22-34-20M730 220c10-18 26-20 36-16"/>
+ <path d="M170 300v-60"/><path d="M170 240c-16-5-28 2-32 10M170 240c16-6 28 0 32 8M170 240c-6-14-20-18-28-16M170 240c8-14 22-16 30-12"/>
+ <rect x="560" y="262" width="74" height="30" rx="6" stroke="${g}"/><path d="M568 270h14v10h-14zM588 270h14v10h-14zM608 270h14v10h-14z" stroke="${g}"/><circle cx="574" cy="295" r="5" stroke="${g}"/><circle cx="620" cy="295" r="5" stroke="${g}"/>
+ <path d="M0 300h800"/></svg>`;}
+const UCOL={espol:'#07275C',ug:'#0469E6',ucsg:'#2F8F6B',uees:'#7C5CC4'};
+const UIDENT={espol:{n:'Juan Pablo Arenas',e:'jparenas@espol.edu.ec'},ug:{n:'Juan Pablo Arenas',e:'jparenas@ug.edu.ec'},ucsg:{n:'Juan Pablo Arenas',e:'jparenas@cu.ucsg.edu.ec'},uees:{n:'Juan Pablo Arenas',e:'jparenas@uees.edu.ec'}};
+let authUni=null,sstep='pick';
+function reAuth(){renderAuth(location.hash==='#ingresar'?'login':'reg');}
+function authHead(){return `<div class="head"><a class="brand" href="#inicio"><img class="i" src="icon.png" alt="" style="height:34px"><img class="w" src="word.png" alt="NidU" style="height:22px"></a><button class="btn ghost sm" data-act="go" data-v="inicio">${ic('i-back','sm')}Volver</button></div>`;}
+function authFoot(){return `<div class="fl"><span>© 2026 NidU</span><a href="#inicio">Inicio</a><a href="#como">Ayuda</a><span>Prototipo</span></div>`;}
+function renderAuth(mode){
+  const cont=mode==='login'?'#authLogin':'#authReg';
+  if(regRole==='estudiante'){$(cont).innerHTML=authArt()+`<div class="auth-form">${authHead()}<div class="box">${studentAuth(mode)}</div>${authFoot()}</div>`;bindStudentAuth();return;}
+  // ---- agent ----
+  if(mode==='login'){
+    $(cont).innerHTML=authArt()+`<div class="auth-form">${authHead()}<form class="box" data-form="login" novalidate><h1>Entra como agente</h1><p class="hint">Accede a tu panel para administrar tus arriendos.</p>
+    <div class="seg"><button type="button" data-act="role" data-r="estudiante">${ic('i-cap','sm')}Soy estudiante</button><button type="button" class="on" data-act="role" data-r="agente">${ic('i-building','sm')}Soy agente</button></div>
+    <div class="fld"><label>Correo electrónico</label><input class="inp" id="lgMail" type="email" placeholder="nombre@correo.com" value="${esc(S.user?.role==='agente'?S.user.email:'')}"><div class="errtxt">Escribe un correo válido.</div></div>
+    <div class="fld"><label>Contraseña</label><input class="inp" id="lgPass" type="password" placeholder="Contraseña"><div class="errtxt">Escribe tu contraseña.</div></div>
+    <button class="btn pri block" type="submit">Iniciar sesión</button>
+    <div class="or">o prueba el prototipo</div>
+    <div class="demo"><button type="button" class="btn sec" data-act="demo" data-r="estudiante">${ic('i-cap','sm')}Estudiante</button><button type="button" class="btn sec" data-act="demo" data-r="agente">${ic('i-building','sm')}Agente</button></div>
+    <p class="legal">¿Eres agente nuevo? <a href="#registro"><b>Crea tu cuenta de agente</b></a></p></form>${authFoot()}</div>`;
+    return;
+  }
+  const unis=Object.entries(ORIG).map(([k,o])=>`<option value="${k}" ${k===S.orig?'selected':''}>${o.n}</option>`).join('');
+  $(cont).innerHTML=authArt()+`<div class="auth-form">${authHead()}<form class="box" data-form="reg" novalidate><h1>Crea tu cuenta de agente</h1><p class="hint">Publica tus arriendos y llega directo a estudiantes foráneos.</p>
+  <div class="seg"><button type="button" data-act="role" data-r="estudiante">${ic('i-cap','sm')}Soy estudiante</button><button type="button" class="on" data-act="role" data-r="agente">${ic('i-building','sm')}Soy agente</button></div>
+  <div class="fld"><label>Nombre completo</label><input class="inp" id="rgName" placeholder="Ej. Carlos Ríos"><div class="errtxt">Escribe tu nombre.</div></div>
+  <div class="fld"><label>Correo electrónico</label><input class="inp" id="rgMail" type="email" placeholder="nombre@correo.com"><div class="errtxt">Escribe un correo válido.</div></div>
+  <div class="row2"><div class="fld"><label>Teléfono</label><input class="inp" id="rgPhone" placeholder="09X XXX XXXX"></div><div class="fld"><label>Tipo</label><select class="inp"><option>Agente independiente</option><option>Inmobiliaria</option><option>Propietario</option></select></div></div>
+  <div class="slab" style="margin-top:4px"><span>Verificación de identidad</span><span style="color:var(--ink3);font-weight:500">Así los estudiantes confían en ti</span></div>
+  <label class="upl" id="uplced"><input type="file" accept="image/*,.pdf" data-up="ced">${ic('i-user','sm')}<span>Cédula o RUC (foto o PDF) · obligatorio</span></label>
+  <div class="errtxt" id="cedErr" style="margin:-4px 0 10px">Sube tu cédula o RUC para poder verificarte.</div>
+  <label class="upl" id="upldoc"><input type="file" accept="image/*,.pdf" data-up="doc">${ic('i-home','sm')}<span>Documento del inmueble · opcional (predio o contrato)</span></label>
+  <div class="switchrow" style="background:var(--gold-50)"><div class="t"><b>Plan Agente · $5/mes</b><small>Publica arriendos ilimitados. El primer mes es gratis.</small></div>${ic('i-star')}</div>
+  <div class="fld"><label>Contraseña</label><input class="inp" id="rgPass" type="password" placeholder="Mínimo 6 caracteres"><div class="errtxt">Usa al menos 6 caracteres.</div></div>
+  <button class="btn pri block" type="submit">Crear cuenta de agente</button>
+  <p class="legal">Al registrarte aceptas los Términos y la Política de privacidad.<br>¿Ya tienes cuenta? <a href="#ingresar"><b>Inicia sesión</b></a></p></form>${authFoot()}</div>`;
+  S.upl={};
+}
+function studentAuth(mode){
+  if(sstep==='sso'&&authUni){const u=UNIS[authUni],id=UIDENT[authUni],dom=id.e.split('@')[1];return `<div class="sso">
+    <div class="ssobadge">${ic('i-cap','xs')}Cuenta de ${u.n}</div>
+    <h1>Inicia sesión con tu correo de ${u.n}</h1>
+    <p class="hint">Entra con el correo y la contraseña de tu cuenta de <b>${esc(u.full)}</b>. En este prototipo no se validan: cualquier contraseña te deja pasar.</p>
+    <form data-form="sso" novalidate autocomplete="off">
+      <div class="fld"><label>Correo institucional</label><input class="inp" id="ssoMail" type="email" value="${id.e}" autocomplete="off"><div class="errtxt">El correo debe terminar en @${dom}.</div></div>
+      <div class="fld"><label>Contraseña</label><input class="inp" id="ssoPass" type="password" placeholder="Tu contraseña" autocomplete="new-password"><div class="errtxt">Escribe tu contraseña.</div></div>
+      <button class="btn pri block" type="submit">${ic('i-lock','sm')}Iniciar sesión</button>
+    </form>
+    <button class="btn ghost block" data-act="ssoBack" style="margin-top:8px">Usar otra universidad</button>
+    <div class="scam" style="margin-top:16px">${ic('i-shield','sm')}<div><b>Es un prototipo de NidU, no el portal real de tu universidad.</b> No escribas tu contraseña verdadera; cualquier texto sirve para la demostración.</div></div></div>`;}
+  if(sstep==='setup'&&authUni){const u=UNIS[authUni],id=UIDENT[authUni],ini=id.n.split(' ').map(w=>w[0]).slice(0,2).join('');return `<h1>¡Hola, ${esc(id.n.split(' ')[0])}!</h1>
+    <p class="hint">Entraste con tu cuenta de ${u.n}. Completa esto una sola vez para mostrarte los arriendos que encajan contigo.</p>
+    <div class="idcard"><div class="av" style="background:${UCOL[authUni]}">${ini}</div><div style="flex:1"><b>${esc(id.n)} <span style="color:var(--good)">${ic('i-shield','xs')}</span></b><small>${esc(S.authMail||id.e)} · ${u.n}</small></div></div>
+    <form data-form="setup" novalidate>
+    <div class="budget"><label style="font-size:13px;font-weight:600;color:var(--ink2)">Presupuesto mensual para arriendo</label><div class="v" id="rgBv">$${S.budget}<small> /mes</small></div><input class="rng" id="rgBudget" type="range" min="80" max="400" step="5" value="${S.budget}" style="--p:${(S.budget-80)/320*100}%"><div class="minmax"><span>$80</span><span>$400</span></div><div class="bcount" id="rgCount"></div></div>
+    <div class="fld"><label>¿De dónde vienes?</label><select class="inp" id="rgOrig">${Object.entries(ORIG).map(([k,o])=>`<option value="${k}" ${k===S.orig?'selected':''}>${o.n}</option>`).join('')}</select></div>
+    <div class="switchrow"><div class="t"><b>Avísame de nuevos arriendos</b><small>Cerca de ${u.n} y dentro de tu presupuesto</small></div><button type="button" class="sw ${S.notify?'on':''}" data-act="sw" aria-label="Notificaciones"></button></div>
+    <button class="btn pri block" type="submit">Entrar a NidU</button></form>`;}
+  // pick
+  return `<h1>Entra con tu cuenta universitaria</h1>
+    <p class="hint">No necesitas crear una cuenta nueva: NidU usa el mismo correo con el que entras a tu universidad.</p>
+    <div class="unipick">${Object.keys(UNIS).map(k=>`<button type="button" class="unibtn" data-act="uniPick" data-u="${k}"><span class="ub-logo" style="background:${UCOL[k]}">${ic('i-cap','sm')}</span><span class="ub-t"><b>${UNIS[k].n}</b><small>${esc(UNIS[k].full)}</small></span>${ic('i-chev','sm')}</button>`).join('')}</div>
+    <div class="or">o</div>
+    <button class="btn sec block" data-act="guest">${ic('i-map','sm')}Explorar sin iniciar sesión</button>
+    <div class="demo" style="margin-top:12px"><button type="button" class="btn ghost sm" data-act="demo" data-r="estudiante">Probar como estudiante</button><button type="button" class="btn ghost sm" data-act="demo" data-r="agente">Probar como agente</button></div>
+    <p class="legal">¿Eres agente inmobiliario? <a href="#registro" data-act="role" data-r="agente"><b>Crea una cuenta de agente</b></a></p>`;
+}
+function bindStudentAuth(){const r=$('#rgBudget');if(!r)return;const upc=()=>{const n=countFor(authUni||S.uni,+r.value);$('#rgCount').innerHTML=`${ic('i-home','xs')}${n} arriendo${n===1?'':'s'} dentro de tu presupuesto cerca de ${UNIS[authUni||S.uni].n}`;};r.oninput=()=>{$('#rgBv').innerHTML=`$${r.value}<small> /mes</small>`;r.style.setProperty('--p',(r.value-80)/320*100+'%');upc();};upc();}
+function studentSetup(){S.uni=authUni;S.budget=+$('#rgBudget').value;S.orig=$('#rgOrig').value;const id=UIDENT[authUni];S.user={name:id.n,email:S.authMail||id.e,role:'estudiante',uni:authUni};S.prof=true;store();toast(`¡Listo, ${id.n.split(' ')[0]}! Bienvenid@ a NidU`);go('explorar');}
+function submitSso(){const m=$('#ssoMail').value.trim(),p=$('#ssoPass').value;const dom=UIDENT[authUni].e.split('@')[1];const okMail=/^[^@\s]+@[^@\s]+$/.test(m)&&new RegExp('@'+dom.replace(/[.]/g,'\\.')+'$','i').test(m);const okPass=p.length>0;vfld('#ssoMail',okMail);vfld('#ssoPass',okPass);if(!(okMail&&okPass)){toast('Revisa el correo y la contraseña');return;}S.authMail=m;if(S.prof){S.uni=authUni;S.user={name:UIDENT[authUni].n,email:m,role:'estudiante',uni:authUni};store();toast(`Bienvenid@ de nuevo, ${UIDENT[authUni].n.split(' ')[0]}`);go('explorar');}else{sstep='setup';reAuth();}}
+function vfld(id,ok){const i=$(id);const f=i.closest('.fld');f.classList.toggle('e',!ok);i.classList.toggle('err',!ok);return ok;}
+function submitReg(){
+  const n=$('#rgName').value.trim(),m=$('#rgMail').value.trim(),p=$('#rgPass').value;
+  const ok=[vfld('#rgName',n.length>1),vfld('#rgMail',/^\S+@\S+\.\S+$/.test(m)),vfld('#rgPass',p.length>=6)].every(Boolean);
+  const c=!!S.upl.ced;$('#cedErr').style.display=c?'none':'block';$('#uplced').classList.toggle('bad',!c);
+  if(!(ok&&c)){toast('Revisa los campos marcados');return;}
+  S.verif='rev';setTimeout(()=>{S.verif='ok';store();S.notifs.unshift({t:'¡Tu identidad fue verificada!',s:'Tus anuncios ya muestran la insignia de agente verificado',id:0,h:'ahora'});toast('¡Listo! Tu cuenta de agente fue verificada');if(location.hash==='#agente')renderAgent();},7000);
+  S.user={name:n,email:m,role:'agente'};store();
+  toast(`¡Bienvenid@, ${n.split(' ')[0]}! Tu cuenta está lista`);
+  go('agente');
+}
+function submitLogin(){const m=$('#lgMail').value.trim(),p=$('#lgPass').value;
+  const ok=[vfld('#lgMail',/^\S+@\S+\.\S+$/.test(m)),vfld('#lgPass',p.length>0)].every(Boolean);if(!ok)return;
+  S.verif='ok';S.user=(S.user&&S.user.email===m)?S.user:{name:m.split('@')[0].replace(/[._]/g,' ').replace(/\b\w/g,c=>c.toUpperCase()),email:m,role:'agente'};S.user.role='agente';store();toast('Sesión iniciada');go('agente');}
+
+/* ===================== TOP BAR ===================== */
+function topbar(v){
+  const ag=S.user?.role==='agente';const name=S.user?.name||'Invitado';const ini=name.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase();
+  const unis=Object.entries(UNIS).map(([k,u])=>`<option value="${k}" ${k===S.uni?'selected':''}>${u.n}</option>`).join('');
+  return `<div class="top"><div class="in"><a class="brand" href="#inicio"><img class="i" src="icon.png" alt="" style="height:34px"><img class="w" src="word.png" alt="NidU" style="height:22px"></a>
+  ${ag&&v!=='explorar'&&v!=='arriendo'?`<div class="tag blue" style="height:30px;padding:0 12px">${ic('i-building','xs')}Modo agente</div>`:`<div class="unisel"><div class="cap">${ic('i-cap','sm')}</div><div><small>Tu universidad</small><select data-chg="uni">${unis}</select></div></div>
+  <div class="tsearch">${ic('i-search','sm')}<input placeholder="Buscar zona o arriendo…" data-chg="q" value="${esc(S.f.q)}"></div>`}
+  <div class="sp"></div>
+  ${S.user?'':`<button class="btn ghost sm gbtn" data-act="go" data-v="ingresar">Iniciar sesión</button><button class="btn pri sm gbtn" data-act="go" data-v="registro">Regístrate</button>`}
+  <button class="iconbtn" data-act="bell" aria-label="Notificaciones">${ic('i-bell')}${S.notifs.length?'<span class="dot"></span>':''}</button>
+  <button class="avatar" data-act="menu" aria-label="Menú">${S.user?ini:ic('i-user','sm')}</button></div>
+  <div class="menu" id="menu"></div></div>`;
+}
+function openMenu(kind){const m=$('#menu');if(m.classList.contains('on')&&m.dataset.k===kind){m.classList.remove('on');return;}m.dataset.k=kind;
+  if(kind==='bell')m.innerHTML=`<h5>Notificaciones</h5>${S.notifs.length?S.notifs.map((n,i)=>`<div class="nt" data-act="openL" data-id="${n.id}" style="cursor:pointer"><div class="ib">${ic('i-bell','sm')}</div><div><b>${esc(n.t)}</b><small>${esc(n.s)} · ${n.h}</small></div></div>`).join(''):'<p style="padding:10px;color:var(--ink3)">Sin novedades</p>'}`;
+  else{const ag=S.user?.role==='agente';m.innerHTML=S.user?`<div style="padding:10px"><b>${esc(S.user.name)}</b><div style="color:var(--ink3);font-size:13px">${esc(S.user.email)}</div></div>
+   ${ag?`<button class="mi" data-act="go" data-v="agente">${ic('i-grid','sm')}Panel del agente</button><button class="mi" data-act="go" data-v="publicar">${ic('i-plus','sm')}Publicar arriendo</button><button class="mi" data-act="go" data-v="explorar">${ic('i-eye','sm')}Ver como estudiante</button>`:`<button class="mi" data-act="go" data-v="explorar">${ic('i-map','sm')}Explorar arriendos</button><button class="mi" data-act="favs">${ic('i-heart','sm')}Mis favoritos (${S.fav.size})</button><button class="mi" data-act="budget">${ic('i-tag','sm')}Cambiar presupuesto ($${S.budget})</button>`}
+   <button class="mi" data-act="switchRole">${ic('i-swap','sm')}Cambiar a ${ag?'estudiante':'agente'} (demo)</button><button class="mi" data-act="logout" style="color:var(--bad)">${ic('i-logout','sm')}Cerrar sesión</button>`
+   :`<button class="mi" data-act="go" data-v="ingresar">${ic('i-user','sm')}Iniciar sesión</button><button class="mi" data-act="go" data-v="registro">${ic('i-plus','sm')}Crear cuenta</button>`;}
+  m.classList.add('on');}
+document.addEventListener('click',e=>{if(!e.target.closest('.menu,[data-act=bell],[data-act=menu]'))$('#menu')?.classList.remove('on');});
+
+/* ===================== EXPLORE ===================== */
+let onlyFav=false;
+function results(){const F=S.f;let r=visible().filter(l=>l.price>=F.min&&l.price<=F.max&&km(l)<=F.dist&&(!F.zones.size||F.zones.has(l.zone))&&(!F.types.size||F.types.has(l.type))&&[...F.sv].every(s=>l.sv.includes(s))&&(!F.q||(l.t+' '+l.zone).toLowerCase().includes(F.q.toLowerCase()))&&(!onlyFav||S.fav.has(l.id))&&safety(l.zone).s>=F.safe&&(!F.vph||l.vph));
+  const srt={cerca:(a,b)=>km(a)-km(b),precio:(a,b)=>a.price-b.price,valor:(a,b)=>(rating(b)?.avg||0)-(rating(a)?.avg||0),seguro:(a,b)=>safety(b.zone).s-safety(a.zone).s,total:(a,b)=>cost(a).tot-cost(b).tot}[F.sort];return r.sort(srt);}
+function cardHTML(l,opt={}){const d=km(l),f=fair(l.price),z=zfair(l.price,l.zone),sf=safety(l.zone),rt=rating(l),c=cost(l);return `<div class="card" data-act="openL" data-id="${l.id}" data-hov="${l.id}" role="button" tabindex="0"><div class="th">${thumb(l)}${l.isNew?'<span class="tag">Nuevo</span>':''}${l.vph?`<span class="tag blue" style="position:absolute;left:6px;bottom:6px;top:auto">${ic('i-camera','xs')}Verificadas</span>`:''}</div><div><h4>${esc(l.t)}</h4><div class="meta">${ic('i-pin','xs')}${esc(l.zone)} · ${d} km de ${UNIS[S.uni].n}</div><div class="meta2"><span>${ic(d<0.9?'i-walk':'i-bus','xs')}${how(d)}</span><span class="sbadge ${sf.k}">${ic('i-shield','xs')}${sf.lab}</span>${rt?`<span>${stars(rt.avg)} ${rt.avg} (${rt.n})</span>`:''}</div><div class="pr"><span class="price">$${l.price}<small>/mes</small></span><span class="badge ${f.k}">${f.s}</span></div><div class="sub2"><span title="Arriendo + servicios no incluidos + pasajes">≈ <b style="color:var(--ink2)">$${c.tot}</b> costo real/mes</span><span style="color:var(--${z.k==='bad'?'bad':z.k==='good'?'good':'ink3'})">${z.s}</span></div></div>${opt.nofav?'':`<button class="fav ${S.fav.has(l.id)?'on':''}" data-act="fav" data-id="${l.id}" aria-label="Favorito">${ic('i-heart','sm')}</button><button class="cmpb ${S.cmp.has(l.id)?'on':''}" data-act="cmp" data-id="${l.id}" aria-label="Comparar" title="Agregar a comparar">${ic('i-list','sm')}</button>`}</div>`;}
+function renderExplore(){
+  const F=S.f,U=UNIS[S.uni];const fc=F.zones.size+F.types.size+F.sv.size+(F.min>80||F.max<350?1:0)+(F.dist<8?1:0)+(F.safe?1:0)+(F.vph?1:0);
+  $('#explore').innerHTML=`<aside class="side"><div class="hd"><h2 id="rcount"></h2><p>Comparados con tu presupuesto de <b style="color:var(--ink)">$${S.budget}/mes</b> · <a href="#explorar" data-act="budget">cambiar</a></p>
+  <div class="fbar"><button class="chip ${fc?'on':''}" data-act="filters">${ic('i-sliders','sm')}Filtros${fc?` · ${fc}`:''}</button><button class="chip ${F.safe>=4?'on':''}" data-act="qSafe">${ic('i-shield','sm')}Zonas seguras</button><button class="chip ${F.max<=S.budget?'on':''}" data-act="qBudget">Hasta $${S.budget}</button>${Object.keys(TYPES).slice(0,3).map(t=>`<button class="chip ${F.types.has(t)?'on':''}" data-act="qType" data-t="${t}">${t}</button>`).join('')}<button class="chip ${F.sv.has('wifi')?'on':''}" data-act="qSv" data-s="wifi">Con wifi</button><button class="chip ${onlyFav?'on':''}" data-act="qFav">${ic('i-heart','sm')}Favoritos</button></div>
+  <div class="legend"><span title="Color del pin según tu presupuesto"><i style="background:var(--good)"></i>Justo</span><span><i style="background:var(--mid)"></i>Algo alto</span><span><i style="background:var(--bad)"></i>Caro para ti</span><select data-chg="sort"><option value="cerca" ${F.sort==='cerca'?'selected':''}>Más cercanos</option><option value="precio" ${F.sort==='precio'?'selected':''}>Menor precio</option><option value="total" ${F.sort==='total'?'selected':''}>Menor costo real</option><option value="seguro" ${F.sort==='seguro'?'selected':''}>Zonas más seguras</option><option value="valor" ${F.sort==='valor'?'selected':''}>Mejor valorados</option></select></div></div>
+  <div class="list" id="rlist"></div></aside><div class="map" id="exMap"></div><button class="btn dark maptoggle" data-act="mapToggle">${ic('i-map','sm')}<span>Ampliar mapa</span></button><div id="cmpwrap"></div>`;
+  const m=initMap($('#exMap'),{onCenter:()=>m.center(U.x,U.y,1.4)});
+  paintResults();paintCmp();
+  requestAnimationFrame(()=>m.center(U.x+60,U.y+40,1.35));
+}
+function paintResults(){
+  const r=results(),U=UNIS[S.uni];$('#rcount').textContent=`${r.length} arriendo${r.length===1?'':'s'} cerca de ${U.n}`;
+  $('#rlist').innerHTML=r.length?r.map(l=>cardHTML(l)).join(''):`<div class="empty"><div class="ib">${ic('i-search','lg')}</div><b>No hay arriendos con esos filtros</b><p style="margin:6px 0 14px">Prueba ampliando el precio o la distancia.</p><button class="btn sec sm" data-act="clearF">Limpiar filtros</button></div>`;
+  const m=MAPS.exMap;if(!m)return;const rad=S.f.dist*62*2;
+  m.layer.innerHTML=`<div class="radius" style="left:${U.x}px;top:${U.y}px;width:${Math.min(rad,1600)}px;height:${Math.min(rad,1600)}px"></div>`+uniMarkers(S.uni)+r.map(l=>{const f=fair(l.price);return `<div class="pin ${f.k} ${l.mine?'mine':''}" style="left:${l.x}px;top:${l.y}px" data-act="pin" data-id="${l.id}" data-hov="${l.id}"><div class="p">$${l.price}</div><div class="t"></div></div>`}).join('')+'<div id="pop"></div>';
+}
+function showPop(id){const l=L.find(x=>x.id===id),m=MAPS.exMap;const f=fair(l.price),d=km(l);
+  const p=document.createElement('div');p.className='popup';p.style.left=(l.x)+'px';p.style.top=(l.y)+'px';p.style.transform=`translate(-50%,calc(-100% - 46px)) scale(var(--inv))`;p.style.transformOrigin='50% 100%';
+  p.innerHTML=`<div class="th">${thumb(l)}</div><button class="x" data-act="closePop">${ic('i-x','sm')}</button><div class="b"><h4>${esc(l.t)}</h4><div style="color:var(--ink3);font-size:12.5px;margin:3px 0 8px">${d} km · ${how(d)}</div><div style="display:flex;justify-content:space-between;align-items:center"><span class="price" style="font-size:20px">$${l.price}<small>/mes</small></span><span class="badge ${f.k}">${f.s}</span></div><button class="btn pri sm block" style="margin-top:10px" data-act="openL" data-id="${l.id}">Ver detalle</button></div>`;
+  const old=m.layer.querySelector('.popup');if(old)old.remove();m.layer.appendChild(p);
+  document.querySelectorAll('.card').forEach(c=>c.classList.toggle('hl',+c.dataset.hov===id));
+  document.querySelector(`.card[data-hov="${id}"]`)?.scrollIntoView({block:'nearest',behavior:'smooth'});}
+document.addEventListener('mouseover',e=>{const h=e.target.closest('.card[data-hov]');if(!h||!MAPS.exMap)return;const id=h.dataset.hov;document.querySelectorAll('#exMap .pin').forEach(p=>p.classList.toggle('hl',p.dataset.id===id));});
+
+function paintCmp(){const w=$('#cmpwrap');if(!w)return;const n=S.cmp.size;w.innerHTML=n?`<div class="cmpbar">${ic('i-list','sm')}<span>${n} para comparar</span><button class="btn sm" style="background:#fff;color:var(--navy)" data-act="cmpOpen">Comparar</button><button class="btn sm ghost" style="color:#fff" data-act="cmpClear">Limpiar</button></div>`:'';}
+function cmpModal(){const ls=[...S.cmp].map(id=>L.find(l=>l.id===id)).filter(Boolean);if(ls.length<2){closeModal();toast('Elige al menos 2 arriendos para comparar');return;}
+ const rows=[['Precio',l=>l.price,'min',l=>`$${l.price}/mes`],['Para tu bolsillo',null,null,l=>{const f=fair(l.price);return `<span class="badge ${f.k}">${f.s}</span>`}],['Para la zona',null,null,l=>{const z=zfair(l.price,l.zone);return `<span class="badge ${z.k}">${z.s.replace(' de la zona','')}</span>`}],['Costo real',l=>cost(l).tot,'min',l=>`$${cost(l).tot}/mes`],['Distancia',l=>km(l),'min',l=>`${km(l)} km · ${how(km(l))}`],['Seguridad',l=>safety(l.zone).s,'max',l=>{const s=safety(l.zone);return `<span class="sbadge ${s.k}">${s.s.toFixed(1)} · ${s.lab}</span>`}],['Opiniones',l=>rating(l)?.avg||0,'max',l=>{const r=rating(l);return r?`${stars(r.avg)} ${r.avg} (${r.n})`:'Sin opiniones'}],['Área',l=>l.m2,'max',l=>`${l.m2} m²`],['Baño',null,null,l=>l.bath],['Servicios',l=>l.sv.length,'max',l=>l.sv.map(s=>SVC[s][0]).join(', ')],['Fotos verificadas',l=>l.vph?1:0,'max',l=>l.vph?'Sí':'No'],['Agente',null,null,l=>{const a=agentOf(l);return `${esc(a.n)}${a.v?` <span style="color:var(--good)">${ic('i-shield','xs')}</span>`:''}`}]];
+ const best=(fn,dir)=>{const v=ls.map(fn);const b=dir==='min'?Math.min(...v):Math.max(...v);const all=v.every(x=>x===b);return v.map(x=>!all&&x===b);};
+ modal(`<div class="mh"><h3>Comparar arriendos</h3><button class="iconbtn" data-act="close">${ic('i-x')}</button></div><div class="mb" style="overflow-x:auto"><table class="ctbl"><tr><th></th>${ls.map(l=>`<td><div class="th">${thumb(l)}</div><b>${esc(l.t)}</b><div style="color:var(--ink3);font-size:12px">${esc(l.zone)}</div></td>`).join('')}</tr>${rows.map(([n,fn,dir,fmt])=>{const bb=fn?best(fn,dir):ls.map(()=>false);return `<tr><th>${n}</th>${ls.map((l,i)=>`<td class="${bb[i]?'best':''}">${fmt(l)}</td>`).join('')}</tr>`}).join('')}<tr><th></th>${ls.map(l=>`<td><button class="btn pri sm" data-act="openL" data-id="${l.id}">Ver</button> <button class="btn ghost sm" data-act="cmp" data-id="${l.id}">Quitar</button></td>`).join('')}</tr></table><p style="font-size:12px;color:var(--ink3);margin-top:10px">En verde, lo mejor de cada fila.</p></div>`,true);}
+function filtersModal(){const F=S.f;const hs=[3,5,8,12,15,14,11,9,10,7,6,5,4,3,3,2,2,1];
+  const zones=[...new Set(L.map(l=>l.zone))];
+  modal(`<div class="mh"><h3>Filtros</h3><button class="iconbtn" data-act="close">${ic('i-x')}</button></div><div class="mb">
+  <div class="slab" style="margin-top:0"><span>Precio mensual</span><span id="fpr" style="color:var(--blue)">$${F.min} – $${F.max}</span></div>
+  <div class="hist" id="hist">${hs.map((h,i)=>`<i data-v="${80+i*15}" style="height:${h*4+4}px"></i>`).join('')}</div>
+  <div class="dual"><div class="tr"></div><div class="fl" id="dfl"></div><input type="range" id="fmin" min="80" max="350" step="5" value="${F.min}"><input type="range" id="fmax" min="80" max="350" step="5" value="${F.max}"></div>
+  <div class="minmax"><span>$80</span><span>Tu presupuesto: $${S.budget}</span><span>$350+</span></div>
+  <div class="slab"><span>Distancia máxima a ${UNIS[S.uni].n}</span><span id="fdv" style="color:var(--blue)">${F.dist} km</span></div>
+  <input class="rng" type="range" id="fdist" min="1" max="8" step="0.5" value="${F.dist}" style="--p:${(F.dist-1)/7*100}%">
+  <div class="slab"><span>Tipo de arriendo</span></div><div class="typegrid">${Object.entries(TYPES).map(([t,i])=>`<button class="${F.types.has(t)?'on':''}" data-act="tType" data-t="${t}">${ic(i)}${t}</button>`).join('')}</div>
+  <div class="slab"><span>Zona</span></div><div class="chips">${zones.map(z=>`<button class="chip ${F.zones.has(z)?'on':''}" data-act="tZone" data-z="${z}">${z}</button>`).join('')}</div>
+  <div class="slab"><span>Seguridad de la zona</span></div><div class="chips">${[[0,'Cualquiera'],[3.2,'Precaución moderada o mejor'],[4,'Solo zonas seguras']].map(([v,n])=>`<button class="chip ${F.safe===v?'on':''}" data-act="tSafe" data-v="${v}">${n}</button>`).join('')}</div>
+  <div class="switchrow" style="margin:12px 0 0"><div class="t"><b>Solo fotos verificadas</b><small>Fotos tomadas o revisadas por NidU en una visita</small></div><button class="sw ${F.vph?'on':''}" data-act="tVph" aria-label="Solo fotos verificadas"></button></div>
+  <div class="slab"><span>Servicios incluidos</span></div><div class="chips">${Object.entries(SVC).map(([k,[n,i]])=>`<button class="chip ${F.sv.has(k)?'on':''}" data-act="tSv" data-s="${k}">${ic(i,'sm')}${n}</button>`).join('')}</div>
+  </div><div class="mf"><button class="btn ghost" data-act="clearF">Limpiar todo</button><button class="btn pri" data-act="applyF" id="fapply">Ver resultados</button></div>`);
+  const upd=()=>{let a=+$('#fmin').value,b=+$('#fmax').value;if(a>b-10){if(document.activeElement.id==='fmin')a=b-10;else b=a+10;$('#fmin').value=a;$('#fmax').value=b;}F.min=a;F.max=b;$('#fpr').textContent=`$${a} – $${b}${b>=350?'+':''}`;$('#dfl').style.left=(a-80)/270*100+'%';$('#dfl').style.right=(100-(b-80)/270*100)+'%';document.querySelectorAll('#hist i').forEach(i=>i.classList.toggle('in',+i.dataset.v>=a&&+i.dataset.v<=b));cnt();};
+  const cnt=()=>{$('#fapply').textContent=`Ver ${results().length} resultados`;};
+  $('#fmin').oninput=upd;$('#fmax').oninput=upd;$('#fdist').oninput=e=>{F.dist=+e.target.value;$('#fdv').textContent=F.dist+' km';e.target.style.setProperty('--p',(F.dist-1)/7*100+'%');cnt();};upd();
+  modal.cnt=cnt;}
+
+/* ===================== DETAIL ===================== */
+function renderDetail(){const l=S.sel,A=agentOf(l),d=km(l),f=fair(l.price),z=zfair(l.price,l.zone),za=ZAVG[l.zone]||190,sf=safety(l.zone),rt=rating(l),c=cost(l),O=ORIG[S.orig]||ORIG.milagro;
+  const lo=Math.round(za*0.65),hi=Math.round(za*1.4),pos=v=>Math.max(2,Math.min(98,(v-lo)/(hi-lo)*100));
+  const bmax=S.budget*1.5,bpos=v=>Math.max(2,Math.min(98,v/bmax*100));
+  const imgs=l.imgs&&l.imgs.length?l.imgs:null;
+  const gal=imgs?imgs.slice(0,5).map((s2,i)=>`<div data-act="zoomImg" data-i="${i}"><img src="${s2}" style="width:100%;height:100%;object-fit:cover" alt=""></div>`).join(''):[['cuarto','Habitación'],['bano','Baño '+l.bath.toLowerCase()],['cocina','Cocina'],['fachada','Fachada'],['cuarto','Área de estudio']].map(([k,cp],i)=>`<div data-act="zoomImg" data-k="${k}" data-c="${cp}">${room(k,i===4?(l.pal+2):l.pal)}<span class="cap">${cp}</span></div>`).join('');
+  const tStay=(d<0.9?busMin(d):busMin(d)+2)*2*22/60,tTrip=O.t*2*22/60,cTrip=Math.round(O.c*2*22),viable=O.t<=120,diff=c.tot-cTrip;
+  const origOpts=Object.entries(ORIG).map(([k,o])=>`<option value="${k}" ${k===S.orig?'selected':''}>${o.n}</option>`).join('');
+  $('#detail').innerHTML=`<div class="crumb"><button data-act="go" data-v="explorar">${ic('i-back','sm')}Volver a resultados</button><span style="color:var(--ink3)">/ ${esc(l.zone)}</span></div>
+  <div class="gal">${gal}</div>
+  <div class="dgrid"><div>
+    <div class="tagrow">${l.isNew?'<span class="tag">Nuevo</span>':''}<span class="tag blue">${ic(TYPES[l.type],'xs')}${l.type}</span>${l.vph?`<span class="tag green">${ic('i-camera','xs')}Fotos verificadas por NidU</span>`:''}<span class="tag" style="background:var(--${sf.k}-50);color:var(--${sf.k})">${ic('i-shield','xs')}${sf.lab}</span></div>
+    <h1>${esc(l.t)}</h1><div class="loc">${ic('i-pin','sm')}${esc(l.zone)}, Guayaquil · a <b>&nbsp;${d} km&nbsp;</b> de ${UNIS[S.uni].full}</div>
+    <div class="specs"><div>${ic('i-ruler')}${l.m2} m²<small>Área</small></div><div>${ic('i-bath')}${l.bath}<small>Baño</small></div><div>${ic(d<0.9?'i-walk':'i-bus')}${busMin(d)} min<small>${d<0.9?'Caminando':'En bus a tu U'}</small></div><div>${ic('i-star')}${rt?rt.avg+' / 5':'Sin opiniones'}<small>${rt?rt.n+' opiniones de estudiantes':'Sé el primero'}</small></div></div>
+    <div class="blk"><h3>Sobre este arriendo</h3><p style="color:var(--ink2)">${esc(l.desc||'')}</p></div>
+    <div class="blk" id="costo"><h3><span>Costo real al mes</span><span style="font-size:13px;color:var(--ink3);font-family:var(--bf);font-weight:600">Estimado</span></h3><div class="cost"><div>${c.items.map(([n,v])=>`<div class="ln"><span>${n}</span><b>${money(v)}</b></div>`).join('')}<div class="tt"><span>Total estimado</span><span>$${c.tot}/mes</span></div></div>
+      <div class="vs"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:13px;font-weight:700;color:var(--ink2)"><span>Frente a viajar a diario desde</span><select data-chg="orig" aria-label="Ciudad de origen">${origOpts}</select></div>
+      ${viable?`<div class="k">${Math.round(tTrip-tStay)} horas</div><p>que recuperas al mes viviendo aquí: ${Math.round(tStay)} h de traslado en vez de ${Math.round(tTrip)} h desde ${O.n}.</p><p>Los pasajes desde ${O.n} costarían <b>$${cTrip}/mes</b>. Vivir aquí cuesta <b>$${Math.abs(diff)} ${diff>0?'más':'menos'}</b> al mes, pero ganas ese tiempo para estudiar y descansar.</p>`:`<div class="k">${Math.round(O.t*2/60*10)/10} h diarias</div><p>Ir y volver cada día desde ${O.n} no es viable (y costaría $${cTrip}/mes en pasajes). Viviendo aquí tu traslado baja a ${how(d)}.</p>`}</div></div>
+      <p style="font-size:12px;color:var(--ink3);margin-top:12px">Servicios no incluidos y pasajes son estimados: pasaje urbano $0.30 y 22 días de clase al mes. Pasajes y tiempos interprovinciales aproximados.</p></div>
+    <div class="blk"><h3><span>Seguridad de la zona</span><span class="badge ${sf.k}">${sf.lab}</span></h3>
+      <div style="display:flex;align-items:baseline;gap:8px"><span class="price">${sf.s.toFixed(1)}</span><span style="color:var(--ink3)">/ 5 · índice NidU de ${esc(l.zone)}</span></div>
+      <div class="meter">${[1,2,3,4,5].map(i=>`<i style="${i<=Math.round(sf.s)?`background:var(--${sf.k})`:''}"></i>`).join('')}</div>
+      <div class="sfx"><div>${ic('i-zap','sm')}Iluminación<b>${sf.l}</b></div><div>${ic('i-shield','sm')}Policía y vigilancia<b>${sf.upc}</b></div><div>${ic('i-users','sm')}Reportes recientes<b>${sf.r}</b></div></div>
+      ${sf.k!=='good'?`<div class="safe" style="margin-top:12px">${ic('i-clock','sm')}<div>Si regresas de noche, usa la ruta por avenidas principales y avisa a alguien cuando llegues.</div></div>`:''}
+      <div class="scam">${ic('i-shield')}<div><b>Evita estafas.</b> Nunca deposites dinero antes de visitar el arriendo y firmar contrato. Si te piden pagar por adelantado para "separarlo", repórtalo. ${l.vph?'Las fotos de este anuncio fueron verificadas por NidU en una visita.':'Las fotos de este anuncio aún no han sido verificadas por NidU.'}</div></div>
+      <button class="btn ghost sm" data-act="report" style="margin-top:10px;color:var(--bad);padding:0">${ic('i-x','sm')}Reportar este anuncio</button></div>
+    <div class="blk"><h3>Servicios incluidos</h3><div class="svc">${Object.entries(SVC).map(([k,[n,i]])=>`<div class="${l.sv.includes(k)?'':'no'}">${ic(i)}${n}</div>`).join('')}</div></div>
+    <div class="blk"><h3>Condiciones</h3><div class="conds">${l.cond.map(cd=>`<div><span class="ck">${ic('i-check','xs')}</span>${esc(cd)}</div>`).join('')}</div></div>
+    <div class="blk" id="rutas"><h3><span>Cómo llegar a ${UNIS[S.uni].n}</span><div class="rseg"><button class="${S.dir==='ida'?'on':''}" data-act="dir" data-d="ida">Ida a la U</button><button class="${S.dir==='reg'?'on':''}" data-act="dir" data-d="reg">Regreso</button></div></h3>
+      <div class="routebox"><div class="map" id="dMap"></div><div id="steps"></div></div>${busRow(S.uni)}</div>
+    <div class="blk"><h3><span>Opiniones de estudiantes</span><button class="btn sec sm" data-act="review">${ic('i-edit','sm')}Escribir opinión</button></h3>
+      ${rt?`<div class="rsum2"><div><span class="price" style="font-size:40px">${rt.avg}</span><div>${stars(rt.avg,'sm')}</div><small style="color:var(--ink3)">${rt.n} opiniones</small></div><div class="asp">${['Seguridad','Ruido','Internet','Trato'].map((n,i)=>`<div><span>${n}</span><i style="--w:${rt.a[i]/5*100}%"></i><b>${rt.a[i].toFixed(1)}</b></div>`).join('')}</div></div>${REV[l.id].map(r=>`<div class="rv"><div class="h"><div class="av" style="background:${r.col}">${r.n.split(' ').map(w=>w[0]).join('').slice(0,2)}</div><div style="flex:1"><b>${esc(r.n)}</b><small>Vino de ${esc(r.from)} · estudia en ${esc(r.u)} · ${r.h}</small></div>${stars(r.r)}</div><p>${esc(r.t)}</p></div>`).join('')}`:`<p style="color:var(--ink2)">Aún no hay opiniones de estudiantes que hayan vivido aquí.</p>`}
+      <p style="font-size:12px;color:var(--ink3);margin-top:10px">Solo opinan estudiantes que vivieron en este arriendo. Opiniones de ejemplo del prototipo.</p></div>
+  </div>
+  <aside class="sticky"><div class="pcard"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px"><span class="price">$${l.price}<small>/mes</small></span><button class="iconbtn fav ${S.fav.has(l.id)?'on':''}" style="position:static" data-act="fav" data-id="${l.id}" aria-label="Guardar">${ic('i-heart')}</button></div>
+    <div class="pfx">
+      <div class="r"><div class="h"><span>Para tu bolsillo</span><span class="badge ${f.k}">${f.s}</span></div>
+        <div class="cmp"><div class="bar"></div><div class="avg" style="left:${bpos(S.budget)}%"></div><div class="mk" style="left:${bpos(l.price)}%"></div></div>
+        <p>${l.price<=S.budget?`$${S.budget-l.price} bajo tu presupuesto de $${S.budget}`:`$${l.price-S.budget} sobre tu presupuesto de $${S.budget}`} · <a href="#arriendo" data-act="budget">cambiar</a></p></div>
+      <div class="r"><div class="h"><span>Para la zona</span><span class="badge ${z.k}">${z.s.replace(' de la zona','')}</span></div>
+        <div class="cmp"><div class="bar"></div><div class="avg" style="left:${pos(za)}%"></div><div class="mk" style="left:${pos(l.price)}%"></div></div>
+        <div class="cmpl"><span>$${lo}</span><span><b>Promedio en ${esc(l.zone)}: $${za}</b></span><span>$${hi}</span></div></div>
+      <a href="#arriendo" data-act="toCost" class="r" style="display:flex;justify-content:space-between;align-items:center;color:var(--ink)"><span style="font-size:13px;font-weight:700;color:var(--ink2)">COSTO REAL ESTIMADO</span><b style="font-family:var(--hf);font-size:20px;color:var(--navy)">$${c.tot}/mes</b></a>
+    </div>
+    <div style="display:grid;gap:10px;margin-top:18px"><button class="btn pri block" data-act="contact">${ic('i-msg','sm')}Contactar al agente</button><button class="btn sec block" data-act="visit">${ic('i-clock','sm')}Agendar visita</button><button class="btn ghost block sm" data-act="cmp" data-id="${l.id}">${ic('i-list','sm')}${S.cmp.has(l.id)?'Quitar de comparar':'Agregar a comparar'}</button></div>
+    <div class="agent"><div class="av" style="background:${A.col}">${A.ini}</div><div style="flex:1"><b>${esc(A.n)} ${A.v?`<span style="color:var(--good)">${ic('i-shield','xs')}</span>`:''}</b><small>${A.rv?`${ic('i-star','xs')} ${A.r} (${A.rv} reseñas) · `:''}${A.v?'Identidad verificada':'En verificación'}</small></div><button class="iconbtn" data-act="call" aria-label="Llamar">${ic('i-phone','sm')}</button></div>
+    <p style="font-size:12px;color:var(--ink3);margin-top:14px;display:flex;gap:6px">${ic('i-shield','xs')}Nunca pagues sin visitar el arriendo y firmar contrato.</p></div></aside></div>
+  <div class="mbar"><div><span class="price" style="font-size:22px">$${l.price}<small>/mes</small></span><div><span class="badge ${f.k}">${f.s}</span></div></div><button class="btn pri" data-act="contact">${ic('i-msg','sm')}Contactar</button></div>`;
+  const m=initMap($('#dMap'),{onCenter:()=>fitR()});const U=UNIS[S.uni];
+  m.layer.innerHTML=uniMarkers(S.uni)+`<div class="pin good" style="left:${l.x}px;top:${l.y}px;--c:var(--blue)"><div class="p">${ic('i-home','xs')}</div><div class="t"></div></div>`+(d>=0.9?`<div class="pin" style="left:${(routePath(l,S.uni).cx+l.x+U.x)/3}px;top:${(routePath(l,S.uni).cy+l.y+U.y)/3}px;--c:#fff"><div class="p" style="color:var(--blue);display:flex;gap:4px;align-items:center;font-size:11px">${ic('i-bus','xs')}${lineOf(l)}</div></div>`:'');
+  drawRoute(m,l,S.uni);const fitR=()=>m.fit([[l.x,l.y],[U.x,U.y]],60);requestAnimationFrame(fitR);paintSteps();
+}
+function paintSteps(){const l=S.sel,d=km(l),U=UNIS[S.uni],ida=S.dir==='ida';const wb=Math.max(3,Math.round(d*1.2+2)),bus=busMin(d)-wb-3,we=3;const tot=d<0.9?busMin(d):busMin(d)+2;
+  const H=ida?'7:00':'18:30';const [hh,mm]=H.split(':').map(Number);const arr=new Date(0,0,0,hh,mm+tot);const t=`${arr.getHours()}:${String(arr.getMinutes()).padStart(2,'0')}`;
+  const steps=d<0.9?[['i-walk','',ida?`Camina hasta ${U.n}`:'Camina hasta tu arriendo',`${Math.round(d*1000)} m por calles iluminadas`,tot+' min']]:
+   (ida?[['i-walk','',`Camina a la parada más cercana`,`${Math.round(wb*80)} m desde tu arriendo`,wb+' min'],['i-bus','bus',`Toma el bus ${lineOf(l)}`,`Bájate en la entrada de ${U.n}`,bus+' min'],['i-walk','','Camina hasta tu facultad','Dentro del campus',we+' min']]
+   :[['i-walk','',`Camina a la parada de ${U.n}`,'Salida principal del campus',we+' min'],['i-bus','bus',`Toma el bus ${lineOf(l)} de regreso`,`Bájate en ${l.zone}`,bus+' min'],['i-walk','','Camina hasta tu arriendo',`${Math.round(wb*80)} m`,wb+' min']]);
+  $('#steps').innerHTML=`<div class="rsum"><span class="big">${tot} min</span><span style="color:var(--ink2)">${d<0.9?'a pie':'· pasaje $0.30'}</span></div><p style="color:var(--ink3);font-size:13px;margin:-6px 0 14px">Si sales a las ${H}, llegas ${t}</p>
+  ${steps.map(([i,c,a,b,m])=>`<div class="rstep"><div class="ic ${c}">${ic(i,'sm')}</div><div><b>${a}</b><small>${b}</small></div><span class="d">${m}</span></div>`).join('')}
+  ${ida?'':`<div class="safe">${ic('i-shield','sm')}<div><b>Regreso seguro.</b> El último bus recomendado pasa a las 21:30. Te avisaremos 15 min antes.</div></div>`}`;
+  const m=MAPS.dMap;if(m){drawRoute(m,l,S.uni);}}
+function contactModal(){const l=S.sel,A=agentOf(l)||{n:'el agente'};modal(`<form data-form="contact"><div class="mh"><h3>Contactar a ${esc(A.n)}</h3><button type="button" class="iconbtn" data-act="close">${ic('i-x')}</button></div><div class="mb">
+  <div style="display:flex;gap:12px;align-items:center;padding:10px;border-radius:14px;background:var(--bg);margin-bottom:16px"><div style="width:56px;height:56px;border-radius:12px;overflow:hidden;flex:none">${thumb(l)}</div><div><b style="font-size:14px">${esc(l.t)}</b><div style="color:var(--ink3);font-size:13px">$${l.price}/mes · ${esc(l.zone)}</div></div></div>
+  <div class="fld"><label>Tu nombre</label><input class="inp" value="${esc(S.user?.name||'')}" placeholder="Tu nombre" required></div>
+  <div class="fld"><label>Mensaje</label><textarea class="inp" rows="4">Hola, vi su arriendo en NidU. Soy estudiante foráneo de ${UNIS[S.uni].n} y me interesa. ¿Sigue disponible? ¿Cuándo podría visitarlo?</textarea></div>
+  <div class="chips" style="margin-top:-4px">${['¿Incluye internet?','¿Aceptan mascotas?','¿Puedo visitarlo este fin de semana?'].map(q=>`<button type="button" class="chip" data-act="addQ">${q}</button>`).join('')}</div>
+  <div class="scam">${ic('i-shield')}<div>Tu número no se comparte hasta que tú lo decidas. <b>Nunca pagues por adelantado</b> para separar un arriendo.</div></div>
+  </div><div class="mf"><button type="button" class="btn ghost" data-act="close">Cancelar</button><button class="btn pri" type="submit">${ic('i-msg','sm')}Enviar mensaje</button></div></form>`);}
+function sendContact(){closeModal();toast('Mensaje enviado (demo). El agente te responderá por la app');const l=S.sel;S.msgs.unshift({n:S.user?.name||'Estudiante invitado',ini:(S.user?.name||'EI').split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase(),col:'#0469E6',lid:l.id,m:'¿Sigue disponible? Me interesa visitarlo.',h:'ahora',u:true});l.contacts++;}
+function visitModal(){const days=['Lun 9','Mar 10','Mié 11','Jue 12','Vie 13','Sáb 14'];modal(`<div class="mh"><h3>Agendar visita</h3><button class="iconbtn" data-act="close">${ic('i-x')}</button></div><div class="mb"><div class="slab" style="margin-top:0"><span>Elige un día de noviembre</span></div><div class="chips" id="vd">${days.map((d,i)=>`<button class="chip ${i===5?'on':''}" data-act="pickOne">${d}</button>`).join('')}</div><div class="slab"><span>Hora</span></div><div class="chips">${['09:00','11:00','15:00','17:00'].map((h,i)=>`<button class="chip ${i===0?'on':''}" data-act="pickOne">${h}</button>`).join('')}</div><div class="safe" style="margin-top:18px">${ic('i-shield','sm')}<div>Ve acompañado y comparte tu ubicación con alguien de confianza.</div></div></div><div class="mf"><button class="btn pri" data-act="confirmVisit">Confirmar visita</button></div>`);}
+
+function reviewModal(){const l=S.sel;S.rvStar=5;modal(`<form data-form="review"><div class="mh"><h3>Tu opinión</h3><button type="button" class="iconbtn" data-act="close">${ic('i-x')}</button></div><div class="mb">
+ <p style="color:var(--ink2);margin-bottom:14px">${esc(l.t)}</p>
+ <div class="slab" style="margin-top:0"><span>Calificación general</span></div><div class="starpick" id="spk">${[1,2,3,4,5].map(i=>`<button type="button" data-act="star" data-v="${i}" aria-label="${i} estrellas"><svg class="ico"><use href="#i-star"/></svg></button>`).join('')}</div>
+ <div class="row2" style="margin-top:14px">${['Seguridad','Ruido','Internet','Trato'].map((n,i)=>`<div class="fld"><label>${n}</label><select class="inp" id="asp${i}">${[5,4,3,2,1].map(v=>`<option>${v}</option>`).join('')}</select></div>`).join('')}</div>
+ <div class="fld"><label>Cuéntale a otros estudiantes</label><textarea class="inp" id="rvT" rows="3" placeholder="¿Cómo es vivir aquí? ¿El arriendo es como en las fotos?"></textarea><div class="errtxt">Escribe al menos 15 caracteres.</div></div>
+ <label style="display:flex;gap:8px;align-items:center;font-size:13.5px;color:var(--ink2)"><input type="checkbox" id="rvLived" style="accent-color:var(--blue)">Confirmo que viví en este arriendo</label>
+ </div><div class="mf"><button type="button" class="btn ghost" data-act="close">Cancelar</button><button class="btn pri" type="submit">Publicar opinión</button></div></form>`);paintStars();}
+function paintStars(){document.querySelectorAll('#spk .ico').forEach((s2,i)=>s2.style.cssText=i<S.rvStar?'fill:var(--gold);stroke:var(--gold)':'fill:var(--line);stroke:var(--line)');}
+function sendReview(){const t=$('#rvT').value.trim();if(!vfld('#rvT',t.length>=15))return;if(!$('#rvLived').checked){toast('Confirma que viviste en este arriendo');return;}
+ const n=S.user?.name||'Estudiante';const parts=n.split(' ');REV[S.sel.id].unshift({n:parts[0]+(parts[1]?' '+parts[1][0]+'.':''),from:(ORIG[S.orig]||ORIG.otra).n,u:UNIS[S.uni].n,r:S.rvStar,a:[0,1,2,3].map(i=>+$('#asp'+i).value),t,h:'ahora',col:'#0469E6'});closeModal();toast('¡Gracias! Tu opinión ya es visible');renderDetail();}
+function reportModal(){modal(`<div class="mh"><h3>Reportar anuncio</h3><button class="iconbtn" data-act="close">${ic('i-x')}</button></div><div class="mb"><p style="color:var(--ink2);margin-bottom:14px">¿Qué pasa con este anuncio?</p><div class="chips">${['Me pidieron pagar por adelantado','Las fotos no coinciden','El precio es distinto','El arriendo no existe','Otro motivo'].map((r,i)=>`<button class="chip ${i===0?'on':''}" data-act="pickOne">${r}</button>`).join('')}</div><div class="fld" style="margin-top:14px"><label>Detalles (opcional)</label><textarea class="inp" rows="3"></textarea></div></div><div class="mf"><button class="btn pri" data-act="sendReport" style="background:var(--bad);box-shadow:none">Enviar reporte</button></div>`);}
+
+/* ===================== AGENT ===================== */
+const isCarlos=()=>!S.user||S.user.name==='Carlos Ríos';
+function mine(){return L.filter(l=>isCarlos()?(l.ag==='carlos'||l.mine):l.ag==='me');}
+function myMsgs(){const ids=new Set(mine().map(l=>l.id));return S.msgs.filter(m=>ids.has(m.lid));}
+function renderAgent(){const my=mine(),act=my.filter(l=>l.st).length,views=my.reduce((a,l)=>a+l.views,0),con=my.reduce((a,l)=>a+l.contacts,0),unread=myMsgs().filter(m=>m.u).length;
+  const days=['L','M','M','J','V','S','D'],vals=views?[32,41,38,55,47,62,37].map(v=>Math.round(v*views/312)):[0,0,0,0,0,0,0];const mx=Math.max(1,...vals);const tab=S.aTab;
+  const name=S.user?.name||'Carlos Ríos';
+  $('#agent').innerHTML=`<nav class="anav"><button class="${tab==='panel'?'on':''}" data-act="aTab" data-t="panel">${ic('i-grid')}Panel</button><button class="${tab==='list'?'on':''}" data-act="aTab" data-t="list">${ic('i-home')}Mis arriendos<span class="count" style="background:var(--blue-50);color:var(--blue)">${my.length}</span></button><button class="${tab==='msgs'?'on':''}" data-act="aTab" data-t="msgs">${ic('i-msg')}Mensajes${unread?`<span class="count">${unread}</span>`:''}</button><button data-act="go" data-v="publicar">${ic('i-plus')}Publicar arriendo</button><button data-act="go" data-v="explorar">${ic('i-eye')}Ver como estudiante</button>
+  <div class="plan"><div class="ring" style="width:160px;height:160px;right:-60px;top:-60px"></div><small style="opacity:.7;font-weight:700;letter-spacing:.08em;font-size:11px">PLAN AGENTE</small><div class="k">$5<small style="font-size:13px;opacity:.7;font-family:var(--bf)">/mes</small></div><small style="opacity:.75">Se renueva el 30 de nov.</small></div></nav>
+  <main class="amain"><div class="ahead"><div><p>Buenos días,</p><h1>${esc(name)}</h1>${S.verif==='ok'?`<div style="display:flex;gap:6px;align-items:center;color:var(--good);font-weight:700;font-size:13px;margin-top:4px">${ic('i-shield','sm')}Agente verificado</div>`:`<div style="display:flex;gap:6px;align-items:center;color:var(--mid);font-weight:700;font-size:13px;margin-top:4px">${ic('i-clock','sm')}Verificación en curso</div>`}</div><button class="btn pri" data-act="go" data-v="publicar">${ic('i-plus','sm')}Publicar arriendo</button></div>
+  ${S.verif==='rev'?`<div class="verif rev"><div class="spin"></div><div><b>Estamos verificando tu identidad</b><div style="font-size:13px">Revisamos tu cédula o RUC. Mientras tanto puedes publicar; tus anuncios mostrarán la insignia de verificado al terminar.</div></div></div>`:''}
+  ${tab==='panel'?`<div class="stats"><div class="stat"><div class="top2">Arriendos activos${ic('i-home','sm')}</div><div class="k">${act}</div><div class="tr" style="color:var(--ink3)">de ${my.length} publicados</div></div><div class="stat"><div class="top2">Vistas este mes${ic('i-eye','sm')}</div><div class="k">${views}</div><div class="tr">▲ 24% vs. mes pasado</div></div><div class="stat"><div class="top2">Estudiantes interesados${ic('i-users','sm')}</div><div class="k">${con}</div><div class="tr">▲ 6 esta semana</div></div><div class="stat"><div class="top2">Tasa de contacto${ic('i-trend','sm')}</div><div class="k">${views?Math.round(con/views*1000)/10:0}%</div><div class="tr">Promedio NidU: 4.1%</div></div></div>
+  <div class="two"><div class="blk" style="margin:0"><h3>Vistas de tus arriendos <span style="font-size:13px;color:var(--ink3);font-family:var(--bf);font-weight:600">Últimos 7 días</span></h3>
+   <svg viewBox="0 0 520 190" width="100%">${vals.map((v,i)=>{const h=v/mx*140;return `<rect x="${i*74+14}" y="${160-h}" width="46" height="${h}" rx="10" fill="${i===5?'#0469E6':'#D4E5FD'}"/><text x="${i*74+37}" y="${152-h}" text-anchor="middle" font-size="12" font-weight="700" fill="#4A5878" font-family="DM Sans">${v}</text><text x="${i*74+37}" y="182" text-anchor="middle" font-size="12" fill="#8A96B0" font-family="DM Sans">${days[i]}</text>`}).join('')}</svg>
+   <p style="font-size:13px;color:var(--ink2);margin-top:6px">${views?'El sábado es tu mejor día: los estudiantes buscan antes de empezar la semana.':'Publica tu primer arriendo para empezar a recibir vistas.'}</p></div>
+   <div class="blk" style="margin:0"><h3>Mensajes recientes <button class="btn ghost sm" data-act="aTab" data-t="msgs">Ver todos</button></h3>${myMsgs().length?myMsgs().slice(0,3).map(m=>msgRow(m,S.msgs.indexOf(m))).join(''):'<p style="color:var(--ink3)">Cuando un estudiante te escriba, lo verás aquí.</p>'}</div></div>
+   <div class="blk" style="margin-top:16px"><h3>Mis arriendos <button class="btn ghost sm" data-act="aTab" data-t="list">Ver todos</button></h3>${tbl(my.slice(0,3))}</div>`
+  :tab==='list'?`<div class="blk">${tbl(my)}</div>`
+  :`<div class="blk">${myMsgs().length?myMsgs().map(m=>msgRow(m,S.msgs.indexOf(m))).join(''):'<p style="color:var(--ink3)">Aún no tienes mensajes.</p>'}</div>`}
+  </main>`;}
+function tbl(rows){if(!rows.length)return `<div class="empty"><div class="ib">${ic('i-home','lg')}</div><b>Aún no tienes arriendos publicados</b><p style="margin:6px 0 14px">Publica el primero y aparecerá en el mapa de los estudiantes.</p><button class="btn pri sm" data-act="go" data-v="publicar">${ic('i-plus','sm')}Publicar arriendo</button></div>`;return `<table class="tbl"><thead><tr><th>Arriendo</th><th class="hide">Precio</th><th class="hide">Vistas</th><th class="hide">Contactos</th><th>Estado</th><th></th></tr></thead><tbody>${rows.map(l=>`<tr><td><div class="tt"><div class="th">${thumb(l)}</div><div><b>${esc(l.t)}</b><small>${esc(l.zone)} · ${km(l,'espol')} km de ESPOL</small></div></div></td><td class="hide"><b>$${l.price}</b><br><span class="badge ${zfair(l.price,l.zone).k}" style="margin-top:4px">${{good:'Justo',mid:'Promedio',bad:'Alto'}[zfair(l.price,l.zone).k]}</span></td><td class="hide">${ic('i-eye','xs')} ${l.views}</td><td class="hide">${ic('i-msg','xs')} ${l.contacts}</td><td><span class="st"><button class="sw ${l.st?'on':''}" data-act="toggleL" data-id="${l.id}" aria-label="Activar"></button>${l.st?'Activo':'Pausado'}</span></td><td><button class="iconbtn" data-act="openL" data-id="${l.id}" aria-label="Ver">${ic('i-eye','sm')}</button></td></tr>`).join('')}</tbody></table>`;}
+function msgRow(m,i){const l=L.find(x=>x.id===m.lid);return `<div class="msg ${m.u?'unread':''}" data-act="readMsg" data-i="${i}"><div class="av" style="background:${m.col}">${m.ini}</div><div style="flex:1;min-width:0"><div style="display:flex;justify-content:space-between"><b>${esc(m.n)}</b><small>${m.h}</small></div><small style="color:var(--blue)">${esc(l?l.t:'')}</small><p>${esc(m.m)}</p></div></div>`;}
+function readMsg(i){const m=S.msgs[i];m.u=false;const l=L.find(x=>x.id===m.lid);modal(`<div class="mh"><h3>${esc(m.n)}</h3><button class="iconbtn" data-act="close">${ic('i-x')}</button></div><div class="mb"><small style="color:var(--blue);font-weight:600">${esc(l?.t||'')}</small><div style="background:var(--bg);padding:12px 14px;border-radius:14px 14px 14px 4px;margin:10px 0 16px;max-width:85%">${esc(m.m)}</div><div class="fld"><label>Tu respuesta</label><textarea class="inp" rows="3">¡Hola! Sí, sigue disponible. Puedes visitarlo el sábado a las 10:00. ¿Te queda bien?</textarea></div></div><div class="mf"><button class="btn pri" data-act="reply">${ic('i-msg','sm')}Responder</button></div>`);renderAgent();}
+
+/* ===================== PUBLISH ===================== */
+function renderPublish(){if(!S.pub)S.pub={t:'',type:'Habitación',zone:'Prosperina',price:170,m2:14,bath:'Privado',sv:new Set(['wifi','agua','luz']),x:360,y:304,imgs:[],g:'1 mes',c:'6 meses',r:'Solo estudiantes'};const P=S.pub;
+  $('#publish').innerHTML=`<div class="crumb"><button data-act="go" data-v="agente">${ic('i-back','sm')}Volver al panel</button></div>
+  <div class="ahead"><div><h1 style="font-size:30px;color:var(--navy);font-weight:900;font-family:var(--hf)">Publicar un arriendo</h1><p style="color:var(--ink2)">Los estudiantes verán tu anuncio en el mapa, comparado con su presupuesto.</p></div></div>
+  <form class="pubgrid" data-form="pub" novalidate><div>
+   <div class="blk"><h3>Fotos</h3><div class="photos" id="phs"></div><input type="file" id="phIn" accept="image/*" multiple hidden><p style="font-size:12.5px;color:var(--ink3);margin-top:10px">Sube fotos reales desde tu computador. Si no subes ninguna, mostramos una ilustración.</p></div>
+   <div class="blk"><h3>Información básica</h3>
+    <div class="fld"><label>Título del anuncio</label><input class="inp" id="pT" placeholder="Ej. Habitación amoblada cerca de ESPOL" value="${esc(P.t)}"><div class="errtxt">Escribe un título (mínimo 8 caracteres).</div></div>
+    <div class="slab" style="margin-top:4px"><span>Tipo</span></div><div class="typegrid">${Object.entries(TYPES).map(([t,i])=>`<button type="button" class="${P.type===t?'on':''}" data-act="pType" data-t="${t}">${ic(i)}${t}</button>`).join('')}</div>
+    <div class="row2" style="margin-top:14px"><div class="fld"><label>Precio mensual (USD)</label><input class="inp" id="pP" type="number" min="50" max="900" value="${P.price}"></div><div class="fld"><label>Área (m²)</label><input class="inp" id="pM" type="number" value="${P.m2}"></div></div>
+    <div id="pHint"></div>
+    <div class="row2" style="margin-top:14px"><div class="fld"><label>Zona</label><select class="inp" id="pZ">${Object.keys(ZAVG).map(z=>`<option ${z===P.zone?'selected':''}>${z}</option>`).join('')}</select></div><div class="fld"><label>Baño</label><select class="inp" id="pB"><option ${P.bath==='Privado'?'selected':''}>Privado</option><option ${P.bath==='Compartido'?'selected':''}>Compartido</option></select></div></div></div>
+   <div class="blk"><h3>Ubicación <span style="font-size:13px;color:var(--ink3);font-family:var(--bf);font-weight:600">Toca el mapa para mover el pin</span></h3><div class="map" id="pMap"></div><div class="locinfo" id="pLoc"></div></div>
+   <div class="blk"><h3>Servicios incluidos</h3><div class="chips">${Object.entries(SVC).map(([k,[n,i]])=>`<button type="button" class="chip ${P.sv.has(k)?'on':''}" data-act="pSv" data-s="${k}">${ic(i,'sm')}${n}</button>`).join('')}</div></div>
+   <div class="blk"><h3>Condiciones</h3><div class="row2"><div class="fld"><label>Garantía</label><select class="inp" id="pG"><option>Sin garantía</option><option selected>1 mes</option><option>2 meses</option></select></div><div class="fld"><label>Contrato mínimo</label><select class="inp" id="pC"><option>Mes a mes</option><option selected>6 meses</option><option>12 meses</option></select></div></div><div class="fld"><label>Reglas de la casa</label><input class="inp" id="pR" value="${esc(P.r)}"></div><div class="fld"><label>Descripción</label><textarea class="inp" id="pD" rows="3" placeholder="Cuenta qué hace especial a tu arriendo…"></textarea></div></div>
+  </div>
+  <aside class="preview"><div class="blk"><h3>Vista previa</h3><p style="font-size:13px;color:var(--ink3);margin:-8px 0 12px">Así lo verá un estudiante con presupuesto de $180</p><div id="pPrev"></div>
+   <button class="btn pri block" type="submit" style="margin-top:16px">${ic('i-check','sm')}Publicar arriendo</button><button class="btn ghost block" type="button" data-act="go" data-v="agente" style="margin-top:6px">Guardar borrador</button></div></aside></form>`;
+  const m=initMap($('#pMap'),{ctl:true,onClick:(x,y)=>{P.x=Math.round(x);P.y=Math.round(y);pubPin();pubPrev();},onCenter:()=>m.center(P.x,P.y,1.4)});
+  requestAnimationFrame(()=>m.center(P.x,P.y,1.4));
+  ['pT','pP','pM','pZ','pB','pR'].forEach(id=>$('#'+id).addEventListener('input',pubPrev));
+  $('#phIn').onchange=e=>{[...e.target.files].slice(0,8-P.imgs.length).forEach(f=>P.imgs.push(URL.createObjectURL(f)));pubPhotos();pubPrev();};
+  pubPhotos();pubPin();pubPrev();}
+function pubPhotos(){const P=S.pub;$('#phs').innerHTML=`<div class="add" data-act="addPh">${ic('i-camera')}Agregar</div>`+(P.imgs.length?P.imgs.map(s=>`<div class="ph"><img src="${s}" alt=""></div>`).join(''):['cuarto','bano'].map((k,i)=>`<div class="ph" style="opacity:.55">${room(k,0)}</div>`).join(''));}
+function nearestUni(x,y){return Object.entries(UNIS).map(([k,u])=>[k,Math.hypot(x-u.x,y-u.y)/62]).sort((a,b)=>a[1]-b[1])[0];}
+function pubPin(){const P=S.pub,m=MAPS.pMap;m.layer.innerHTML=uniMarkers(nearestUni(P.x,P.y)[0])+`<div class="pin mine" style="left:${P.x}px;top:${P.y}px;--c:var(--blue)"><div class="p">${ic('i-home','xs')}</div><div class="t"></div></div>`;const [u,d]=nearestUni(P.x,P.y);const dd=Math.round(d*10)/10;$('#pLoc').innerHTML=`${ic('i-cap')}<div><b>A ${dd} km de ${UNIS[u].n}</b><div style="color:var(--ink3);font-size:12.5px">${how(dd)} · la universidad más cercana</div></div>`;}
+function pubPrev(){const P=S.pub;P.t=$('#pT').value;P.price=+$('#pP').value||0;P.m2=+$('#pM').value||0;P.zone=$('#pZ').value;P.bath=$('#pB').value;P.r=$('#pR').value;
+  const z=zfair(P.price,P.zone);$('#pHint').innerHTML=P.price?`<div class="hintbox ${z.k}">${ic(z.k==='good'?'i-check':'i-tag','sm')}${z.l}</div>`:'';
+  const [u]=nearestUni(P.x,P.y);const fake={id:0,t:P.t||'Título de tu arriendo',type:P.type,zone:P.zone,x:P.x,y:P.y,price:P.price,m2:P.m2,pal:0,ag:'carlos',sv:[...P.sv],img:P.imgs[0],isNew:true};
+  const old=S.uni;S.uni=u;const b=S.budget;S.budget=180;$('#pPrev').innerHTML=cardHTML(fake,{nofav:true}).replace('data-act="openL"','');S.uni=old;S.budget=b;}
+function submitPub(){const P=S.pub;pubPrev();if(!vfld('#pT',P.t.trim().length>=8)){toast('Falta el título del anuncio');$('#pT').focus();return;}
+  const l={id:++NID,t:P.t.trim(),type:P.type,zone:P.zone,x:P.x,y:P.y,price:P.price,m2:P.m2,bath:P.bath,sv:[...P.sv],cond:[`Garantía: ${$('#pG').value}`,`Contrato mínimo: ${$('#pC').value}`,P.r].filter(Boolean),ag:(S.user?.name==='Carlos Ríos'?'carlos':'me'),pal:NID%5,isNew:true,views:0,contacts:0,st:true,mine:true,vph:false,img:P.imgs[0],imgs:P.imgs.slice(),desc:$('#pD').value||'Arriendo publicado recientemente en NidU.'};
+  L.unshift(l);REV[l.id]=[];const [u,d]=nearestUni(l.x,l.y);S.notifs.unshift({t:`Nuevo arriendo en ${l.zone}`,s:`${l.t} · $${l.price}/mes`,id:l.id,h:'ahora'});S.pub=null;
+  toast('¡Publicado! Ya aparece en el mapa de los estudiantes');S.aTab='list';go('agente');}
+
+/* ===================== EVENTS ===================== */
+document.addEventListener('click',e=>{const a=e.target.closest('[data-act]');if(!a)return;const act=a.dataset.act,id=+a.dataset.id;
+  switch(act){
+  case 'go':e.preventDefault();$('#menu')?.classList.remove('on');if(a.dataset.v==='registro'||a.dataset.v==='ingresar'){regRole='estudiante';sstep='pick';authUni=null;}go(a.dataset.v);break;
+  case 'agentSignup':regRole='agente';go('registro');break;
+  case 'role':e.preventDefault();regRole=a.dataset.r;sstep='pick';authUni=null;reAuth();break;
+  case 'uniPick':authUni=a.dataset.u;sstep='sso';reAuth();break;
+  case 'ssoBack':sstep='pick';authUni=null;reAuth();break;
+  case 'ssoGo':submitSso();break;
+  case 'guest':toast('Explorando como invitado');go('explorar');break;
+  case 'sw':S.notify=!S.notify;a.classList.toggle('on',S.notify);break;
+  case 'demo':if(a.dataset.r==='agente')S.verif='ok';S.user=a.dataset.r==='agente'?{name:'Carlos Ríos',email:'carlos.rios@nidu.ec',role:'agente'}:{name:'Juan Pablo Arenas',email:'jparenas@espol.edu.ec',role:'estudiante',uni:'espol'};S.prof=true;store();toast(`Entraste como ${S.user.name}`);go(S.user.role==='agente'?'agente':'explorar');break;
+  case 'forgot':e.preventDefault();toast('Te enviaríamos un enlace para restablecerla (demo)');break;
+  case 'menu':openMenu('menu');break;
+  case 'bell':openMenu('bell');break;
+  case 'logout':S.user=null;store();toast('Sesión cerrada');go('inicio');break;
+  case 'switchRole':S.user.role=S.user.role==='agente'?'estudiante':'agente';if(S.user.role==='agente'&&!S.verif)S.verif='ok';store();go(S.user.role==='agente'?'agente':'explorar');break;
+  case 'favs':onlyFav=true;$('#menu').classList.remove('on');go('explorar');break;
+  case 'budget':e.preventDefault();$('#menu')?.classList.remove('on');modal(`<div class="mh"><h3>Tu presupuesto mensual</h3><button class="iconbtn" data-act="close">${ic('i-x')}</button></div><div class="mb"><div class="budget" style="margin:0"><div class="v" id="mbv">$${S.budget}<small> /mes</small></div><input class="rng" id="mb" type="range" min="80" max="400" step="5" value="${S.budget}" style="--p:${(S.budget-80)/320*100}%"><div class="minmax"><span>$80</span><span>$400</span></div></div><p style="color:var(--ink2);font-size:13.5px;margin-top:12px">Usamos tu presupuesto para decirte si cada arriendo es justo, promedio o caro para ti.</p></div><div class="mf"><button class="btn pri" data-act="saveBudget">Guardar</button></div>`);const r=$('#mb');r.oninput=()=>{$('#mbv').innerHTML=`$${r.value}<small> /mes</small>`;r.style.setProperty('--p',(r.value-80)/320*100+'%');};break;
+  case 'saveBudget':S.budget=+$('#mb').value;store();closeModal();toast(`Presupuesto actualizado a $${S.budget}`);render();break;
+  case 'close':closeModal();break;
+  case 'openL':{const l=L.find(x=>x.id===id);if(!l)return;S.sel=l;S.dir='ida';l.views++;$('#menu')?.classList.remove('on');closeModal();go('arriendo');break;}
+  case 'fav':e.stopPropagation();S.fav.has(id)?S.fav.delete(id):S.fav.add(id);store();a.classList.toggle('on');toast(S.fav.has(id)?'Guardado en favoritos':'Quitado de favoritos');if(onlyFav)paintResults();break;
+  case 'pin':showPop(id);break;
+  case 'closePop':a.closest('.popup').remove();break;
+  case 'setUni':S.uni=a.dataset.u;store();if(location.hash==='#explorar')renderExplore();else if(location.hash==='#arriendo')renderDetail();$('#appTop').innerHTML=topbar(location.hash.slice(1));toast(`Mostrando distancias a ${UNIS[S.uni].n}`);break;
+  case 'filters':filtersModal();break;
+  case 'qSafe':S.f.safe=S.f.safe>=4?0:4;renderExplore();break;
+  case 'tSafe':S.f.safe=+a.dataset.v;a.parentNode.querySelectorAll('.chip').forEach(c=>c.classList.toggle('on',c===a));modal.cnt&&modal.cnt();break;
+  case 'tVph':S.f.vph=!S.f.vph;a.classList.toggle('on',S.f.vph);modal.cnt&&modal.cnt();break;
+  case 'cmp':{e.stopPropagation();if(S.cmp.has(id))S.cmp.delete(id);else{if(S.cmp.size>=3){toast('Puedes comparar hasta 3 arriendos');break;}S.cmp.add(id);}
+    document.querySelectorAll(`.cmpb[data-id="${id}"]`).forEach(b=>b.classList.toggle('on',S.cmp.has(id)));paintCmp();
+    if($('#ov').classList.contains('on'))cmpModal();else if(location.hash==='#arriendo')renderDetail();else toast(S.cmp.has(id)?'Agregado a comparar':'Quitado de comparar');break;}
+  case 'cmpOpen':cmpModal();break;
+  case 'cmpClear':S.cmp.clear();paintCmp();document.querySelectorAll('.cmpb.on').forEach(b=>b.classList.remove('on'));break;
+  case 'review':if(!S.user){toast('Inicia sesión para opinar');go('ingresar');break;}reviewModal();break;
+  case 'star':S.rvStar=+a.dataset.v;paintStars();break;
+  case 'report':reportModal();break;
+  case 'sendReport':closeModal();toast('Gracias. Revisaremos el anuncio en menos de 24 horas');break;
+  case 'toCost':e.preventDefault();$('#costo').scrollIntoView({behavior:'smooth',block:'start'});break;
+  case 'qBudget':S.f.max=S.f.max<=S.budget?350:S.budget;renderExplore();break;
+  case 'qType':{const t=a.dataset.t;S.f.types.has(t)?S.f.types.delete(t):S.f.types.add(t);renderExplore();break;}
+  case 'qSv':{const s=a.dataset.s;S.f.sv.has(s)?S.f.sv.delete(s):S.f.sv.add(s);renderExplore();break;}
+  case 'qFav':onlyFav=!onlyFav;renderExplore();break;
+  case 'tType':case 'tZone':case 'tSv':{const set={tType:S.f.types,tZone:S.f.zones,tSv:S.f.sv}[act];const v=a.dataset.t||a.dataset.z||a.dataset.s;set.has(v)?set.delete(v):set.add(v);a.classList.toggle('on');modal.cnt&&modal.cnt();break;}
+  case 'applyF':closeModal();renderExplore();break;
+  case 'clearF':S.f={min:80,max:350,zones:new Set(),types:new Set(),sv:new Set(),dist:8,sort:S.f.sort,q:'',safe:0,vph:false};onlyFav=false;closeModal();renderExplore();break;
+  case 'mapToggle':{const ex=$('#explore');ex.classList.toggle('showmap');a.querySelector('span').textContent=ex.classList.contains('showmap')?'Ver lista':'Ampliar mapa';window.scrollTo(0,0);const U=UNIS[S.uni];requestAnimationFrame(()=>MAPS.exMap.center(U.x+60,U.y+40,1.2));break;}
+  case 'dir':S.dir=a.dataset.d;a.parentNode.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b===a));paintSteps();break;
+  case 'contact':contactModal();break;
+  case 'addQ':{const t=a.closest('form').querySelector('textarea');t.value+=' '+a.textContent;a.classList.add('on');break;}
+  case 'visit':visitModal();break;
+  case 'pickOne':a.parentNode.querySelectorAll('.chip').forEach(c=>c.classList.toggle('on',c===a));break;
+  case 'confirmVisit':closeModal();toast('Visita solicitada (demo). Te confirmaremos por notificación');break;
+  case 'call':{const A=agentOf(S.sel);toast(A?`Teléfono de ${A.n}: ${A.ph}`:'Teléfono no disponible');break;}
+  case 'zoomImg':{const k=a.dataset.k;modal(`<div class="mh"><h3>${esc(a.dataset.c||'Foto')}</h3><button class="iconbtn" data-act="close">${ic('i-x')}</button></div><div style="height:420px">${k?room(k,S.sel.pal):`<img src="${S.sel.imgs[+a.dataset.i]}" style="width:100%;height:100%;object-fit:contain;background:#000">`}</div>`,true);break;}
+  case 'aTab':S.aTab=a.dataset.t;renderAgent();break;
+  case 'toggleL':{const l=L.find(x=>x.id===id);l.st=!l.st;toast(l.st?'Arriendo activado: visible para estudiantes':'Arriendo pausado: ya no aparece en el mapa');renderAgent();break;}
+  case 'readMsg':readMsg(+a.dataset.i);break;
+  case 'reply':closeModal();toast('Respuesta enviada (demo)');break;
+  case 'addPh':$('#phIn').click();break;
+  case 'pType':S.pub.type=a.dataset.t;a.parentNode.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b===a));pubPrev();break;
+  case 'pSv':{const s=a.dataset.s;S.pub.sv.has(s)?S.pub.sv.delete(s):S.pub.sv.add(s);a.classList.toggle('on');pubPrev();break;}
+  }});
+document.addEventListener('change',e=>{const up=e.target.dataset.up;if(up){const f=e.target.files[0];if(f){S.upl[up]=true;const lb=e.target.closest('.upl');lb.classList.add('done');lb.classList.remove('bad');lb.querySelector('span').textContent='✓ '+f.name;if(up==='ced')$('#cedErr').style.display='none';}return;}const c=e.target.dataset.chg;if(!c)return;if(c==='uni'){S.uni=e.target.value;store();const v=location.hash.slice(1);if(v==='arriendo')renderDetail();else{go('explorar');renderExplore();}}if(c==='sort'){S.f.sort=e.target.value;paintResults();}if(c==='orig'){S.orig=e.target.value;store();renderDetail();document.getElementById('costo').scrollIntoView({block:'center'});}});
+document.addEventListener('input',e=>{if(e.target.dataset.chg==='q'){S.f.q=e.target.value;if(location.hash!=='#explorar'){go('explorar');}else paintResults();}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();if(e.key==='Enter'&&e.target.matches('.card'))e.target.click();});
+window.addEventListener('resize',()=>{});
+render();
+</script>
+</body>
+</html>
