@@ -74,10 +74,10 @@ svg{display:block}
 .hero-vis .mapcard{position:absolute;inset:0 0 0 30px;border-radius:28px;overflow:hidden;box-shadow:var(--sh2);border:6px solid #fff}
 .float{position:absolute;background:#fff;border-radius:18px;box-shadow:var(--sh2);padding:12px;display:flex;gap:12px;align-items:center}
 .float .th{width:64px;height:64px;border-radius:12px;overflow:hidden;flex:none}
-.f1{left:0;bottom:46px;width:300px;animation:bob 5s ease-in-out infinite}
-.f2{right:-14px;top:36px;padding:12px 14px;animation:bob 6s ease-in-out infinite reverse}
+.f1{left:0;bottom:46px;width:300px;animation:bob 7s ease-in-out infinite}
+.f2{right:-14px;top:36px;padding:12px 14px;animation:bob 9s ease-in-out infinite reverse}
 .f2 .big{font-family:var(--hf);font-weight:900;font-size:26px;color:var(--navy)}
-@keyframes bob{50%{transform:translateY(-8px)}}
+@keyframes bob{50%{transform:translateY(-6px)}}
 .lsec{max-width:1200px;margin:auto;padding:72px 24px}
 .lsec h2{font-size:clamp(30px,3.4vw,42px);color:var(--navy);font-weight:900}
 .lsec .sub{color:var(--ink2);font-size:17px;margin-top:10px;max-width:620px}
@@ -571,5 +571,26 @@ svg text{font-family:var(--bf)}
 .btn:disabled{opacity:.5;cursor:not-allowed;box-shadow:none}
 .btn:active:not(:disabled){transform:translateY(1px)}
 :focus-visible{outline:3px solid var(--blue);outline-offset:2px;border-radius:8px}
-@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+  .f1{animation:bob 7s ease-in-out infinite!important}
+  .f2{animation:bob 9s ease-in-out infinite reverse!important}
+}
 [data-view=perfil] .prof{max-width:none}
+
+/* ===================== RESPONSIVE MÓVIL (inicio) ===================== */
+@media (max-width:600px){
+  .hero{padding:26px 18px 38px;gap:26px}
+  .hero-vis{height:300px;margin-top:0}
+  .hero-vis .mapcard{inset:0;border-width:4px;border-radius:22px}
+  .f1{width:min(250px,78%);left:8px;bottom:10px}
+  .f2{right:8px;top:10px;padding:9px 12px}
+  .f2 .big{font-size:19px}
+  .f2 .badge{font-size:10.5px;padding:3px 8px}
+  .band{grid-template-columns:1fr 1fr;padding:30px 22px;gap:18px 20px}
+  .band .k{font-size:34px}
+  .band .cta{grid-column:1 / -1;border-top:1px solid rgba(255,255,255,.16);padding-top:20px}
+}
+@media (max-width:380px){
+  .band{grid-template-columns:1fr}
+}
