@@ -514,3 +514,62 @@ input[type=range]{width:100%;accent-color:var(--blue)}
 .pwreq .ico{color:var(--line);flex:none;transition:color .15s}
 .pwreq div.ok{color:var(--good);font-weight:600}
 .pwreq div.ok .ico{color:var(--good)}
+
+/* ===================== CAPA DE PULIDO VISUAL =====================
+   Ajustes de consistencia: filas reutilizables, avisos, etiquetas,
+   anchos de lectura y tipografía de rótulos. */
+
+/* Rótulos en formato oración (sin mayúsculas forzadas) */
+.searchbox label,.menu h5,.tbl th,.pfx .r .h,.anav .plan small{text-transform:none;letter-spacing:0}
+.tbl th{font-size:12.5px;font-weight:600}
+svg text{font-family:var(--bf)}
+
+/* Fila con avatar/miniatura + texto: válida en cualquier contenedor */
+.th2{display:flex;align-items:center;gap:12px}
+.th2 small{color:var(--ink3);font-size:12.5px;display:block}
+.th2 .av{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:800;font-size:13.5px;flex:none;font-family:var(--hf)}
+.count{background:var(--gold);color:var(--navy);font-size:11.5px;font-weight:800;padding:2px 8px;border-radius:999px;flex:none}
+
+/* Avisos: informativo (azul) distinto de alerta (rojo) */
+.scam.info{background:var(--blue-50);color:var(--navy)}
+.scam.info .ico{color:var(--blue)}
+
+/* Acciones en lista (perfil, soporte) */
+.mi{display:flex;gap:10px;align-items:center;width:100%;padding:12px 14px;border-radius:12px;font-weight:600;text-align:left;border:1px solid var(--line);background:#fff;transition:background .15s,border-color .15s}
+.mi:hover{background:var(--bg);border-color:var(--blue-100)}
+.menu .mi{border:0;padding:10px;background:none}
+
+/* Tarjetas de arriendo: nada se desborda */
+.card>div:nth-child(2){min-width:0}
+.card .meta2{row-gap:4px}
+.card .pr{flex-wrap:wrap;justify-content:flex-start;row-gap:6px}
+.card .pr .price{margin-right:auto}
+.sbadge{white-space:nowrap}
+
+/* Barra de filtros: desvanecido donde continúa el scroll */
+.fbar{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 36px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 36px),transparent);padding-right:28px}
+
+/* Tabla del agente */
+.intr{display:inline-flex;align-items:center;gap:5px;white-space:nowrap;color:var(--ink2);font-weight:600;margin-right:12px}
+
+/* Vistas de lectura: ancho cómodo */
+[data-view=perfil] .wrap,[data-view=amigos] .wrap,[data-view=visitas] .wrap,[data-view=mensajes] .wrap{max-width:880px}
+.ahead h1{letter-spacing:-.025em}
+.ahead p{margin-top:6px;max-width:62ch}
+.tgrid{grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px 18px}
+.tgrid div b{font-size:14.5px;font-weight:700}
+.tenant{transition:border-color .15s}
+.blk[data-act]:hover{border-color:var(--blue-100);box-shadow:0 6px 22px rgba(7,39,92,.06)}
+.blk[data-act]{transition:border-color .15s,box-shadow .15s}
+.zgrid .blk>div:first-child>div>div{white-space:nowrap}
+
+/* Mapa: la nota no tapa contenido en el inicio ni en pantallas chicas */
+.hero .mnote{display:none}
+@media (max-width:700px){.mnote{display:none}}
+
+/* Estados */
+.btn:disabled{opacity:.5;cursor:not-allowed;box-shadow:none}
+.btn:active:not(:disabled){transform:translateY(1px)}
+:focus-visible{outline:3px solid var(--blue);outline-offset:2px;border-radius:8px}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+[data-view=perfil] .prof{max-width:none}
