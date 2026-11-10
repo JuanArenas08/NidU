@@ -594,3 +594,43 @@ svg text{font-family:var(--bf)}
 @media (max-width:380px){
   .band{grid-template-columns:1fr}
 }
+
+
+/* ===================== RESPONSIVE MÓVIL (vistas internas) =====================
+   Todo aquí es solo para pantallas <=600px; no afecta el escritorio. */
+@media (max-width:600px){
+  /* El panel del agente debe poder encogerse al ancho del celular */
+  .amain{min-width:0}
+  .agentlay>*{min-width:0}
+
+  /* "Mis arriendos": la tabla se vuelve tarjetas apiladas */
+  .tbl,.tbl tbody,.tbl tr,.tbl td{display:block;width:auto}
+  .tbl thead{display:none}
+  .tbl td.hide{display:none}
+  .tbl tr{border:1.5px solid var(--line);border-radius:16px;padding:12px 14px;margin-bottom:12px}
+  .tbl td{border-top:0;padding:6px 0}
+  .tbl td:first-child{padding-top:0}
+  .tbl td:last-child>div{justify-content:flex-start!important;flex-wrap:wrap;margin-top:4px}
+  .tbl .tt .th{width:48px;height:48px}
+
+  /* Detalle del arriendo: permitir que las columnas encojan */
+  .dgrid,.dgrid>*,.cost,.cost>*,.routebox,.routebox>*,.two,.two>*{min-width:0}
+  .asp{min-width:0}
+  .vs select{max-width:100%}
+
+  /* Zonas: el encabezado (nombre + etiqueta) puede envolver */
+  .zgrid{grid-template-columns:1fr}
+  .zgrid .blk>div:first-child{flex-wrap:wrap}
+  .zgrid .blk>div:first-child>div>div{white-space:normal}
+
+  /* Mis visitas: la fila de acciones envuelve */
+  #visits .blk>div:last-child{flex-wrap:wrap}
+
+  /* Detalle: filas de botones y encabezados con acción envuelven si no caben */
+  #detail div[style*="display:flex"]{flex-wrap:wrap}
+  .blk h3{flex-wrap:wrap}
+  .svc>*{min-width:0}
+}
+@media (max-width:400px){
+  .svc{grid-template-columns:1fr}
+}
