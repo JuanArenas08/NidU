@@ -19,51 +19,85 @@
     <button class="btn ghost gbtn" data-act="go" data-v="ingresar">Iniciar sesión</button>
     <button class="btn pri sm" data-act="go" data-v="registro">Entrar</button>
   </div></nav>
-  <header class="hero">
-    <div>
-      <div class="eyebrow"><b>Nuevo</b> Arriendos cerca de ESPOL, UG, UCSG y UEES</div>
-      <h1>Tu nido <em>cerca de la U</em>, sin perder tiempo ni plata.</h1>
-      <p class="lead">NidU junta en un solo lugar los arriendos cerca de tu universidad, te dice si el precio es justo para tu presupuesto y te muestra cómo llegar en bus.</p>
-      <form class="searchbox" data-form="hero">
+  <header class="hero" data-enter>
+    <div class="hero-copy">
+      <h1 class="enter">Tu nido <em>cerca de la U</em>, sin perder tiempo ni plata.</h1>
+      <p class="lead enter">NidU reúne en un mapa los arriendos cerca de tu universidad, te dice si el precio es justo para tu presupuesto y te muestra cómo llegar en bus.</p>
+      <form class="searchbox enter" data-form="hero">
         <div class="f"><label>Universidad</label><select id="heroUni"></select></div>
         <div class="f"><label>Presupuesto mensual</label><input id="heroBudget" type="number" min="60" max="600" value="180"></div>
-        <button class="btn pri" type="submit"><svg class="ico"><use href="#i-search"/></svg>Buscar</button>
+        <button class="btn pri" type="submit"><svg class="ico"><use href="#i-search"/></svg>Buscar arriendos</button>
       </form>
-      <div class="trust"><span><svg class="ico sm"><use href="#i-shield"/></svg>Zonas seguras y agentes verificados</span><span><svg class="ico sm"><use href="#i-bus"/></svg>Rutas de bus</span><span><svg class="ico sm"><use href="#i-bell"/></svg>Alertas de nuevos arriendos</span></div>
+      <div class="trust enter"><span><svg class="ico sm"><use href="#i-shield"/></svg>Zonas seguras y agentes verificados</span><span><svg class="ico sm"><use href="#i-bus"/></svg>Rutas de bus</span><span><svg class="ico sm"><use href="#i-bell"/></svg>Alertas de nuevos arriendos</span></div>
     </div>
-    <div class="hero-vis">
+    <div class="hero-vis enter">
+      <div class="glow"></div>
       <div class="mapcard" id="heroMap"></div>
       <div class="float f1" id="heroCard"></div>
-      <div class="float f2"><div><small style="color:var(--ink3);font-weight:600">Arriendos cerca de ESPOL</small><div class="big" id="heroCount">0</div><span class="badge good">Dentro de tu presupuesto</span></div></div>
+      <div class="float f2"><div><small style="color:var(--ink3);font-weight:700">Arriendos cerca de ESPOL</small><div class="big" id="heroCount">0</div><span class="badge good">Dentro de tu presupuesto</span></div></div>
     </div>
   </header>
+
+  <div class="unibar">
+    <span class="ul">Hecho para estudiantes foráneos de</span>
+    <div class="unis">
+      <span class="um">ESPOL</span><span class="um">U. de Guayaquil</span><span class="um">UCSG</span><span class="um">UEES</span>
+    </div>
+  </div>
+
   <section class="lsec" id="como">
-    <h2>Así de fácil funciona</h2>
-    <p class="sub">Pensado para estudiantes que llegan a Guayaquil desde otras ciudades y cantones.</p>
+    <div class="lhead"><h2>Del mapa al arriendo en tres pasos</h2><p class="sub">Pensado para estudiantes que llegan a Guayaquil desde otras ciudades y cantones y no conocen la ciudad.</p></div>
     <div class="steps">
-      <div class="step"><span class="n">1</span><div class="ib"><svg class="ico lg"><use href="#i-cap"/></svg></div><h3>Elige tu universidad</h3><p>Dinos dónde estudias y cuánto puedes pagar al mes por tu arriendo.</p></div>
-      <div class="step"><span class="n">2</span><div class="ib" style="background:var(--gold);color:var(--navy)"><svg class="ico lg"><use href="#i-map"/></svg></div><h3>Compara en el mapa</h3><p>Ves los arriendos más cercanos, con colores según si el precio es justo para ti.</p></div>
-      <div class="step"><span class="n">3</span><div class="ib" style="background:var(--navy)"><svg class="ico lg"><use href="#i-bus"/></svg></div><h3>Mira cómo llegar</h3><p>Rutas de ida y regreso en bus, con tiempo, pasaje y aviso del último bus.</p></div>
+      <div class="step"><span class="n">01</span><div class="ib"><svg class="ico lg"><use href="#i-cap"/></svg></div><h3>Elige tu universidad</h3><p>Dinos dónde estudias y cuánto puedes pagar al mes. Fijamos tu campus como punto de partida.</p></div>
+      <div class="step"><span class="n">02</span><div class="ib gold"><svg class="ico lg"><use href="#i-map"/></svg></div><h3>Compara en el mapa</h3><p>Ves los arriendos más cercanos con un color según si el precio es justo para tu bolsillo y su zona.</p></div>
+      <div class="step"><span class="n">03</span><div class="ib navy"><svg class="ico lg"><use href="#i-bus"/></svg></div><h3>Mira cómo llegar</h3><p>Rutas de ida y regreso en bus, con tiempo, pasaje y el aviso del último bus de la noche.</p></div>
     </div>
   </section>
-  <section class="lsec" id="beneficios" style="padding-top:0">
-    <h2>Todo lo que necesitas, en un solo lugar</h2>
-    <div class="feat">
-      <div class="fc"><div class="ib" style="background:var(--good-50);color:var(--good)"><svg class="ico"><use href="#i-tag"/></svg></div><h4>¿Caro o no?</h4><p>Dos respuestas claras: si es caro para tu bolsillo y si es caro para su zona.</p></div>
-      <div class="fc"><div class="ib" style="background:var(--blue-50);color:var(--blue)"><svg class="ico"><use href="#i-pin"/></svg></div><h4>Cerca de tu U</h4><p>Distancia real y tiempo en bus desde cada arriendo hasta tu campus.</p></div>
-      <div class="fc"><div class="ib" style="background:var(--gold-50);color:#B07400"><svg class="ico"><use href="#i-shield"/></svg></div><h4>Seguridad primero</h4><p>Índice de seguridad por zona, fotos verificadas y agentes con identidad comprobada.</p></div>
-      <div class="fc"><div class="ib" style="background:#EEE9FB;color:#6B4FC6"><svg class="ico"><use href="#i-list"/></svg></div><h4>Costo real del mes</h4><p>Arriendo, servicios y pasajes sumados, comparados con viajar a diario desde tu ciudad.</p></div>
+
+  <section class="lsec" id="beneficios">
+    <div class="lhead"><h2>Todo lo que necesitas para decidir bien</h2><p class="sub">No solo arriendos en un mapa: las respuestas que un estudiante foráneo necesita antes de mudarse.</p></div>
+    <div class="bento">
+      <article class="bcard big">
+        <div class="btag"><svg class="ico sm"><use href="#i-tag"/></svg>Precio justo</div>
+        <h3>¿Caro o no? Dos respuestas claras.</h3>
+        <p>Te decimos si un arriendo es caro para <b>tu presupuesto</b> y si es caro para <b>su zona</b>, con una barra que vas entendiendo de un vistazo.</p>
+        <div class="meter"><span class="mlab">Justo para ti</span><div class="mbar"><i style="left:34%"></i></div><div class="mscale"><span>$90</span><span>$300</span></div></div>
+      </article>
+      <article class="bcard"><div class="ib" style="background:var(--blue-50);color:var(--blue)"><svg class="ico"><use href="#i-pin"/></svg></div><h4>Cerca de tu U</h4><p>Distancia real y tiempo en bus desde cada arriendo hasta tu campus.</p></article>
+      <article class="bcard"><div class="ib" style="background:var(--gold-50);color:#B07400"><svg class="ico"><use href="#i-shield"/></svg></div><h4>Seguridad por zona</h4><p>Índice de seguridad, opiniones de estudiantes y agentes con identidad verificada.</p></article>
+      <article class="bcard wide"><div class="ib" style="background:var(--good-50);color:var(--good)"><svg class="ico"><use href="#i-list"/></svg></div><h4>Costo real del mes</h4><p>Arriendo, servicios y pasajes sumados y comparados con viajar a diario desde tu ciudad. Sabes cuánto te cuesta vivir cerca, de verdad.</p></article>
     </div>
   </section>
-  <section class="lsec" id="agentes" style="padding-top:0">
+
+  <section class="lsec" id="voces">
+    <div class="lhead"><h2>Estudiantes que ya encontraron su nido</h2><p class="sub">Historias de ejemplo de cómo se vive la búsqueda con NidU.</p></div>
+    <div class="quotes">
+      <figure class="quote"><blockquote>Llegué de Manta sin conocer Guayaquil. En una tarde encontré un cuarto a diez minutos de ESPOL y ya sabía qué bus tomar.</blockquote><figcaption><span class="av" style="background:#E2725B">DV</span><div><b>Doménica V.</b><small>Estudiante foránea · ESPOL</small></div></figcaption></figure>
+      <figure class="quote"><blockquote>Lo mejor fue saber si el precio era justo antes de ir a verlo. Me ahorró un montón de vueltas por toda la ciudad.</blockquote><figcaption><span class="av" style="background:#0469E6">MS</span><div><b>Mateo S.</b><small>Estudiante foráneo · U. de Guayaquil</small></div></figcaption></figure>
+      <figure class="quote"><blockquote>Ver las rutas de bus y a qué hora pasa el último me dio tranquilidad para volver de noche a mi arriendo.</blockquote><figcaption><span class="av" style="background:#7C5CC4">VC</span><div><b>Valentina C.</b><small>Estudiante foránea · UCSG</small></div></figcaption></figure>
+    </div>
+  </section>
+
+  <section class="lsec" id="agentes">
     <div class="band">
       <div class="ring" style="width:420px;height:420px;right:-120px;top:-160px"></div><div class="ring" style="width:620px;height:620px;right:-220px;top:-260px"></div>
-      <div><div class="k">19.350</div><div class="l">estudiantes foráneos estimados en universidades de Guayaquil</div></div>
-      <div><div class="k">15%</div><div class="l">de los universitarios de la ciudad vienen de otras ciudades o cantones</div></div>
-      <div><div class="k">$5</div><div class="l">al mes para que un agente publique sus arriendos</div></div>
-      <div class="cta"><h3>¿Eres agente inmobiliario?</h3><p>Llega directo a estudiantes foráneos que buscan arriendo cerca de su universidad.</p><button class="btn gold" data-act="agentSignup">Publicar mis arriendos</button></div>
+      <div class="bstats">
+        <div><div class="k">19.350</div><div class="l">estudiantes foráneos estimados en universidades de Guayaquil</div></div>
+        <div><div class="k">15%</div><div class="l">de los universitarios de la ciudad vienen de otras ciudades o cantones</div></div>
+        <div><div class="k">$5</div><div class="l">al mes para que un agente publique todos sus arriendos</div></div>
+      </div>
+      <div class="cta"><h3>¿Eres agente inmobiliario?</h3><p>Llega directo a los estudiantes foráneos que buscan arriendo cerca de su universidad, sin anuncios perdidos entre mil.</p><button class="btn gold" data-act="agentSignup">Publicar mis arriendos</button></div>
     </div>
   </section>
+
+  <section class="lsec" id="cierre">
+    <div class="closer">
+      <h2>Tu próximo arriendo está más cerca de lo que crees.</h2>
+      <p>Compara precio, zona y rutas de bus en un solo lugar. Gratis para estudiantes.</p>
+      <div class="cbtns"><button class="btn pri lg" data-act="go" data-v="explorar"><svg class="ico"><use href="#i-map"/></svg>Explorar arriendos</button><button class="btn sec lg" data-act="go" data-v="registro">Crear mi cuenta</button></div>
+    </div>
+  </section>
+
   <footer class="foot"><div class="in"><a class="brand" href="#inicio"><img class="i" src="resources/icon.png" alt="" style="height:28px"><img class="w" src="resources/word.png" alt="NidU" style="height:20px"></a><span>Prototipo académico · Emprendimiento e Innovación 2026-PAO2 · Grupo Los desubicados</span><span>Datos y arriendos de ejemplo</span></div></footer>
 </section>
 
